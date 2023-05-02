@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7C1F5C0429FD316300DB6438 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0329FD316300DB6438 /* AppDelegate.swift */; };
-		7C1F5C0629FD316300DB6438 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0529FD316300DB6438 /* GameScene.sks */; };
 		7C1F5C0829FD316300DB6438 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0729FD316300DB6438 /* Actions.sks */; };
 		7C1F5C0A29FD316300DB6438 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0929FD316300DB6438 /* GameScene.swift */; };
 		7C1F5C0C29FD316300DB6438 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0B29FD316300DB6438 /* GameViewController.swift */; };
@@ -18,6 +17,24 @@
 		7C1F5C1E29FD316400DB6438 /* astralTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C1D29FD316400DB6438 /* astralTests.swift */; };
 		7C1F5C2829FD316400DB6438 /* astralUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C2729FD316400DB6438 /* astralUITests.swift */; };
 		7C1F5C2A29FD316400DB6438 /* astralUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C2929FD316400DB6438 /* astralUITestsLaunchTests.swift */; };
+		7C1F5C3A29FD326E00DB6438 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3929FD326E00DB6438 /* GameScene.sks */; };
+		7C1F5C3C29FD35C800DB6438 /* AstralPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */; };
+		7C1F5C3E29FD36B100DB6438 /* Polarity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3D29FD36B100DB6438 /* Polarity.swift */; };
+		7C1F5C4229FD5A4A00DB6438 /* AstralPlayer.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C4129FD5A4A00DB6438 /* AstralPlayer.atlas */; };
+		7C26511C29FF49720013B36E /* Joystick.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C26511B29FF49720013B36E /* Joystick.atlas */; };
+		7C26511F29FF49ED0013B36E /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C26511E29FF49ED0013B36E /* Direction.swift */; };
+		7C26512129FF4A5C0013B36E /* AstralJoystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C26512029FF4A5C0013B36E /* AstralJoystick.swift */; };
+		7C81E0CF29FF9D12005FB6EC /* BackgroundStars.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C81E0CE29FF9D12005FB6EC /* BackgroundStars.atlas */; };
+		7C81E0D129FF9D92005FB6EC /* AstralBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C81E0D029FF9D92005FB6EC /* AstralBackground.swift */; };
+		7C81E0D329FF9E7E005FB6EC /* AstralBackgroundLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C81E0D229FF9E7E005FB6EC /* AstralBackgroundLayer.swift */; };
+		7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */; };
+		7CAA6AF62A00E0A100EBEA1E /* AstralParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */; };
+		7CAA6AF92A00E5A100EBEA1E /* Thruster.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */; };
+		7CAA6AFA2A00E5A100EBEA1E /* Particle.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF82A00E5A100EBEA1E /* Particle.xcassets */; };
+		7CAA6AFD2A011D1A00EBEA1E /* TrailingShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */; };
+		7CC2F9DA29FF68C7003CA700 /* AstralWeapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */; };
+		7CC2F9DC29FF6BDC003CA700 /* AstralWeaponAmmoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */; };
+		7CC2F9DE29FF75FC003CA700 /* testScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9DD29FF75FC003CA700 /* testScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +57,6 @@
 /* Begin PBXFileReference section */
 		7C1F5C0029FD316300DB6438 /* astral.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = astral.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C1F5C0329FD316300DB6438 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7C1F5C0529FD316300DB6438 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		7C1F5C0729FD316300DB6438 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		7C1F5C0929FD316300DB6438 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		7C1F5C0B29FD316300DB6438 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
@@ -52,6 +68,24 @@
 		7C1F5C2329FD316400DB6438 /* astralUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = astralUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C1F5C2729FD316400DB6438 /* astralUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = astralUITests.swift; sourceTree = "<group>"; };
 		7C1F5C2929FD316400DB6438 /* astralUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = astralUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		7C1F5C3929FD326E00DB6438 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPlayer.swift; sourceTree = "<group>"; };
+		7C1F5C3D29FD36B100DB6438 /* Polarity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polarity.swift; sourceTree = "<group>"; };
+		7C1F5C4129FD5A4A00DB6438 /* AstralPlayer.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = AstralPlayer.atlas; sourceTree = "<group>"; };
+		7C26511B29FF49720013B36E /* Joystick.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = Joystick.atlas; sourceTree = "<group>"; };
+		7C26511E29FF49ED0013B36E /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
+		7C26512029FF4A5C0013B36E /* AstralJoystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralJoystick.swift; sourceTree = "<group>"; };
+		7C81E0CE29FF9D12005FB6EC /* BackgroundStars.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BackgroundStars.atlas; sourceTree = "<group>"; };
+		7C81E0D029FF9D92005FB6EC /* AstralBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralBackground.swift; sourceTree = "<group>"; };
+		7C81E0D229FF9E7E005FB6EC /* AstralBackgroundLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralBackgroundLayer.swift; sourceTree = "<group>"; };
+		7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPhysicsCategory.swift; sourceTree = "<group>"; };
+		7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AstralParticleSystem.swift; path = swift/AstralParticleSystem.swift; sourceTree = "<group>"; };
+		7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Thruster.sks; sourceTree = "<group>"; };
+		7CAA6AF82A00E5A100EBEA1E /* Particle.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Particle.xcassets; sourceTree = "<group>"; };
+		7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingShader.swift; sourceTree = "<group>"; };
+		7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralWeapon.swift; sourceTree = "<group>"; };
+		7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralWeaponAmmoType.swift; sourceTree = "<group>"; };
+		7CC2F9DD29FF75FC003CA700 /* testScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +116,9 @@
 		7C1F5BF729FD316300DB6438 = {
 			isa = PBXGroup;
 			children = (
+				7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */,
+				7CAA6AFB2A00E93500EBEA1E /* Particles */,
+				7C26511D29FF49770013B36E /* atlas */,
 				7C1F5C0229FD316300DB6438 /* astral */,
 				7C1F5C1C29FD316400DB6438 /* astralTests */,
 				7C1F5C2629FD316400DB6438 /* astralUITests */,
@@ -102,13 +139,12 @@
 		7C1F5C0229FD316300DB6438 /* astral */ = {
 			isa = PBXGroup;
 			children = (
-				7C1F5C0329FD316300DB6438 /* AppDelegate.swift */,
-				7C1F5C0529FD316300DB6438 /* GameScene.sks */,
+				7C1F5C3629FD317400DB6438 /* swift */,
 				7C1F5C0729FD316300DB6438 /* Actions.sks */,
-				7C1F5C0929FD316300DB6438 /* GameScene.swift */,
-				7C1F5C0B29FD316300DB6438 /* GameViewController.swift */,
-				7C1F5C0D29FD316300DB6438 /* Main.storyboard */,
+				7C1F5C3929FD326E00DB6438 /* GameScene.sks */,
 				7C1F5C1029FD316400DB6438 /* Assets.xcassets */,
+				7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */,
+				7C1F5C0D29FD316300DB6438 /* Main.storyboard */,
 				7C1F5C1229FD316400DB6438 /* LaunchScreen.storyboard */,
 			);
 			path = astral;
@@ -129,6 +165,45 @@
 				7C1F5C2929FD316400DB6438 /* astralUITestsLaunchTests.swift */,
 			);
 			path = astralUITests;
+			sourceTree = "<group>";
+		};
+		7C1F5C3629FD317400DB6438 /* swift */ = {
+			isa = PBXGroup;
+			children = (
+				7CC2F9DD29FF75FC003CA700 /* testScene.swift */,
+				7C1F5C0329FD316300DB6438 /* AppDelegate.swift */,
+				7C1F5C0929FD316300DB6438 /* GameScene.swift */,
+				7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */,
+				7C81E0D029FF9D92005FB6EC /* AstralBackground.swift */,
+				7C81E0D229FF9E7E005FB6EC /* AstralBackgroundLayer.swift */,
+				7C26512029FF4A5C0013B36E /* AstralJoystick.swift */,
+				7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */,
+				7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */,
+				7C1F5C0B29FD316300DB6438 /* GameViewController.swift */,
+				7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */,
+				7C26511E29FF49ED0013B36E /* Direction.swift */,
+				7C1F5C3D29FD36B100DB6438 /* Polarity.swift */,
+			);
+			path = swift;
+			sourceTree = "<group>";
+		};
+		7C26511D29FF49770013B36E /* atlas */ = {
+			isa = PBXGroup;
+			children = (
+				7C81E0CE29FF9D12005FB6EC /* BackgroundStars.atlas */,
+				7C26511B29FF49720013B36E /* Joystick.atlas */,
+				7C1F5C4129FD5A4A00DB6438 /* AstralPlayer.atlas */,
+			);
+			path = atlas;
+			sourceTree = "<group>";
+		};
+		7CAA6AFB2A00E93500EBEA1E /* Particles */ = {
+			isa = PBXGroup;
+			children = (
+				7CAA6AF82A00E5A100EBEA1E /* Particle.xcassets */,
+				7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */,
+			);
+			path = Particles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -236,8 +311,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C1F5C0F29FD316300DB6438 /* Main.storyboard in Resources */,
-				7C1F5C0629FD316300DB6438 /* GameScene.sks in Resources */,
+				7C1F5C4229FD5A4A00DB6438 /* AstralPlayer.atlas in Resources */,
+				7C1F5C3A29FD326E00DB6438 /* GameScene.sks in Resources */,
+				7C26511C29FF49720013B36E /* Joystick.atlas in Resources */,
+				7CAA6AFA2A00E5A100EBEA1E /* Particle.xcassets in Resources */,
+				7CAA6AF92A00E5A100EBEA1E /* Thruster.sks in Resources */,
 				7C1F5C1129FD316400DB6438 /* Assets.xcassets in Resources */,
+				7C81E0CF29FF9D12005FB6EC /* BackgroundStars.atlas in Resources */,
 				7C1F5C1429FD316400DB6438 /* LaunchScreen.storyboard in Resources */,
 				7C1F5C0829FD316300DB6438 /* Actions.sks in Resources */,
 			);
@@ -264,9 +344,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CAA6AFD2A011D1A00EBEA1E /* TrailingShader.swift in Sources */,
+				7CC2F9DE29FF75FC003CA700 /* testScene.swift in Sources */,
+				7C81E0D129FF9D92005FB6EC /* AstralBackground.swift in Sources */,
+				7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */,
 				7C1F5C0A29FD316300DB6438 /* GameScene.swift in Sources */,
+				7C1F5C3C29FD35C800DB6438 /* AstralPlayer.swift in Sources */,
 				7C1F5C0C29FD316300DB6438 /* GameViewController.swift in Sources */,
+				7C1F5C3E29FD36B100DB6438 /* Polarity.swift in Sources */,
 				7C1F5C0429FD316300DB6438 /* AppDelegate.swift in Sources */,
+				7C26511F29FF49ED0013B36E /* Direction.swift in Sources */,
+				7CC2F9DA29FF68C7003CA700 /* AstralWeapon.swift in Sources */,
+				7C26512129FF4A5C0013B36E /* AstralJoystick.swift in Sources */,
+				7C81E0D329FF9E7E005FB6EC /* AstralBackgroundLayer.swift in Sources */,
+				7CC2F9DC29FF6BDC003CA700 /* AstralWeaponAmmoType.swift in Sources */,
+				7CAA6AF62A00E0A100EBEA1E /* AstralParticleSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,6 +543,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -479,6 +572,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
