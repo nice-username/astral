@@ -37,7 +37,7 @@ class AstralPlayer: SKSpriteNode {
     
     
     // Initializes the player sprite and sets its properties
-    init() {
+    init(scene: SKScene) {
         let initialTexture = SKTexture(imageNamed: "frame06.png")
         super.init(texture: initialTexture, color: .clear, size: initialTexture.size())
         
@@ -45,7 +45,7 @@ class AstralPlayer: SKSpriteNode {
         self.zPosition = 2
         self.physicsBody = SKPhysicsBody(circleOfRadius: size.width / 2)
         physicsBody?.categoryBitMask = AstralPhysicsCategory.player
-        physicsBody?.collisionBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary | AstralPhysicsCategory.bullet
+        physicsBody?.collisionBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary
         physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary | AstralPhysicsCategory.bullet
         physicsBody?.linearDamping = 0.5
         physicsBody?.angularDamping = 1.0
@@ -70,7 +70,16 @@ class AstralPlayer: SKSpriteNode {
         
         // Weapon 01
         let defaultAmmo   = AstralWeaponAmmoType.singleShot
-        let defaultWeapon = AstralWeapon(name: "Double shot", damage: 4.0, cooldown: 1.2, range: 300, ammoType: defaultAmmo, reloadTime: 4.0, clipSize: 50)
+        let defaultWeapon = AstralWeapon(gameScene: scene, name: "Double shot", damage: 4.0, cooldown: 0.2, range: 300, ammoType: defaultAmmo, reloadTime: 4.0, clipSize: 50)
+        self.weapons.append(defaultWeapon)
+        
+        // Scaling
+        self.xScale = 2
+        self.yScale = 2
+        self.texture?.filteringMode = .nearest
+        
+        // Add to scene
+        scene.addChild(self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -95,7 +104,7 @@ class AstralPlayer: SKSpriteNode {
     //
     //
     func moveBy(_ vector: CGVector) {
-        let movementSpeed: CGFloat = 5.0
+        let movementSpeed: CGFloat = 8.0
         let newPosition = CGPoint(x: self.position.x + vector.dx * movementSpeed, y: self.position.y + vector.dy * movementSpeed)
         self.position = newPosition
     }
@@ -148,12 +157,15 @@ class AstralPlayer: SKSpriteNode {
     
     
     // Called every frame to update the player's position and check for collisions with other objects
-    func update(joystick: AstralJoystick) {
+    func update(joystick: AstralJoystick, currentTime: TimeInterval, deltaTime: TimeInterval) {
         // Update position and check for collisions
         if joystick.velocity != nil {
             self.moveBy(joystick.velocity!)
         }
         self.particleSystem!.update(player: self, joystickDirection: joystick.direction)
+        for weapon in self.weapons {
+            weapon.update(currentTime, deltaTime)
+        }
     }
     
     // Called when the player touches the screen, moves the player sprite
@@ -169,6 +181,7 @@ class AstralPlayer: SKSpriteNode {
     // Fires the player's current weapon, based on the current polarity and any power-ups that have been collected
     func fireWeapon() {
         // Fire the player's current weapon and apply any relevant power-up effects
+        self.weapons[0].fire(player: self)
     }
     
     // Handles the player picking up power-ups, and updates the player's weapons or other properties as appropriate

@@ -32,6 +32,7 @@
 		7CAA6AF92A00E5A100EBEA1E /* Thruster.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */; };
 		7CAA6AFA2A00E5A100EBEA1E /* Particle.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF82A00E5A100EBEA1E /* Particle.xcassets */; };
 		7CAA6AFD2A011D1A00EBEA1E /* TrailingShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */; };
+		7CAA6AFF2A020C5600EBEA1E /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AFE2A020C5600EBEA1E /* CGPoint.swift */; };
 		7CC2F9DA29FF68C7003CA700 /* AstralWeapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */; };
 		7CC2F9DC29FF6BDC003CA700 /* AstralWeaponAmmoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */; };
 		7CC2F9DE29FF75FC003CA700 /* testScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9DD29FF75FC003CA700 /* testScene.swift */; };
@@ -83,6 +84,7 @@
 		7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Thruster.sks; sourceTree = "<group>"; };
 		7CAA6AF82A00E5A100EBEA1E /* Particle.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Particle.xcassets; sourceTree = "<group>"; };
 		7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingShader.swift; sourceTree = "<group>"; };
+		7CAA6AFE2A020C5600EBEA1E /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
 		7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralWeapon.swift; sourceTree = "<group>"; };
 		7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralWeaponAmmoType.swift; sourceTree = "<group>"; };
 		7CC2F9DD29FF75FC003CA700 /* testScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testScene.swift; sourceTree = "<group>"; };
@@ -183,6 +185,7 @@
 				7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */,
 				7C26511E29FF49ED0013B36E /* Direction.swift */,
 				7C1F5C3D29FD36B100DB6438 /* Polarity.swift */,
+				7CAA6AFE2A020C5600EBEA1E /* CGPoint.swift */,
 			);
 			path = swift;
 			sourceTree = "<group>";
@@ -356,6 +359,7 @@
 				7C26511F29FF49ED0013B36E /* Direction.swift in Sources */,
 				7CC2F9DA29FF68C7003CA700 /* AstralWeapon.swift in Sources */,
 				7C26512129FF4A5C0013B36E /* AstralJoystick.swift in Sources */,
+				7CAA6AFF2A020C5600EBEA1E /* CGPoint.swift in Sources */,
 				7C81E0D329FF9E7E005FB6EC /* AstralBackgroundLayer.swift in Sources */,
 				7CC2F9DC29FF6BDC003CA700 /* AstralWeaponAmmoType.swift in Sources */,
 				7CAA6AF62A00E0A100EBEA1E /* AstralParticleSystem.swift in Sources */,

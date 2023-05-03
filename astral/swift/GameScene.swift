@@ -24,12 +24,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.backgroundColor = .black
         
         self.lastUpdateTime = 0
-        self.player = AstralPlayer()
-        self.addChild(player!)
-        
-        player!.xScale = 2
-        player!.yScale = 2
-        player!.texture?.filteringMode = .nearest
+        self.player = AstralPlayer(scene: self)
         
         joystick = AstralJoystick()
         joystick.position = CGPoint(x: frame.minX + (76 * 2.5), y: frame.minY + (76 * 1.5))
@@ -42,9 +37,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         fireButton!.xScale = 3
         fireButton!.yScale = 3
         fireButton!.texture?.filteringMode = .nearest
-        fireButton.position.x += self.frame.width / 2.0 - fireButton.size.width + 32
-        
-        
+        fireButton.position.x += self.frame.width  / 2.0 - fireButton.size.width  + 32
         fireButton.position.y -= self.frame.height / 2.0 - fireButton.size.height - 200
         
         
@@ -109,6 +102,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if !hitButton {
             self.joystick.touchesBegan(touches, with: event)
         }
+        if hitButton {
+            self.player?.fireWeapon()
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -144,7 +140,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         */
         self.parallaxBg.update(dt, joystickDirection: self.joystick.direction)
-        self.player?.update(joystick: self.joystick)
+        self.player?.update(joystick: self.joystick, currentTime: currentTime, deltaTime: dt)
         
         if let normalizedVelocity = joystick.normalizedVelocity, let player = player {
             player.moveBy(normalizedVelocity)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SpriteKit
 
 /*
 enum AmmoType: Int {
@@ -27,44 +28,73 @@ enum AmmoType: Int {
 }
 */
 
-class AstralWeaponAmmoType {
-    let name: String
-    let description: String
+class AstralWeaponAmmoType: SKNode {
     let spriteFilename: String
     let damage: CGFloat
-    let speed: CGFloat
+    let moveSpeed: CGFloat
     let range: CGFloat
     let spread: CGFloat
     let homing: Bool
     let splash: Bool
     
     
-    init(name: String, description: String, spriteFilename: String, damage: CGFloat, speed: CGFloat, range: CGFloat, spread: CGFloat, homing: Bool, splash: Bool) {
-        self.name = name
-        self.description = description
+    init(name: String, spriteFilename: String, damage: CGFloat, moveSpeed: CGFloat, range: CGFloat, spread: CGFloat, homing: Bool, splash: Bool) {
         self.spriteFilename = spriteFilename
         self.damage = damage
-        self.speed = speed
+        self.moveSpeed = moveSpeed
         self.range = range
         self.spread = spread
         self.homing = homing
         self.splash = splash
+        super.init()
+        self.name = name
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func spawnBullet(at point: CGPoint, target: CGPoint) -> SKSpriteNode {
+        let bullet = SKSpriteNode(imageNamed: self.spriteFilename)
+        bullet.zPosition = 3
+        bullet.xScale = 2.0
+        bullet.yScale = 2.0
+        bullet.texture?.filteringMode = .nearest
+        bullet.position = point
+        
+        // Configure physics properties
+        bullet.physicsBody = SKPhysicsBody(circleOfRadius: bullet.size.width / 2)
+        bullet.physicsBody?.categoryBitMask = AstralPhysicsCategory.bullet
+        bullet.physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.destructible | AstralPhysicsCategory.obstacle
+        bullet.physicsBody?.collisionBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.destructible | AstralPhysicsCategory.obstacle
+        bullet.physicsBody?.usesPreciseCollisionDetection = true
+        bullet.physicsBody?.friction = 0
+        bullet.physicsBody?.linearDamping = 0.0
+        bullet.physicsBody?.angularDamping = 0.0
+
+        
+        // Calculate the angle and direction vector
+        let angle = CGFloat.pi / 2 // 90 degrees (upwards)
+        let direction = CGVector(dx: cos(angle), dy: sin(angle))
+        bullet.physicsBody?.velocity = CGVector(dx: direction.dx * self.moveSpeed, dy: direction.dy * self.moveSpeed)
+
+        return bullet
     }
     
     static var singleShot: AstralWeaponAmmoType {
-        return AstralWeaponAmmoType(name: "Single Shot",
-                        description: "Fires a single shot straight ahead",
-                        spriteFilename: "bullet00",
+        return AstralWeaponAmmoType(name: "Double Shot",
+                        spriteFilename: "Bullet00",
                         damage: 4,
-                        speed: 40,
-                        range: 500,
+                        moveSpeed: 400,
+                        range: 50,
                         spread: 0,
                         homing: false,
                         splash: false)
     }
     
     static var tripleShot: AstralWeaponAmmoType {
-        return AstralWeaponAmmoType(name: "Triple Shot", description: "Fires three shots at 0, 30, and -30 degree angles", spriteFilename: "bullet00", damage: 5, speed: 400, range: 400, spread: 30, homing: false, splash: false)
+        return AstralWeaponAmmoType(name: "Triple Shot", spriteFilename: "Bullet00", damage: 5, moveSpeed: 20, range: 400, spread: 30, homing: false, splash: false)
     }
+    
     // Add more ammo types as needed...
 }
