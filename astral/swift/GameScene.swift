@@ -57,7 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.createBoundaries()
         
         
-        self.enemy = AstralEnemy(scene: self, maxHP: 16)
+        self.enemy = AstralEnemy(scene: self, maxHP: 80)
         
         
         // Init audio .. ?

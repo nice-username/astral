@@ -81,11 +81,11 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         self.texture?.filteringMode = .nearest
         
         // Add to scene
-        self.position.y += 1000
+        self.position.y += 900
         scene.addChild(self)
         
         let exampleOrders : [AstralEnemyOrder] = [
-            AstralEnemyOrder(type: .move(.down),        duration: 1.2),
+            AstralEnemyOrder(type: .move(.down),        duration: 1.6),
             AstralEnemyOrder(type: .move(.downLeft),    duration: 0),
             AstralEnemyOrder(type: .turnLeft(0.5),      duration: 0.6),
             AstralEnemyOrder(type: .rest(0.5),          duration: 0.0),
@@ -159,9 +159,15 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     
     func takeDamage(amount: Int = 1) {
         // TODO: Replace with appropriate frame
-        let hitSprite = SKSpriteNode(imageNamed: "enemyFrameWhite06")
+        let hitStr = "enemyFrameWhite\(String(format: "%02d", self.currentSpriteID))"
+        let hitSprite = SKSpriteNode(imageNamed: hitStr)
+        
         hitSprite.zPosition = 3
+        let dy = Double.random(in: 12...24)
+        let fadeOutTime = Double.random(in: 0.15...0.4)
+        hitSprite.alpha = Double.random(in: 0.2...0.4)
         let action = SKAction.sequence([
+            SKAction.move(by: CGVector(dx: 0.0, dy: dy), duration: fadeOutTime),
             SKAction.fadeOut(withDuration: 0.2),
             SKAction.removeFromParent()
         ])
@@ -208,12 +214,13 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         for (index, texture) in turnTextures.enumerated() {
             let textureAction = SKAction.setTexture(texture)
             let waitAction = SKAction.wait(forDuration: frameDuration)
+            let setSpriteAction = SKAction.run { [weak self] in
+                self!.currentSpriteID = ids[index]
+            }
             let frameAction = SKAction.sequence([
                 textureAction,
-                waitAction,
-                SKAction.run { [weak self] in
-                    self!.currentSpriteID = ids[index]
-                }
+                setSpriteAction,
+                waitAction
             ])
             actions.append(frameAction)
         }
@@ -255,12 +262,13 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         for (index, texture) in turnTextures.enumerated() {
             let textureAction = SKAction.setTexture(texture)
             let waitAction = SKAction.wait(forDuration: frameDuration)
+            let setSpriteAction = SKAction.run { [weak self] in
+                self!.currentSpriteID = ids[index]
+            }
             let frameAction = SKAction.sequence([
                 textureAction,
-                waitAction,
-                SKAction.run { [weak self] in
-                    self!.currentSpriteID = ids[index]
-                }
+                setSpriteAction,
+                waitAction
             ])
             actions.append(frameAction)
         }
@@ -289,7 +297,10 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
             let texture = self.textures[i]
             let waitAction = SKAction.wait(forDuration: frameDuration)
             let textureAction = SKAction.setTexture(texture)
-            let frameAction = SKAction.sequence([waitAction, textureAction])
+            let setSpriteAction = SKAction.run { [weak self] in
+                self!.currentSpriteID = i
+            }
+            let frameAction = SKAction.sequence([waitAction, textureAction, setSpriteAction])
             actions.append(frameAction)
         }
         
