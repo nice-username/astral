@@ -19,8 +19,7 @@
 		7C1F5C2A29FD316400DB6438 /* astralUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C2929FD316400DB6438 /* astralUITestsLaunchTests.swift */; };
 		7C1F5C3A29FD326E00DB6438 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3929FD326E00DB6438 /* GameScene.sks */; };
 		7C1F5C3C29FD35C800DB6438 /* AstralPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */; };
-		7C1F5C3E29FD36B100DB6438 /* Polarity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3D29FD36B100DB6438 /* Polarity.swift */; };
-		7C1F5C4229FD5A4A00DB6438 /* AstralPlayer.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C4129FD5A4A00DB6438 /* AstralPlayer.atlas */; };
+		7C1F5C3E29FD36B100DB6438 /* AstralPolarity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */; };
 		7C26511C29FF49720013B36E /* Joystick.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C26511B29FF49720013B36E /* Joystick.atlas */; };
 		7C26511F29FF49ED0013B36E /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C26511E29FF49ED0013B36E /* Direction.swift */; };
 		7C26512129FF4A5C0013B36E /* AstralJoystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C26512029FF4A5C0013B36E /* AstralJoystick.swift */; };
@@ -33,6 +32,15 @@
 		7CAA6AFA2A00E5A100EBEA1E /* Particle.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF82A00E5A100EBEA1E /* Particle.xcassets */; };
 		7CAA6AFD2A011D1A00EBEA1E /* TrailingShader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */; };
 		7CAA6AFF2A020C5600EBEA1E /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AFE2A020C5600EBEA1E /* CGPoint.swift */; };
+		7CAA6B012A02492D00EBEA1E /* AstralCollisionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6B002A02492D00EBEA1E /* AstralCollisionHandler.swift */; };
+		7CAA6B032A02599000EBEA1E /* AstralUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6B022A02599000EBEA1E /* AstralUnit.swift */; };
+		7CAA6B092A026C6F00EBEA1E /* AstralPlayer.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6B082A026C6F00EBEA1E /* AstralPlayer.atlas */; };
+		7CAA6B0E2A026EEA00EBEA1E /* AstralEnemy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6B0D2A026EEA00EBEA1E /* AstralEnemy.swift */; };
+		7CAA6B102A02775700EBEA1E /* AstralEnemyType00.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6B0F2A02775700EBEA1E /* AstralEnemyType00.atlas */; };
+		7CAA6B142A027EC100EBEA1E /* colorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6B132A027EC100EBEA1E /* colorShader.fsh */; };
+		7CAA6B172A029A1600EBEA1E /* AstralEnemyType00Hit.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6B162A029A1600EBEA1E /* AstralEnemyType00Hit.atlas */; };
+		7CAA6B192A035D5A00EBEA1E /* impact00.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6B182A035D5A00EBEA1E /* impact00.wav */; };
+		7CAA6B1D2A03643700EBEA1E /* AstralEnemyOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */; };
 		7CC2F9DA29FF68C7003CA700 /* AstralWeapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */; };
 		7CC2F9DC29FF6BDC003CA700 /* AstralWeaponAmmoType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */; };
 		7CC2F9DE29FF75FC003CA700 /* testScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9DD29FF75FC003CA700 /* testScene.swift */; };
@@ -71,8 +79,7 @@
 		7C1F5C2929FD316400DB6438 /* astralUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = astralUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		7C1F5C3929FD326E00DB6438 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPlayer.swift; sourceTree = "<group>"; };
-		7C1F5C3D29FD36B100DB6438 /* Polarity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polarity.swift; sourceTree = "<group>"; };
-		7C1F5C4129FD5A4A00DB6438 /* AstralPlayer.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = AstralPlayer.atlas; sourceTree = "<group>"; };
+		7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPolarity.swift; sourceTree = "<group>"; };
 		7C26511B29FF49720013B36E /* Joystick.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = Joystick.atlas; sourceTree = "<group>"; };
 		7C26511E29FF49ED0013B36E /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		7C26512029FF4A5C0013B36E /* AstralJoystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralJoystick.swift; sourceTree = "<group>"; };
@@ -85,6 +92,15 @@
 		7CAA6AF82A00E5A100EBEA1E /* Particle.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Particle.xcassets; sourceTree = "<group>"; };
 		7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingShader.swift; sourceTree = "<group>"; };
 		7CAA6AFE2A020C5600EBEA1E /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPoint.swift; sourceTree = "<group>"; };
+		7CAA6B002A02492D00EBEA1E /* AstralCollisionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralCollisionHandler.swift; sourceTree = "<group>"; };
+		7CAA6B022A02599000EBEA1E /* AstralUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralUnit.swift; sourceTree = "<group>"; };
+		7CAA6B082A026C6F00EBEA1E /* AstralPlayer.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = AstralPlayer.atlas; sourceTree = "<group>"; };
+		7CAA6B0D2A026EEA00EBEA1E /* AstralEnemy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralEnemy.swift; sourceTree = "<group>"; };
+		7CAA6B0F2A02775700EBEA1E /* AstralEnemyType00.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = AstralEnemyType00.atlas; sourceTree = "<group>"; };
+		7CAA6B132A027EC100EBEA1E /* colorShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = colorShader.fsh; sourceTree = "<group>"; };
+		7CAA6B162A029A1600EBEA1E /* AstralEnemyType00Hit.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = AstralEnemyType00Hit.atlas; sourceTree = "<group>"; };
+		7CAA6B182A035D5A00EBEA1E /* impact00.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = impact00.wav; sourceTree = "<group>"; };
+		7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralEnemyOrder.swift; sourceTree = "<group>"; };
 		7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralWeapon.swift; sourceTree = "<group>"; };
 		7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralWeaponAmmoType.swift; sourceTree = "<group>"; };
 		7CC2F9DD29FF75FC003CA700 /* testScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testScene.swift; sourceTree = "<group>"; };
@@ -118,7 +134,7 @@
 		7C1F5BF729FD316300DB6438 = {
 			isa = PBXGroup;
 			children = (
-				7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */,
+				7CAA6B152A027ECB00EBEA1E /* shaders */,
 				7CAA6AFB2A00E93500EBEA1E /* Particles */,
 				7C26511D29FF49770013B36E /* atlas */,
 				7C1F5C0229FD316300DB6438 /* astral */,
@@ -141,6 +157,7 @@
 		7C1F5C0229FD316300DB6438 /* astral */ = {
 			isa = PBXGroup;
 			children = (
+				7CAA6B1B2A035D8A00EBEA1E /* audio */,
 				7C1F5C3629FD317400DB6438 /* swift */,
 				7C1F5C0729FD316300DB6438 /* Actions.sks */,
 				7C1F5C3929FD326E00DB6438 /* GameScene.sks */,
@@ -175,16 +192,21 @@
 				7CC2F9DD29FF75FC003CA700 /* testScene.swift */,
 				7C1F5C0329FD316300DB6438 /* AppDelegate.swift */,
 				7C1F5C0929FD316300DB6438 /* GameScene.swift */,
+				7CAA6B002A02492D00EBEA1E /* AstralCollisionHandler.swift */,
 				7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */,
 				7C81E0D029FF9D92005FB6EC /* AstralBackground.swift */,
 				7C81E0D229FF9E7E005FB6EC /* AstralBackgroundLayer.swift */,
+				7CAA6B0D2A026EEA00EBEA1E /* AstralEnemy.swift */,
+				7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */,
 				7C26512029FF4A5C0013B36E /* AstralJoystick.swift */,
+				7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */,
 				7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */,
+				7CAA6B022A02599000EBEA1E /* AstralUnit.swift */,
 				7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */,
-				7C1F5C0B29FD316300DB6438 /* GameViewController.swift */,
 				7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */,
+				7C1F5C0B29FD316300DB6438 /* GameViewController.swift */,
+				7CAA6AFC2A011D1A00EBEA1E /* TrailingShader.swift */,
 				7C26511E29FF49ED0013B36E /* Direction.swift */,
-				7C1F5C3D29FD36B100DB6438 /* Polarity.swift */,
 				7CAA6AFE2A020C5600EBEA1E /* CGPoint.swift */,
 			);
 			path = swift;
@@ -193,9 +215,11 @@
 		7C26511D29FF49770013B36E /* atlas */ = {
 			isa = PBXGroup;
 			children = (
+				7CAA6B162A029A1600EBEA1E /* AstralEnemyType00Hit.atlas */,
+				7CAA6B0F2A02775700EBEA1E /* AstralEnemyType00.atlas */,
+				7CAA6B082A026C6F00EBEA1E /* AstralPlayer.atlas */,
 				7C81E0CE29FF9D12005FB6EC /* BackgroundStars.atlas */,
 				7C26511B29FF49720013B36E /* Joystick.atlas */,
-				7C1F5C4129FD5A4A00DB6438 /* AstralPlayer.atlas */,
 			);
 			path = atlas;
 			sourceTree = "<group>";
@@ -207,6 +231,22 @@
 				7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */,
 			);
 			path = Particles;
+			sourceTree = "<group>";
+		};
+		7CAA6B152A027ECB00EBEA1E /* shaders */ = {
+			isa = PBXGroup;
+			children = (
+				7CAA6B132A027EC100EBEA1E /* colorShader.fsh */,
+			);
+			path = shaders;
+			sourceTree = "<group>";
+		};
+		7CAA6B1B2A035D8A00EBEA1E /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				7CAA6B182A035D5A00EBEA1E /* impact00.wav */,
+			);
+			path = audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -313,14 +353,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CAA6B142A027EC100EBEA1E /* colorShader.fsh in Resources */,
 				7C1F5C0F29FD316300DB6438 /* Main.storyboard in Resources */,
-				7C1F5C4229FD5A4A00DB6438 /* AstralPlayer.atlas in Resources */,
+				7CAA6B172A029A1600EBEA1E /* AstralEnemyType00Hit.atlas in Resources */,
 				7C1F5C3A29FD326E00DB6438 /* GameScene.sks in Resources */,
+				7CAA6B192A035D5A00EBEA1E /* impact00.wav in Resources */,
 				7C26511C29FF49720013B36E /* Joystick.atlas in Resources */,
+				7CAA6B102A02775700EBEA1E /* AstralEnemyType00.atlas in Resources */,
 				7CAA6AFA2A00E5A100EBEA1E /* Particle.xcassets in Resources */,
 				7CAA6AF92A00E5A100EBEA1E /* Thruster.sks in Resources */,
 				7C1F5C1129FD316400DB6438 /* Assets.xcassets in Resources */,
 				7C81E0CF29FF9D12005FB6EC /* BackgroundStars.atlas in Resources */,
+				7CAA6B092A026C6F00EBEA1E /* AstralPlayer.atlas in Resources */,
 				7C1F5C1429FD316400DB6438 /* LaunchScreen.storyboard in Resources */,
 				7C1F5C0829FD316300DB6438 /* Actions.sks in Resources */,
 			);
@@ -353,11 +397,15 @@
 				7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */,
 				7C1F5C0A29FD316300DB6438 /* GameScene.swift in Sources */,
 				7C1F5C3C29FD35C800DB6438 /* AstralPlayer.swift in Sources */,
+				7CAA6B032A02599000EBEA1E /* AstralUnit.swift in Sources */,
 				7C1F5C0C29FD316300DB6438 /* GameViewController.swift in Sources */,
-				7C1F5C3E29FD36B100DB6438 /* Polarity.swift in Sources */,
+				7C1F5C3E29FD36B100DB6438 /* AstralPolarity.swift in Sources */,
 				7C1F5C0429FD316300DB6438 /* AppDelegate.swift in Sources */,
+				7CAA6B1D2A03643700EBEA1E /* AstralEnemyOrder.swift in Sources */,
 				7C26511F29FF49ED0013B36E /* Direction.swift in Sources */,
 				7CC2F9DA29FF68C7003CA700 /* AstralWeapon.swift in Sources */,
+				7CAA6B012A02492D00EBEA1E /* AstralCollisionHandler.swift in Sources */,
+				7CAA6B0E2A026EEA00EBEA1E /* AstralEnemy.swift in Sources */,
 				7C26512129FF4A5C0013B36E /* AstralJoystick.swift in Sources */,
 				7CAA6AFF2A020C5600EBEA1E /* CGPoint.swift in Sources */,
 				7C81E0D329FF9E7E005FB6EC /* AstralBackgroundLayer.swift in Sources */,

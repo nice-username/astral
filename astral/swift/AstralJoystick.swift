@@ -49,7 +49,7 @@ class AstralJoystick: SKNode {
     }
     
     
-    private func calculateVelocity(from direction: JoystickDirection) -> CGVector {
+    public func calculateVelocity(from direction: JoystickDirection) -> CGVector {
         let velocityFactor: CGFloat = 1.0
         switch direction {
         case .up:

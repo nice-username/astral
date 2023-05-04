@@ -10,7 +10,7 @@ import SpriteKit
 
 class AstralWeapon: SKNode {
     var gameScene: SKScene!
-    var damage: CGFloat
+    var damage: Int
     var cooldownTime: TimeInterval
     var cooldownTimeToWait: TimeInterval
     var reloadTime: TimeInterval
@@ -26,7 +26,7 @@ class AstralWeapon: SKNode {
     private var lifeTime: TimeInterval = 0.0
     
 
-    init(gameScene: SKScene, name: String, damage: CGFloat, cooldown: TimeInterval, range: CGFloat, ammoType: AstralWeaponAmmoType, reloadTime: TimeInterval, clipSize: Int) {
+    init(gameScene: SKScene, name: String, damage: Int, cooldown: TimeInterval, range: CGFloat, ammoType: AstralWeaponAmmoType, reloadTime: TimeInterval, clipSize: Int) {
         self.gameScene = gameScene
         self.damage = damage
         self.cooldownTime = cooldown
@@ -49,15 +49,18 @@ class AstralWeapon: SKNode {
     // Shoot the weapon
     // Create associated sprites and sounds
     //
-    func fire(player: AstralPlayer) {
+    func fire(player: SKSpriteNode) {
         if self.canFire() {
-            let spawnPt = CGPoint(x: player.position.x, y: player.position.y)
-            // let currentTime = CACurrentMediaTime()
-            let bullet = AstralWeaponAmmoType.singleShot.spawnBullet(at: spawnPt, target: spawnPt)
+            let randomOffset = CGFloat(Int(arc4random_uniform(4)) + 0)
+            let spawnPt1 = CGPoint(x: player.position.x - 24 - randomOffset, y: player.position.y)
+            let spawnPt2 = CGPoint(x: player.position.x + 24 + randomOffset, y: player.position.y)
+            let bullet  = AstralWeaponAmmoType.singleShot.spawnBullet(at: spawnPt1, target: spawnPt1)
+            let bullet2 = AstralWeaponAmmoType.singleShot.spawnBullet(at: spawnPt2, target: spawnPt1)
             
             // Configure bullet properties here using the weapon's settings and target position
             // ...
             self.gameScene.addChild(bullet)
+            self.gameScene.addChild(bullet2)
             self.cooldownTimeToWait = self.cooldownTime
             self.isCoolingDown = true
         }
@@ -74,19 +77,6 @@ class AstralWeapon: SKNode {
         } else {
             self.cooldownTimeToWait -= deltaTime
         }
-        
-        for bullet in self.children {
-            if let bullet = bullet as? SKSpriteNode {
-                if bullet.position.distanceTo(self.position) > self.ammoType.range {
-                    bullet.removeFromParent()
-                    continue
-                }
-                // apply homing behavior if enabled
-                if self.ammoType.homing {
-                    // ...
-                }
-            }
-        }
     }
     
     
@@ -94,7 +84,7 @@ class AstralWeapon: SKNode {
     //
     // Are we allowed to shoot?
     //
-    private func canFire() -> Bool {
+    public func canFire() -> Bool {
         return !self.isReloading && !self.isCoolingDown
     }
 

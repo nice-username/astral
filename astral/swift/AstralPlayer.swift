@@ -9,26 +9,18 @@ import Foundation
 import SpriteKit
 import GameplayKit
 
-class AstralPlayer: SKSpriteNode {
+class AstralPlayer: SKSpriteNode, AstralUnit {
+    var health: Int
+    var maxHealth: Int
+    var movementSpeed: CGFloat = 8.0
+    var textures: [SKTexture] = []
 
     // Properties
-    var isAbsorbing: Bool = false
-    var polarity: Polarity = .white
-    private var textures: [SKTexture] = []
+    var polarity: AstralPolarity = .white
     private var touchStartPosition: CGPoint?
     private var targetRestingFrame: Int = 6
-    private var weapons: [AstralWeapon] = []
+    public var weapons: [AstralWeapon] = []
 
-    
-    // Weapon properties
-    // var currentWeapon: WeaponType = .Basic
-    var hasSpreadShot: Bool = false
-    var hasPiercingShot: Bool = false
-    
-    // Power-up properties
-    var hasShield: Bool = false
-    var shieldTimer: TimeInterval = 0
-    
     // Thruster particles
     var particleSystem: AstralParticleSystem?
     
@@ -38,6 +30,8 @@ class AstralPlayer: SKSpriteNode {
     
     // Initializes the player sprite and sets its properties
     init(scene: SKScene) {
+        self.maxHealth = 1
+        self.health = 1
         let initialTexture = SKTexture(imageNamed: "frame06.png")
         super.init(texture: initialTexture, color: .clear, size: initialTexture.size())
         
@@ -45,7 +39,7 @@ class AstralPlayer: SKSpriteNode {
         self.zPosition = 2
         self.physicsBody = SKPhysicsBody(circleOfRadius: size.width / 2)
         physicsBody?.categoryBitMask = AstralPhysicsCategory.player
-        physicsBody?.collisionBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary
+        physicsBody?.collisionBitMask = AstralPhysicsCategory.boundary | AstralPhysicsCategory.obstacle
         physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary | AstralPhysicsCategory.bullet
         physicsBody?.linearDamping = 0.5
         physicsBody?.angularDamping = 1.0
@@ -64,18 +58,14 @@ class AstralPlayer: SKSpriteNode {
         self.particleSystem?.zPosition = 1
         self.addChild(particleSystem!)
         
-        // Trail shader
-        // let trailNode = TrailShaderNode(trailLength: 20.0, color: .white)
-        // self.shader = trailNode
-        
         // Weapon 01
         let defaultAmmo   = AstralWeaponAmmoType.singleShot
-        let defaultWeapon = AstralWeapon(gameScene: scene, name: "Double shot", damage: 4.0, cooldown: 0.2, range: 300, ammoType: defaultAmmo, reloadTime: 4.0, clipSize: 50)
+        let defaultWeapon = AstralWeapon(gameScene: scene, name: "Double shot", damage: 1, cooldown: 0.08, range: 300, ammoType: defaultAmmo, reloadTime: 4.0, clipSize: 50)
         self.weapons.append(defaultWeapon)
         
         // Scaling
-        self.xScale = 2
-        self.yScale = 2
+        self.xScale = 1.5
+        self.yScale = 1.5
         self.texture?.filteringMode = .nearest
         
         // Add to scene
@@ -104,7 +94,7 @@ class AstralPlayer: SKSpriteNode {
     //
     //
     func moveBy(_ vector: CGVector) {
-        let movementSpeed: CGFloat = 8.0
+        // print("dx: \(vector.dx), dy: \(vector.dy)")
         let newPosition = CGPoint(x: self.position.x + vector.dx * movementSpeed, y: self.position.y + vector.dy * movementSpeed)
         self.position = newPosition
     }
@@ -114,7 +104,7 @@ class AstralPlayer: SKSpriteNode {
     //
     // Set the player sprite to one of its textures immediately
     //
-    public func setPlayerSprite(inputValue: CGFloat) {
+    public func setSprite(inputValue: CGFloat) {
         self.removeAction(forKey: "returnToRest")
         let index = Int(round(inputValue * 5)) + 6
         if index >= 0 && index < textures.count {
@@ -123,6 +113,12 @@ class AstralPlayer: SKSpriteNode {
         }
     }
 
+    
+    
+    
+    
+    
+    
     
     
     //
@@ -151,12 +147,12 @@ class AstralPlayer: SKSpriteNode {
         self.run(sequence,withKey: "returnToRest")
     }
 
-
     
+    // Called every frame to update the player's position, weapons and thruster jet animation
+    func update(currentTime: TimeInterval, deltaTime: TimeInterval) {
+        // Unused
+    }
     
-    
-    
-    // Called every frame to update the player's position and check for collisions with other objects
     func update(joystick: AstralJoystick, currentTime: TimeInterval, deltaTime: TimeInterval) {
         // Update position and check for collisions
         if joystick.velocity != nil {

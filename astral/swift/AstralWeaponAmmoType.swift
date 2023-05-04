@@ -55,38 +55,47 @@ class AstralWeaponAmmoType: SKNode {
     }
     
     func spawnBullet(at point: CGPoint, target: CGPoint) -> SKSpriteNode {
+        let bullet = self.initBulletSprite(at: point)
+        self.initBulletPhysics(bullet: bullet)
+        bullet.yScale = Double.random(in: 2.0...4.0)
+
+        // Calculate the angle and direction vector
+        let angle        = CGFloat.pi / 2
+        let direction    = CGVector(dx: cos(angle), dy: sin(angle))
+        let randomOffset = CGFloat(Int(arc4random_uniform(500)) + 100)
+        let speed        = self.moveSpeed + randomOffset
+        bullet.physicsBody?.velocity = CGVector(dx: direction.dx * speed, dy: direction.dy * speed)
+
+        return bullet
+    }
+    
+    private func initBulletSprite(at point: CGPoint) -> SKSpriteNode {
         let bullet = SKSpriteNode(imageNamed: self.spriteFilename)
         bullet.zPosition = 3
         bullet.xScale = 2.0
         bullet.yScale = 2.0
         bullet.texture?.filteringMode = .nearest
         bullet.position = point
-        
-        // Configure physics properties
+        return bullet
+    }
+    
+    private func initBulletPhysics(bullet: SKSpriteNode) {
         bullet.physicsBody = SKPhysicsBody(circleOfRadius: bullet.size.width / 2)
         bullet.physicsBody?.categoryBitMask = AstralPhysicsCategory.bullet
         bullet.physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.destructible | AstralPhysicsCategory.obstacle
-        bullet.physicsBody?.collisionBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.destructible | AstralPhysicsCategory.obstacle
+        bullet.physicsBody?.collisionBitMask = AstralPhysicsCategory.none
         bullet.physicsBody?.usesPreciseCollisionDetection = true
         bullet.physicsBody?.friction = 0
         bullet.physicsBody?.linearDamping = 0.0
         bullet.physicsBody?.angularDamping = 0.0
-
-        
-        // Calculate the angle and direction vector
-        let angle = CGFloat.pi / 2 // 90 degrees (upwards)
-        let direction = CGVector(dx: cos(angle), dy: sin(angle))
-        bullet.physicsBody?.velocity = CGVector(dx: direction.dx * self.moveSpeed, dy: direction.dy * self.moveSpeed)
-
-        return bullet
     }
     
     static var singleShot: AstralWeaponAmmoType {
         return AstralWeaponAmmoType(name: "Double Shot",
-                        spriteFilename: "Bullet00",
+                        spriteFilename: "Bullet01",
                         damage: 4,
-                        moveSpeed: 400,
-                        range: 50,
+                        moveSpeed: 800,
+                        range: 0,
                         spread: 0,
                         homing: false,
                         splash: false)

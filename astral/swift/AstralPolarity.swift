@@ -1,5 +1,5 @@
 //
-//  Polarity.swift
+//  AstralPolarity.swift
 //  astral
 //
 //  Created by Joseph Haygood on 4/29/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Polarity {
+enum AstralPolarity {
     case white
     case black
 }

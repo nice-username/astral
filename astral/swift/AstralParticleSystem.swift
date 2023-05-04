@@ -12,7 +12,7 @@ class AstralParticleSystem: SKNode {
 
     private let emitterNode: SKEmitterNode
     
-    init(player: AstralPlayer) {
+    init(player: SKSpriteNode) {
         self.emitterNode = SKEmitterNode(fileNamed: "Thruster")!
         self.emitterNode.particleTexture?.filteringMode = .nearest
         //self.emitterNode.particlePositionRange = CGVector(dx: player.size.width / 2, dy: 0)
