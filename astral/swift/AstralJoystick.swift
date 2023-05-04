@@ -26,7 +26,9 @@ class AstralJoystick: SKNode {
         self.joystick.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
         self.loadTextures()
-        self.isUserInteractionEnabled = true
+        self.xScale = 2.0
+        self.yScale = 2.0
+        self.alpha  = 0
         self.addChild(joystick)
         
         self.feedback.prepare()

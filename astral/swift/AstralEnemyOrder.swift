@@ -13,8 +13,9 @@ struct AstralEnemyOrder {
         case turnRight(TimeInterval)
         case turnLeft(TimeInterval)
         case turnToBase(TimeInterval)
+        case rest(TimeInterval)
         case stop
-        case shoot(TimeInterval)
+        case shoot
     }
     
     let type: AstralEnemyActionType

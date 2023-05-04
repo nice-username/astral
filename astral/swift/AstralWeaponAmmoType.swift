@@ -54,20 +54,30 @@ class AstralWeaponAmmoType: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func spawnBullet(at point: CGPoint, target: CGPoint) -> SKSpriteNode {
+    
+    func spawnBullet(at point: CGPoint, direction: CGFloat, collider: UInt32) -> SKSpriteNode {
         let bullet = self.initBulletSprite(at: point)
-        self.initBulletPhysics(bullet: bullet)
+        self.initBulletPhysics(bullet: bullet, collider: collider)
+        
+        // Stretch a random amount verticall
         bullet.yScale = Double.random(in: 2.0...4.0)
 
-        // Calculate the angle and direction vector
-        let angle        = CGFloat.pi / 2
-        let direction    = CGVector(dx: cos(angle), dy: sin(angle))
+        // Convert the angle from degrees to radians
+        let angleInRadians = direction * CGFloat.pi / 180.0
+
+        // Calculate the direction vector
+        let directionVector = CGVector(dx: cos(angleInRadians), dy: sin(angleInRadians))
+
+        // Calculate the speed with a random offset
         let randomOffset = CGFloat(Int(arc4random_uniform(500)) + 100)
         let speed        = self.moveSpeed + randomOffset
-        bullet.physicsBody?.velocity = CGVector(dx: direction.dx * speed, dy: direction.dy * speed)
+
+        // Set the velocity of the bullet
+        bullet.physicsBody?.velocity = CGVector(dx: directionVector.dx * speed, dy: directionVector.dy * speed)
 
         return bullet
     }
+    
     
     private func initBulletSprite(at point: CGPoint) -> SKSpriteNode {
         let bullet = SKSpriteNode(imageNamed: self.spriteFilename)
@@ -79,9 +89,9 @@ class AstralWeaponAmmoType: SKNode {
         return bullet
     }
     
-    private func initBulletPhysics(bullet: SKSpriteNode) {
+    private func initBulletPhysics(bullet: SKSpriteNode, collider: UInt32) {
         bullet.physicsBody = SKPhysicsBody(circleOfRadius: bullet.size.width / 2)
-        bullet.physicsBody?.categoryBitMask = AstralPhysicsCategory.bullet
+        bullet.physicsBody?.categoryBitMask = collider
         bullet.physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.destructible | AstralPhysicsCategory.obstacle
         bullet.physicsBody?.collisionBitMask = AstralPhysicsCategory.none
         bullet.physicsBody?.usesPreciseCollisionDetection = true

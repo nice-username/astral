@@ -35,9 +35,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.collisionHandler?.player = self.player
         
         joystick = AstralJoystick()
-        joystick.position = CGPoint(x: frame.minX + (76 * 2.5), y: frame.minY + (76 * 1.5))
-        joystick.xScale = 3.0
-        joystick.yScale = 3.0
         self.addChild(joystick)
         
         fireButton = SKSpriteNode(imageNamed: "weapon_use_button")
@@ -61,6 +58,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         
         self.enemy = AstralEnemy(scene: self, maxHP: 16)
+        
+        
+        // Init audio .. ?
+        let audio1 = SKAction.playSoundFileNamed("impact00",waitForCompletion: false)
+        self.run(audio1)
     }
     
     
@@ -70,7 +72,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let body = SKPhysicsBody(edgeLoopFrom: bounds)
         body.categoryBitMask = AstralPhysicsCategory.boundary
         body.collisionBitMask = AstralPhysicsCategory.boundary
-        body.contactTestBitMask = AstralPhysicsCategory.bullet | AstralPhysicsCategory.laser | AstralPhysicsCategory.enemy | AstralPhysicsCategory.player
+        body.contactTestBitMask = AstralPhysicsCategory.bulletPlayer | AstralPhysicsCategory.bulletEnemy | AstralPhysicsCategory.enemy | AstralPhysicsCategory.player
         
         let hitbox = SKShapeNode(rect: bounds)
         hitbox.lineWidth = 5.0
@@ -162,7 +164,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Update entities
         if self.holdingDownFire && self.player!.weapons[0].canFire() {
-            self.player!.weapons[0].fire(player: self.player!)
+            self.player!.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
         }
         self.parallaxBg.update(dt, joystickDirection: self.joystick.direction)
         self.player?.update(joystick: self.joystick, currentTime: currentTime, deltaTime: dt)

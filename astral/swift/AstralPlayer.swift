@@ -40,7 +40,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         self.physicsBody = SKPhysicsBody(circleOfRadius: size.width / 2)
         physicsBody?.categoryBitMask = AstralPhysicsCategory.player
         physicsBody?.collisionBitMask = AstralPhysicsCategory.boundary | AstralPhysicsCategory.obstacle
-        physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary | AstralPhysicsCategory.bullet
+        physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary | AstralPhysicsCategory.bulletEnemy
         physicsBody?.linearDamping = 0.5
         physicsBody?.angularDamping = 1.0
         physicsBody?.allowsRotation = false
@@ -60,7 +60,15 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         
         // Weapon 01
         let defaultAmmo   = AstralWeaponAmmoType.singleShot
-        let defaultWeapon = AstralWeapon(gameScene: scene, name: "Double shot", damage: 1, cooldown: 0.08, range: 300, ammoType: defaultAmmo, reloadTime: 4.0, clipSize: 50)
+        let defaultWeapon = AstralWeapon(gameScene: scene,
+                                         name: "Double shot",
+                                         damage: 1,
+                                         direction: 90.0,
+                                         cooldown: 0.08,
+                                         range: 300,
+                                         ammoType: defaultAmmo,
+                                         reloadTime: 4.0,
+                                         clipSize: 50 )
         self.weapons.append(defaultWeapon)
         
         // Scaling
@@ -177,13 +185,19 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     // Fires the player's current weapon, based on the current polarity and any power-ups that have been collected
     func fireWeapon() {
         // Fire the player's current weapon and apply any relevant power-up effects
-        self.weapons[0].fire(player: self)
+        self.weapons[0].fire(unit: self, collider: AstralPhysicsCategory.bulletPlayer)
     }
     
     // Handles the player picking up power-ups, and updates the player's weapons or other properties as appropriate
     // func collectPowerUp(_ powerUp: PowerUpType) {
         // Handle the power-up and apply any relevant effects to the player's properties
     // }
+    
+    // Ouch!
+    func damage(amount: Int = 1) {
+        print("You're fucking dead.")
+    }
+    
     
     // Upgrades the player's current weapon, increasing its power or adding new capabilities
     func upgradeWeapon() {

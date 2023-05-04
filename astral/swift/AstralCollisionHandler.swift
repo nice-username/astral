@@ -17,19 +17,24 @@ class AstralCollisionHandler {
         let cat2 = contact.bodyB.categoryBitMask
         
         // Bullet vs. screen boundaries
-        if cat1 == AstralPhysicsCategory.bullet && cat2 == AstralPhysicsCategory.boundary {
+        if cat1 == AstralPhysicsCategory.bulletPlayer && cat2 == AstralPhysicsCategory.boundary {
             contact.bodyA.node?.run(self.removeAction)
-        } else if cat1 == AstralPhysicsCategory.boundary && cat2 == AstralPhysicsCategory.bullet {
+        } else if cat1 == AstralPhysicsCategory.boundary && cat2 == AstralPhysicsCategory.bulletPlayer {
+            contact.bodyB.node?.run(self.removeAction)
+        }
+        if cat1 == AstralPhysicsCategory.bulletEnemy && cat2 == AstralPhysicsCategory.boundary {
+            contact.bodyA.node?.run(self.removeAction)
+        } else if cat1 == AstralPhysicsCategory.boundary && cat2 == AstralPhysicsCategory.bulletEnemy {
             contact.bodyB.node?.run(self.removeAction)
         }
         
         // Bullet vs. enemy
-        if cat1 == AstralPhysicsCategory.bullet && cat2 == AstralPhysicsCategory.enemy {
+        if cat1 == AstralPhysicsCategory.bulletPlayer && cat2 == AstralPhysicsCategory.enemy {
             contact.bodyA.node?.removeFromParent()
             if let enemyNode = contact.bodyB.node as? AstralEnemy {
                 enemyNode.takeDamage()
             }
-        } else if cat1 == AstralPhysicsCategory.enemy && cat2 == AstralPhysicsCategory.bullet {
+        } else if cat1 == AstralPhysicsCategory.enemy && cat2 == AstralPhysicsCategory.bulletPlayer {
             var dmg = player!.weapons[0].damage
             if let enemyNode = contact.bodyA.node as? AstralEnemy {
                 enemyNode.takeDamage(amount: dmg)
@@ -38,19 +43,24 @@ class AstralCollisionHandler {
             }
             contact.bodyB.node?.removeFromParent()
         }
+        
+        
+        // Bullet vs. Player
+        if cat1 == AstralPhysicsCategory.bulletEnemy && cat2 == AstralPhysicsCategory.player {
+            contact.bodyA.node?.removeFromParent()
+            if let player = contact.bodyB.node as? AstralPlayer {
+                player.damage()
+            }
+        } else if cat1 == AstralPhysicsCategory.player && cat2 == AstralPhysicsCategory.bulletEnemy {
+            if let player = contact.bodyA.node as? AstralPlayer {
+                player.damage()
+                let impactSound = SKAction.playSoundFileNamed("impact00", waitForCompletion: false)
+                player.run(impactSound)
+            }
+            contact.bodyB.node?.removeFromParent()
+        }
     }
     
-    
-    
-    private func handleEnemyCollision(contact: SKPhysicsContact) {
-        // Handle enemy collision with other objects
-        // ...
-    }
-    
-    private func handlePlayerCollision(contact: SKPhysicsContact) {
-        // Handle player collision with other objects
-        // ...
-    }
     
 }
 
