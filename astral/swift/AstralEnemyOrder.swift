@@ -15,10 +15,13 @@ struct AstralEnemyOrder {
         case turnToBase(TimeInterval)
         case rest(TimeInterval)
         case stop
-        case shoot
+        case fire
+        case fireStop
+        case speedUp(Double)
+        case speedDown(Double)
     }
     
     let type: AstralEnemyActionType
     let duration: TimeInterval
-    let completion: (() -> Void)? = nil
+    var completion: (() -> Void)? = nil
 }

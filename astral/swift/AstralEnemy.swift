@@ -23,7 +23,10 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     var currentSpriteID: Int = 6
     var weapons: [AstralWeapon] = []
     var orders: [AstralEnemyOrder] = []
+    var isShooting: Bool = false
     let joystick: AstralJoystick = AstralJoystick()
+    var speedUpChangeTimeLeft: Double = 0.0
+    var speedDownChangeTimeLeft: Double = 0.0
     private var targetRestingFrame: Int = 6
     
     // AstralEnemy-specific properties
@@ -84,18 +87,23 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         self.position.y += 900
         scene.addChild(self)
         
-        let exampleOrders : [AstralEnemyOrder] = [
-            AstralEnemyOrder(type: .move(.down),        duration: 1.6),
+        let exampleOrders : [AstralEnemyOrder] = [  
+            AstralEnemyOrder(type: .move(.down),        duration: 1.2),
             AstralEnemyOrder(type: .move(.downLeft),    duration: 0),
-            AstralEnemyOrder(type: .turnLeft(0.5),      duration: 0.6),
-            AstralEnemyOrder(type: .rest(0.5),          duration: 0.0),
-            AstralEnemyOrder(type: .shoot,              duration: 0.0),
-            AstralEnemyOrder(type: .shoot,              duration: 0.12),
-            AstralEnemyOrder(type: .shoot,              duration: 0.12),
-            AstralEnemyOrder(type: .shoot,              duration: 0.12),
-            AstralEnemyOrder(type: .stop,               duration: 0.14),
-            AstralEnemyOrder(type: .move(.right),       duration: 0.5),
-            AstralEnemyOrder(type: .turnRight(0.5),     duration: 1.0),
+            AstralEnemyOrder(type: .turnLeft(0.75),     duration: 0.6),
+            AstralEnemyOrder(type: .rest(0.75),         duration: 0.0),
+            AstralEnemyOrder(type: .fire,               duration: 0.36),
+            AstralEnemyOrder(type: .fireStop,           duration: 0.14),
+            AstralEnemyOrder(type: .stop,               duration: 0.12),
+            AstralEnemyOrder(type: .move(.right),       duration: 0.0),
+            AstralEnemyOrder(type: .turnRight(1.5),     duration: 1.25),
+            AstralEnemyOrder(type: .stop,               duration: 0.0),
+            AstralEnemyOrder(type: .rest(0.75),         duration: 0.75),
+            AstralEnemyOrder(type: .move(.upLeft),      duration: 0.0),
+            AstralEnemyOrder(type: .turnLeft(0.50),     duration: 0.25),
+            AstralEnemyOrder(type: .fire,               duration: 0.50),
+            AstralEnemyOrder(type: .fireStop,           duration: 0.0),
+            AstralEnemyOrder(type: .rest(0.75),         duration: 0.5),
             AstralEnemyOrder(type: .stop,               duration: 1.0)
         ]
         self.orders = exampleOrders
@@ -117,6 +125,17 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         }
         for weapon in self.weapons {
             weapon.update(currentTime, deltaTime)
+        }
+        if self.isShooting {
+            self.fireWeapon()
+        }
+        if self.speedUpChangeTimeLeft > 0 {
+            self.speedUpChangeTimeLeft -= deltaTime
+            self.movementSpeed += 0.02
+        }
+        if self.speedDownChangeTimeLeft > 0 {
+            self.speedDownChangeTimeLeft -= deltaTime
+            self.movementSpeed -= 0.02
         }
     }
     
@@ -147,7 +166,6 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     
     func moveBy(_ vector: CGVector) {
         // Unused
-        print("What?")
     }
     
     func moveBy(direction: JoystickDirection) {
@@ -164,11 +182,12 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         
         hitSprite.zPosition = 3
         let dy = Double.random(in: 12...24)
+        let dx = Double.random(in: -12...12)
         let fadeOutTime = Double.random(in: 0.15...0.4)
         hitSprite.alpha = Double.random(in: 0.2...0.4)
         let action = SKAction.sequence([
-            SKAction.move(by: CGVector(dx: 0.0, dy: dy), duration: fadeOutTime),
-            SKAction.fadeOut(withDuration: 0.2),
+            SKAction.move(by: CGVector(dx: dx, dy: dy), duration: 0.2),
+            SKAction.fadeOut(withDuration: fadeOutTime),
             SKAction.removeFromParent()
         ])
         self.addChild(hitSprite)
@@ -321,7 +340,6 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         for order in self.orders {
             DispatchQueue.main.asyncAfter(deadline: .now() + time) { [weak self] in
                 switch order.type {
-                    
                 case .move(let direction):
                     self!.joystick.direction = direction
                     
@@ -331,19 +349,29 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
                 case .turnLeft(let duration):
                     self!.turnLeft(over: duration)
                     
-                case .shoot:
-                    print("shot")
-                    self!.fireWeapon()
+                case .fire:
+                    self!.isShooting = true
+                    
+                case .fireStop:
+                    self!.isShooting = false
                     
                 case .stop:
                     self!.stop()
                 
                 case .rest(let duration):
                     self!.animateToRestingPosition(duration: duration)
+                    
+                case .speedUp(let duration):
+                    self!.speedUpChangeTimeLeft = duration
+                    
+                case .speedDown(let duration):
+                    self!.speedDownChangeTimeLeft = duration
                 
                 default:
                     break
                 }
+                
+                order.completion?()
             }
             time += order.duration
         }

@@ -21,6 +21,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var fireButton : SKSpriteNode!
     private var holdingDownFire : Bool = false
     private var collisionHandler : AstralCollisionHandler?
+    var enemies: [AstralEnemy] = []
     var enemy: AstralEnemy?
     var fireTouch: UITouch?
     var joystickTouch: UITouch?
@@ -57,12 +58,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.createBoundaries()
         
         
-        self.enemy = AstralEnemy(scene: self, maxHP: 80)
+        self.enemies.append(AstralEnemy(scene: self, maxHP: 20))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let newEnemy = AstralEnemy(scene: self, maxHP: 20)
+            newEnemy.position.y = 1000
+            self.enemies.append(newEnemy)
+        }
+        
         
         
         // Init audio .. ?
-        let audio1 = SKAction.playSoundFileNamed("impact00",waitForCompletion: false)
-        self.run(audio1)
+        // let audio1 = SKAction.playSoundFileNamed("impact00",waitForCompletion: false)
     }
     
     
@@ -99,6 +105,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
         var hitButton = false
         for t in touches {
             let point = t.location(in: self)
@@ -106,8 +113,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 hitButton = true
                 self.fireTouch = t
                 self.holdingDownFire = true
-            } else {
-                guard let touch = touches.first else { return }
+            } else if self.joystickTouch == nil {
                 self.joystickTouch = t
                 self.touchStartPosition = point
             }
@@ -116,13 +122,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if !hitButton {
             self.joystick.touchesBegan(touches, with: event)
         } else {
-            self.player?.fireWeapon()
+            self.player?.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
         }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             if touch == self.fireTouch {
+                print("You moved your finger while holding the FIRE button.")
                 // The touch is on the fire button
             } else if touch == self.joystickTouch {
                 self.touchMoved(toPoint: touch.location(in: self))
@@ -138,10 +145,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // player?.releaseFireButton()
                 self.fireTouch = nil
                 self.holdingDownFire = false
+                self.player?.weapons[0].isWarmingUp = false
             } else if touch == self.joystickTouch {
                 let animationDuration: TimeInterval = 0.4141 // Change this value to adjust the total animation duration
                 self.player!.animateToRestingPosition(duration: animationDuration)
-                touchStartPosition = nil
+                self.touchStartPosition = nil
                 self.joystickTouch = nil
                 self.joystick.touchesEnded(touches, with: event)
             }
@@ -164,11 +172,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Update entities
         if self.holdingDownFire && self.player!.weapons[0].canFire() {
-            self.player!.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
+            // self.player!.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
         }
         self.parallaxBg.update(dt, joystickDirection: self.joystick.direction)
-        self.player?.update(joystick: self.joystick, currentTime: currentTime, deltaTime: dt)
-        self.enemy?.update(currentTime: currentTime, deltaTime: dt)
+        self.player?.update(joystick: self.joystick, currentTime: currentTime, deltaTime: dt, holdingFire: self.holdingDownFire)
+        
+        
+        for e in enemies {
+            e.update(currentTime: currentTime, deltaTime: dt)
+        }
         
         if let normalizedVelocity = joystick.normalizedVelocity, let player = player {
             player.moveBy(normalizedVelocity)

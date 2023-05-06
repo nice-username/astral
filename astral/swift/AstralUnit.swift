@@ -20,6 +20,5 @@ protocol AstralUnit {
     var weapons: [AstralWeapon] { get set }
 
     func update(currentTime: TimeInterval, deltaTime: TimeInterval)
-    func fireWeapon()
     func moveBy(_ vector: CGVector)
 }

@@ -14,67 +14,34 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     var maxHealth: Int
     var movementSpeed: CGFloat = 8.0
     var textures: [SKTexture] = []
-
-    // Properties
     var polarity: AstralPolarity = .white
-    private var touchStartPosition: CGPoint?
     private var targetRestingFrame: Int = 6
+    private var initialScene: SKScene
     public var weapons: [AstralWeapon] = []
 
     // Thruster particles
     var particleSystem: AstralParticleSystem?
-    
-    // debug
     var hitbox : SKShapeNode?
     
-    
+    //
     // Initializes the player sprite and sets its properties
+    //
     init(scene: SKScene) {
         self.maxHealth = 1
         self.health = 1
+        self.initialScene = scene
         let initialTexture = SKTexture(imageNamed: "frame06.png")
         super.init(texture: initialTexture, color: .clear, size: initialTexture.size())
         
-        self.name = "player"
-        self.zPosition = 2
-        self.physicsBody = SKPhysicsBody(circleOfRadius: size.width / 2)
-        physicsBody?.categoryBitMask = AstralPhysicsCategory.player
-        physicsBody?.collisionBitMask = AstralPhysicsCategory.boundary | AstralPhysicsCategory.obstacle
-        physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary | AstralPhysicsCategory.bulletEnemy
-        physicsBody?.linearDamping = 0.5
-        physicsBody?.angularDamping = 1.0
-        physicsBody?.allowsRotation = false
-        physicsBody?.affectedByGravity = false
-        
-        
-        self.hitbox = SKShapeNode(circleOfRadius: self.size.width / 2)
-        // self.addChild(self.hitbox!)
-        
-        // Set initial position, size, and other properties
-        self.loadTextures()
-        
-        // Initialize particle system
-        self.particleSystem = AstralParticleSystem(player: self)
-        self.particleSystem?.zPosition = 1
-        self.addChild(particleSystem!)
-        
-        // Weapon 01
-        let defaultAmmo   = AstralWeaponAmmoType.singleShot
-        let defaultWeapon = AstralWeapon(gameScene: scene,
-                                         name: "Double shot",
-                                         damage: 1,
-                                         direction: 90.0,
-                                         cooldown: 0.08,
-                                         range: 300,
-                                         ammoType: defaultAmmo,
-                                         reloadTime: 4.0,
-                                         clipSize: 50 )
-        self.weapons.append(defaultWeapon)
-        
-        // Scaling
-        self.xScale = 1.5
-        self.yScale = 1.5
+        self.name                   = "player"
+        self.zPosition              = 2
+        self.xScale                 = 1.5
+        self.yScale                 = 1.5
         self.texture?.filteringMode = .nearest
+        self.initPhysics()
+        self.initParticles()
+        self.loadTextures()
+        self.initWeapon()
         
         // Add to scene
         scene.addChild(self)
@@ -83,6 +50,60 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
+    
+    
+    //
+    // Init collision
+    //
+    private func initPhysics() {
+        self.physicsBody = SKPhysicsBody(circleOfRadius: size.width / 2)
+        physicsBody?.categoryBitMask = AstralPhysicsCategory.player
+        physicsBody?.collisionBitMask = AstralPhysicsCategory.boundary | AstralPhysicsCategory.obstacle
+        physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary | AstralPhysicsCategory.bulletEnemy
+        physicsBody?.allowsRotation = false
+        physicsBody?.affectedByGravity = false
+    }
+    
+    
+    
+    
+    
+    //
+    // Init weapon
+    //
+    private func initWeapon() {
+        // Default weapon
+        // Laser beam weapon
+        let laserAmmo = AstralWeaponAmmoType.beamWhite
+        let defaultWeapon = AstralWeapon(gameScene: self.initialScene,
+                                         name: "",
+                                         damage: 1,
+                                         direction: 90.0,
+                                         cooldown: 5.0,
+                                         range: 0,
+                                         ammoType: laserAmmo,
+                                         reloadTime: 6.0,
+                                         clipSize: 0,
+                                         isBeam: true)
+        self.weapons.append(defaultWeapon)
+    }
+    
+    
+    
+    
+    //
+    // Draw hitbox sprite
+    //
+    public func showHitbox() {
+        self.hitbox = SKShapeNode(circleOfRadius: self.size.width / 2)
+        self.addChild(self.hitbox!)
+    }
+    
+    
+    
+    
     
     //
     // Load sprites
@@ -96,6 +117,21 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
             textures.append(texture)
         }
     }
+    
+    
+    
+    
+    
+    //
+    // Init particles
+    //
+    private func initParticles() {
+        self.particleSystem = AstralParticleSystem(player: self)
+        self.particleSystem?.zPosition = 1
+        self.addChild(particleSystem!)
+    }
+    
+    
     
     
     //
@@ -161,14 +197,17 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         // Unused
     }
     
-    func update(joystick: AstralJoystick, currentTime: TimeInterval, deltaTime: TimeInterval) {
+    func update(joystick: AstralJoystick, currentTime: TimeInterval, deltaTime: TimeInterval, holdingFire: Bool = false) {
         // Update position and check for collisions
         if joystick.velocity != nil {
             self.moveBy(joystick.velocity!)
         }
         self.particleSystem!.update(player: self, joystickDirection: joystick.direction)
         for weapon in self.weapons {
-            weapon.update(currentTime, deltaTime)
+            weapon.update(currentTime, deltaTime, holdingFire: holdingFire)
+            if !holdingFire {
+                weapon.stopFiring()
+            }
         }
     }
     
@@ -180,12 +219,6 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     // Switches the player's polarity, allowing them to absorb or dodge bullets depending on the current polarity
     func switchPolarity() {
         // Switch the player's polarity and update any relevant properties
-    }
-    
-    // Fires the player's current weapon, based on the current polarity and any power-ups that have been collected
-    func fireWeapon() {
-        // Fire the player's current weapon and apply any relevant power-up effects
-        self.weapons[0].fire(unit: self, collider: AstralPhysicsCategory.bulletPlayer)
     }
     
     // Handles the player picking up power-ups, and updates the player's weapons or other properties as appropriate

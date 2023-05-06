@@ -29,16 +29,21 @@ enum AmmoType: Int {
 */
 
 class AstralWeaponAmmoType: SKNode {
-    let spriteFilename: String
+    let spriteFilename: String?
     let damage: CGFloat
     let moveSpeed: CGFloat
     let range: CGFloat
     let spread: CGFloat
     let homing: Bool
     let splash: Bool
+    let warmUpAtlasName: String?
+    let firingAtlasName: String?
+    var warmUpTextures: [SKTexture] = []
+    var firingTextures: [SKTexture] = []
+    var warmUpAnim: SKAction?
+    var firingAnim: SKAction?
     
-    
-    init(name: String, spriteFilename: String, damage: CGFloat, moveSpeed: CGFloat, range: CGFloat, spread: CGFloat, homing: Bool, splash: Bool) {
+    init(name: String, spriteFilename: String? = nil, warmUpAtlasName: String? = nil, firingAtlasName: String? = nil, damage: CGFloat, moveSpeed: CGFloat, range: CGFloat, spread: CGFloat, homing: Bool, splash: Bool) {
         self.spriteFilename = spriteFilename
         self.damage = damage
         self.moveSpeed = moveSpeed
@@ -46,8 +51,12 @@ class AstralWeaponAmmoType: SKNode {
         self.spread = spread
         self.homing = homing
         self.splash = splash
+        self.warmUpAtlasName = warmUpAtlasName
+        self.firingAtlasName = firingAtlasName
         super.init()
         self.name = name
+        self.initializeWarmUp()
+        self.initializeFiring()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -55,6 +64,9 @@ class AstralWeaponAmmoType: SKNode {
     }
     
     
+    //
+    // Use bullet type weapon
+    //
     func spawnBullet(at point: CGPoint, direction: CGFloat, collider: UInt32) -> SKSpriteNode {
         let bullet = self.initBulletSprite(at: point)
         self.initBulletPhysics(bullet: bullet, collider: collider)
@@ -79,8 +91,47 @@ class AstralWeaponAmmoType: SKNode {
     }
     
     
+    
+    //
+    // Use beam type weapon
+    //
+    func spawnBeam(length: Int = 8, warmUp: Bool = true, collider: UInt32) -> [SKSpriteNode] {
+        var textures: [SKTexture] = []
+        if warmUp {
+            textures = self.warmUpTextures
+        } else {
+            textures = self.firingTextures
+        }
+        let anim = SKAction.animate(with: textures, timePerFrame: 0.0625)
+        
+        var segments: [SKSpriteNode] = []
+        var yOffset: CGFloat = 0.0
+        for _ in 0 ... length - 1 {
+            let randomFrame = Int.random(in: 0 ..< textures.count)
+            let sprite = SKSpriteNode(texture: textures[randomFrame])
+            sprite.texture?.filteringMode = .nearest
+            sprite.position.y += yOffset
+
+            // Generate a random delay between 0 and the total duration of the warm-up animation
+            let maxDelay = TimeInterval(textures.count) * 0.1
+            let randomDelay = TimeInterval.random(in: 0 ..< maxDelay)
+            let delayAction = SKAction.wait(forDuration: randomDelay)
+
+            let loopAnim = SKAction.repeatForever(anim)
+            let delayedLoopAnim = SKAction.sequence([delayAction, loopAnim])
+            sprite.run(delayedLoopAnim)
+
+            segments.append(sprite)
+            yOffset += sprite.size.height
+        }
+        return segments
+    }
+
+    
+    
+    
     private func initBulletSprite(at point: CGPoint) -> SKSpriteNode {
-        let bullet = SKSpriteNode(imageNamed: self.spriteFilename)
+        let bullet = SKSpriteNode(imageNamed: self.spriteFilename!)
         bullet.zPosition = 3
         bullet.xScale = 2.0
         bullet.yScale = 2.0
@@ -88,6 +139,7 @@ class AstralWeaponAmmoType: SKNode {
         bullet.position = point
         return bullet
     }
+    
     
     private func initBulletPhysics(bullet: SKSpriteNode, collider: UInt32) {
         bullet.physicsBody = SKPhysicsBody(circleOfRadius: bullet.size.width / 2)
@@ -100,11 +152,40 @@ class AstralWeaponAmmoType: SKNode {
         bullet.physicsBody?.angularDamping = 0.0
     }
     
+    
+    private func initializeWarmUp() {
+        guard let atlasName = self.warmUpAtlasName else { return }
+        let atlas = SKTextureAtlas(named: atlasName)
+        let sortedNames = atlas.textureNames.sorted()
+        self.warmUpTextures = sortedNames.map { atlas.textureNamed($0) }
+    }
+
+    private func initializeFiring() {
+        guard let atlasName = self.firingAtlasName else { return }
+        let atlas = SKTextureAtlas(named: atlasName)
+        let sortedNames = atlas.textureNames.sorted()
+        self.firingTextures = sortedNames.map { atlas.textureNamed($0) }
+    }
+    
+    
     static var singleShot: AstralWeaponAmmoType {
         return AstralWeaponAmmoType(name: "Double Shot",
                         spriteFilename: "Bullet01",
                         damage: 4,
                         moveSpeed: 800,
+                        range: 0,
+                        spread: 0,
+                        homing: false,
+                        splash: false)
+    }
+    
+    
+    static var beamWhite: AstralWeaponAmmoType {
+        return AstralWeaponAmmoType(name: "Beam",
+                        warmUpAtlasName: "BeamWhite01WarmUp",
+                        firingAtlasName: "BeamWhite00",
+                        damage: 1,
+                        moveSpeed: 0,
                         range: 0,
                         spread: 0,
                         homing: false,
