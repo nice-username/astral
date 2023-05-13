@@ -68,6 +68,7 @@ class AstralWeapon: SKNode {
             if self.isBeam && !self.isFiring && !self.isWarmingUp {
                 self.beam = AstralWeaponAmmoType.beamWhite.spawnBeam(collider: collider)
                 self.lastUsedCollider = collider
+                
                 for sprite in beam {
                     unit.addChild(sprite!)
                     sprite?.position.y += 24
@@ -76,7 +77,7 @@ class AstralWeapon: SKNode {
                 self.isWarmingUp = true
                 self.warmUpTimeToWait = self.warmUpTime
             } else {
-                print("lol, firin: \(self.isFiring), warmin: \(self.isWarmingUp)")
+                // print("lol, firin: \(self.isFiring), warmin: \(self.isWarmingUp)")
                 let randomOffset = CGFloat(Int(arc4random_uniform(4)) + 0)
                 let spawnPt1     = CGPoint(x: unit.position.x - 24 - randomOffset, y: unit.position.y)
                 let spawnPt2     = CGPoint(x: unit.position.x + 24 + randomOffset, y: unit.position.y)
@@ -88,11 +89,11 @@ class AstralWeapon: SKNode {
                 self.isCoolingDown = true
             }
         } else {
-            print("fucken, cd: \(self.isCoolingDown), reload: \(self.isReloading)")
+            // print("fucken, cd: \(self.isCoolingDown), reload: \(self.isReloading)")
         }
     }
     
-    
+    	
     
     //
     //
@@ -101,7 +102,7 @@ class AstralWeapon: SKNode {
         self.isFiring           = false
         self.isWarmingUp        = false
         self.timeFiring         = 0
-        self.cooldownTimeToWait = cooldownTime
+        self.cooldownTimeToWait = 0
         for sprite in beam {
             if sprite != nil {
                 sprite!.removeFromParent()
@@ -122,34 +123,36 @@ class AstralWeapon: SKNode {
             self.cooldownTimeToWait -= deltaTime
         }
         
-        if self.isWarmingUp && holdingFire {
-            self.warmUpTimeToWait -= deltaTime
-            if self.warmUpTimeToWait <= 0 {
-                self.isWarmingUp = false
-                self.isFiring    = true
-            }
-        }
-        
-        if self.isFiring && holdingFire {
-            // TODO: replace with stopBeam()
-            if self.timeFiring >= self.maxFiringTime {
-                self.isFiring   = false
-                self.timeFiring = 0
-                self.cooldownTimeToWait = self.cooldownTime
-            } else {
-                if self.timeFiring == 0 && self.lastUsedUnit != nil {
-                    let beam = self.ammoType.spawnBeam(warmUp: false, collider: self.lastUsedCollider)
-                    for sprite in self.beam {
-                        sprite?.removeFromParent()
-                    }
-                    self.beam = beam
-                    for sprite in beam {
-                        sprite.position.y += 24
-                        self.lastUsedUnit!.addChild(sprite)
-                    }
+        if self.isBeam {
+            if self.isWarmingUp && holdingFire {
+                self.warmUpTimeToWait -= deltaTime
+                if self.warmUpTimeToWait <= 0 {
+                    self.isWarmingUp = false
+                    self.isFiring    = true
                 }
             }
-            self.timeFiring += deltaTime
+            
+            if self.isFiring && holdingFire {
+                // TODO: replace with stopBeam()
+                if self.timeFiring >= self.maxFiringTime {
+                    self.isFiring   = false
+                    self.timeFiring = 0
+                    self.cooldownTimeToWait = self.cooldownTime
+                } else {
+                    if self.timeFiring == 0 && self.lastUsedUnit != nil {
+                        let beam = self.ammoType.spawnBeam(warmUp: false, collider: self.lastUsedCollider)
+                        for sprite in self.beam {
+                            sprite?.removeFromParent()
+                        }
+                        self.beam = beam
+                        for sprite in beam {
+                            sprite.position.y += 24
+                            self.lastUsedUnit!.addChild(sprite)
+                        }
+                    }
+                }
+                self.timeFiring += deltaTime
+            }
         }
     }
     

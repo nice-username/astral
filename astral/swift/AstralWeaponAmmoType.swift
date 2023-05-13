@@ -102,25 +102,17 @@ class AstralWeaponAmmoType: SKNode {
         } else {
             textures = self.firingTextures
         }
-        let anim = SKAction.animate(with: textures, timePerFrame: 0.0625)
         
         var segments: [SKSpriteNode] = []
         var yOffset: CGFloat = 0.0
         for _ in 0 ... length - 1 {
-            let randomFrame = Int.random(in: 0 ..< textures.count)
-            let sprite = SKSpriteNode(texture: textures[randomFrame])
+            let shuffledTextures = textures.shuffled()
+            let anim = SKAction.animate(with: shuffledTextures, timePerFrame: 0.0625)
+            let sprite = SKSpriteNode(texture: textures[0])
             sprite.texture?.filteringMode = .nearest
             sprite.position.y += yOffset
-
-            // Generate a random delay between 0 and the total duration of the warm-up animation
-            let maxDelay = TimeInterval(textures.count) * 0.1
-            let randomDelay = TimeInterval.random(in: 0 ..< maxDelay)
-            let delayAction = SKAction.wait(forDuration: randomDelay)
-
             let loopAnim = SKAction.repeatForever(anim)
-            let delayedLoopAnim = SKAction.sequence([delayAction, loopAnim])
-            sprite.run(delayedLoopAnim)
-
+            sprite.run(loopAnim)
             segments.append(sprite)
             yOffset += sprite.size.height
         }
@@ -182,7 +174,7 @@ class AstralWeaponAmmoType: SKNode {
     
     static var beamWhite: AstralWeaponAmmoType {
         return AstralWeaponAmmoType(name: "Beam",
-                        warmUpAtlasName: "BeamWhite01WarmUp",
+                        warmUpAtlasName: "BeamWhite02WarmUp",
                         firingAtlasName: "BeamWhite00",
                         damage: 1,
                         moveSpeed: 0,

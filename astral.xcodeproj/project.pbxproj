@@ -24,11 +24,18 @@
 		7C26511F29FF49ED0013B36E /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C26511E29FF49ED0013B36E /* Direction.swift */; };
 		7C26512129FF4A5C0013B36E /* AstralJoystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C26512029FF4A5C0013B36E /* AstralJoystick.swift */; };
 		7C2AB7E32A0659C30026328A /* BeamWhite00WarmUp.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C2AB7E22A0659C30026328A /* BeamWhite00WarmUp.atlas */; };
-		7C2AB7E52A0659D30026328A /* BeamWhite00.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C2AB7E42A0659D30026328A /* BeamWhite00.atlas */; };
 		7C2AB7E92A06830E0026328A /* BeamWhite01WarmUp.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C2AB7E82A06830E0026328A /* BeamWhite01WarmUp.atlas */; };
+		7C36D0162A07ED05005F3354 /* BeamWhite02WarmUp.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C36D0152A07ED05005F3354 /* BeamWhite02WarmUp.atlas */; };
+		7C37CC5B2A0BD01F00EA9DD3 /* BeamWhite00.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C37CC5A2A0BD01F00EA9DD3 /* BeamWhite00.atlas */; };
 		7C81E0CF29FF9D12005FB6EC /* BackgroundStars.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C81E0CE29FF9D12005FB6EC /* BackgroundStars.atlas */; };
 		7C81E0D129FF9D92005FB6EC /* AstralBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C81E0D029FF9D92005FB6EC /* AstralBackground.swift */; };
 		7C81E0D329FF9E7E005FB6EC /* AstralBackgroundLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C81E0D229FF9E7E005FB6EC /* AstralBackgroundLayer.swift */; };
+		7C8D13612A0E323100C81D85 /* AstralEnemyWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8D13602A0E323100C81D85 /* AstralEnemyWave.swift */; };
+		7C8D13632A0E7CC300C81D85 /* AstralDialogSmall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8D13622A0E7CC300C81D85 /* AstralDialogSmall.swift */; };
+		7C8D13662A0E7EE700C81D85 /* visitor1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C8D13642A0E7EE700C81D85 /* visitor1.ttf */; };
+		7C8D13672A0E7EE700C81D85 /* visitor2.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C8D13652A0E7EE700C81D85 /* visitor2.ttf */; };
+		7C8D136B2A0F5A6500C81D85 /* AstralDialogSpeaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8D136A2A0F5A6500C81D85 /* AstralDialogSpeaker.swift */; };
+		7C8D136D2A0F725700C81D85 /* AstralDialogColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8D136C2A0F725700C81D85 /* AstralDialogColor.swift */; };
 		7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */; };
 		7CAA6AF62A00E0A100EBEA1E /* AstralParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */; };
 		7CAA6AF92A00E5A100EBEA1E /* Thruster.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */; };
@@ -87,11 +94,19 @@
 		7C26511E29FF49ED0013B36E /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		7C26512029FF4A5C0013B36E /* AstralJoystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralJoystick.swift; sourceTree = "<group>"; };
 		7C2AB7E22A0659C30026328A /* BeamWhite00WarmUp.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite00WarmUp.atlas; sourceTree = "<group>"; };
-		7C2AB7E42A0659D30026328A /* BeamWhite00.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite00.atlas; sourceTree = "<group>"; };
 		7C2AB7E82A06830E0026328A /* BeamWhite01WarmUp.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite01WarmUp.atlas; sourceTree = "<group>"; };
+		7C36D0152A07ED05005F3354 /* BeamWhite02WarmUp.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite02WarmUp.atlas; sourceTree = "<group>"; };
+		7C37CC5A2A0BD01F00EA9DD3 /* BeamWhite00.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite00.atlas; sourceTree = "<group>"; };
 		7C81E0CE29FF9D12005FB6EC /* BackgroundStars.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BackgroundStars.atlas; sourceTree = "<group>"; };
 		7C81E0D029FF9D92005FB6EC /* AstralBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralBackground.swift; sourceTree = "<group>"; };
 		7C81E0D229FF9E7E005FB6EC /* AstralBackgroundLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralBackgroundLayer.swift; sourceTree = "<group>"; };
+		7C8D13602A0E323100C81D85 /* AstralEnemyWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralEnemyWave.swift; sourceTree = "<group>"; };
+		7C8D13622A0E7CC300C81D85 /* AstralDialogSmall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralDialogSmall.swift; sourceTree = "<group>"; };
+		7C8D13642A0E7EE700C81D85 /* visitor1.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = visitor1.ttf; sourceTree = "<group>"; };
+		7C8D13652A0E7EE700C81D85 /* visitor2.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = visitor2.ttf; sourceTree = "<group>"; };
+		7C8D13692A0E812B00C81D85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		7C8D136A2A0F5A6500C81D85 /* AstralDialogSpeaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralDialogSpeaker.swift; sourceTree = "<group>"; };
+		7C8D136C2A0F725700C81D85 /* AstralDialogColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralDialogColor.swift; sourceTree = "<group>"; };
 		7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPhysicsCategory.swift; sourceTree = "<group>"; };
 		7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralParticleSystem.swift; sourceTree = "<group>"; };
 		7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Thruster.sks; sourceTree = "<group>"; };
@@ -163,11 +178,13 @@
 		7C1F5C0229FD316300DB6438 /* astral */ = {
 			isa = PBXGroup;
 			children = (
+				7C8D13682A0E7EFB00C81D85 /* font */,
 				7CAA6B1B2A035D8A00EBEA1E /* audio */,
 				7C1F5C3629FD317400DB6438 /* swift */,
 				7C1F5C0729FD316300DB6438 /* Actions.sks */,
 				7C1F5C3929FD326E00DB6438 /* GameScene.sks */,
 				7C1F5C1029FD316400DB6438 /* Assets.xcassets */,
+				7C8D13692A0E812B00C81D85 /* Info.plist */,
 				7C1F5C0D29FD316300DB6438 /* Main.storyboard */,
 				7C1F5C1229FD316400DB6438 /* LaunchScreen.storyboard */,
 			);
@@ -201,7 +218,11 @@
 				7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */,
 				7C81E0D029FF9D92005FB6EC /* AstralBackground.swift */,
 				7C81E0D229FF9E7E005FB6EC /* AstralBackgroundLayer.swift */,
+				7C8D136C2A0F725700C81D85 /* AstralDialogColor.swift */,
+				7C8D13622A0E7CC300C81D85 /* AstralDialogSmall.swift */,
+				7C8D136A2A0F5A6500C81D85 /* AstralDialogSpeaker.swift */,
 				7CAA6B0D2A026EEA00EBEA1E /* AstralEnemy.swift */,
+				7C8D13602A0E323100C81D85 /* AstralEnemyWave.swift */,
 				7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */,
 				7C26512029FF4A5C0013B36E /* AstralJoystick.swift */,
 				7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */,
@@ -221,9 +242,10 @@
 		7C26511D29FF49770013B36E /* atlas */ = {
 			isa = PBXGroup;
 			children = (
-				7C2AB7E42A0659D30026328A /* BeamWhite00.atlas */,
+				7C37CC5A2A0BD01F00EA9DD3 /* BeamWhite00.atlas */,
 				7C2AB7E22A0659C30026328A /* BeamWhite00WarmUp.atlas */,
 				7C2AB7E82A06830E0026328A /* BeamWhite01WarmUp.atlas */,
+				7C36D0152A07ED05005F3354 /* BeamWhite02WarmUp.atlas */,
 				7CAA6B0F2A02775700EBEA1E /* AstralEnemyType00.atlas */,
 				7CAA6B162A029A1600EBEA1E /* AstralEnemyType00Hit.atlas */,
 				7CAA6B082A026C6F00EBEA1E /* AstralPlayer.atlas */,
@@ -231,6 +253,15 @@
 				7C26511B29FF49720013B36E /* Joystick.atlas */,
 			);
 			path = atlas;
+			sourceTree = "<group>";
+		};
+		7C8D13682A0E7EFB00C81D85 /* font */ = {
+			isa = PBXGroup;
+			children = (
+				7C8D13642A0E7EE700C81D85 /* visitor1.ttf */,
+				7C8D13652A0E7EE700C81D85 /* visitor2.ttf */,
+			);
+			path = font;
 			sourceTree = "<group>";
 		};
 		7CAA6AFB2A00E93500EBEA1E /* Particles */ = {
@@ -321,6 +352,9 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
+				KnownAssetTags = (
+					New,
+				);
 				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
@@ -364,16 +398,19 @@
 			files = (
 				7CAA6B142A027EC100EBEA1E /* colorShader.fsh in Resources */,
 				7C1F5C0F29FD316300DB6438 /* Main.storyboard in Resources */,
+				7C37CC5B2A0BD01F00EA9DD3 /* BeamWhite00.atlas in Resources */,
 				7CAA6B172A029A1600EBEA1E /* AstralEnemyType00Hit.atlas in Resources */,
 				7C2AB7E32A0659C30026328A /* BeamWhite00WarmUp.atlas in Resources */,
 				7C2AB7E92A06830E0026328A /* BeamWhite01WarmUp.atlas in Resources */,
 				7C1F5C3A29FD326E00DB6438 /* GameScene.sks in Resources */,
 				7CAA6B192A035D5A00EBEA1E /* impact00.wav in Resources */,
+				7C8D13662A0E7EE700C81D85 /* visitor1.ttf in Resources */,
 				7C26511C29FF49720013B36E /* Joystick.atlas in Resources */,
+				7C8D13672A0E7EE700C81D85 /* visitor2.ttf in Resources */,
 				7CAA6B102A02775700EBEA1E /* AstralEnemyType00.atlas in Resources */,
 				7CAA6AFA2A00E5A100EBEA1E /* Particle.xcassets in Resources */,
 				7CAA6AF92A00E5A100EBEA1E /* Thruster.sks in Resources */,
-				7C2AB7E52A0659D30026328A /* BeamWhite00.atlas in Resources */,
+				7C36D0162A07ED05005F3354 /* BeamWhite02WarmUp.atlas in Resources */,
 				7C1F5C1129FD316400DB6438 /* Assets.xcassets in Resources */,
 				7C81E0CF29FF9D12005FB6EC /* BackgroundStars.atlas in Resources */,
 				7CAA6B092A026C6F00EBEA1E /* AstralPlayer.atlas in Resources */,
@@ -403,19 +440,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C8D136D2A0F725700C81D85 /* AstralDialogColor.swift in Sources */,
 				7CAA6AFD2A011D1A00EBEA1E /* TrailingShader.swift in Sources */,
 				7CC2F9DE29FF75FC003CA700 /* testScene.swift in Sources */,
 				7C81E0D129FF9D92005FB6EC /* AstralBackground.swift in Sources */,
+				7C8D136B2A0F5A6500C81D85 /* AstralDialogSpeaker.swift in Sources */,
 				7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */,
 				7C1F5C0A29FD316300DB6438 /* GameScene.swift in Sources */,
 				7C1F5C3C29FD35C800DB6438 /* AstralPlayer.swift in Sources */,
 				7CAA6B032A02599000EBEA1E /* AstralUnit.swift in Sources */,
 				7C1F5C0C29FD316300DB6438 /* GameViewController.swift in Sources */,
+				7C8D13612A0E323100C81D85 /* AstralEnemyWave.swift in Sources */,
 				7C1F5C3E29FD36B100DB6438 /* AstralPolarity.swift in Sources */,
 				7C1F5C0429FD316300DB6438 /* AppDelegate.swift in Sources */,
 				7CAA6B1D2A03643700EBEA1E /* AstralEnemyOrder.swift in Sources */,
 				7C26511F29FF49ED0013B36E /* Direction.swift in Sources */,
 				7CC2F9DA29FF68C7003CA700 /* AstralWeapon.swift in Sources */,
+				7C8D13632A0E7CC300C81D85 /* AstralDialogSmall.swift in Sources */,
 				7CAA6B012A02492D00EBEA1E /* AstralCollisionHandler.swift in Sources */,
 				7CAA6B0E2A026EEA00EBEA1E /* AstralEnemy.swift in Sources */,
 				7C26512129FF4A5C0013B36E /* AstralJoystick.swift in Sources */,
@@ -601,6 +642,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CNEE5Q5EX5;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = astral/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -630,6 +672,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CNEE5Q5EX5;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = astral/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

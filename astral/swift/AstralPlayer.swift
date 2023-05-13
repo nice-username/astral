@@ -76,17 +76,17 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     private func initWeapon() {
         // Default weapon
         // Laser beam weapon
-        let laserAmmo = AstralWeaponAmmoType.beamWhite
+        let laserAmmo = AstralWeaponAmmoType.singleShot
         let defaultWeapon = AstralWeapon(gameScene: self.initialScene,
                                          name: "",
                                          damage: 1,
                                          direction: 90.0,
-                                         cooldown: 5.0,
+                                         cooldown: 0.125,
                                          range: 0,
                                          ammoType: laserAmmo,
                                          reloadTime: 6.0,
                                          clipSize: 0,
-                                         isBeam: true)
+                                         isBeam: false)
         self.weapons.append(defaultWeapon)
     }
     
@@ -228,7 +228,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     
     // Ouch!
     func damage(amount: Int = 1) {
-        print("You're fucking dead.")
+        // print("You're fucking dead.")
     }
     
     

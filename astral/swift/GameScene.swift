@@ -66,6 +66,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         
+        // test dialog
+        let speaker = AstralDialogSpeaker(at: CGPoint(x: -150.0, y: -72.0))
+        let test1   = AstralDialogSmall(dialogText: "host", dialogWidth: 7.0)
+        let test2   = AstralDialogSmall(dialogText: "status", dialogWidth: 46.0)
+        let test3   = AstralDialogSmall(dialogText: "connection", dialogWidth: 65.0)
+        let test4   = AstralDialogSmall(dialogText: "frequency", dialogWidth: 62.0)
+        self.addChild(test1)
+        self.addChild(test2)
+        self.addChild(test3)
+        self.addChild(test4)
+        self.addChild(speaker)
+                
+        test2.position.y -= 48.0
+        test3.position.y -= 96.0
+        test4.position.y -= 144.0
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            test1.extendWidthTo(targetWidth: 34.0, overTime: 0.250)
+        }
+        
         
         // Init audio .. ?
         // let audio1 = SKAction.playSoundFileNamed("impact00",waitForCompletion: false)
@@ -129,7 +149,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             if touch == self.fireTouch {
-                print("You moved your finger while holding the FIRE button.")
                 // The touch is on the fire button
             } else if touch == self.joystickTouch {
                 self.touchMoved(toPoint: touch.location(in: self))
@@ -172,7 +191,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Update entities
         if self.holdingDownFire && self.player!.weapons[0].canFire() {
-            // self.player!.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
+            self.player!.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
         }
         self.parallaxBg.update(dt, joystickDirection: self.joystick.direction)
         self.player?.update(joystick: self.joystick, currentTime: currentTime, deltaTime: dt, holdingFire: self.holdingDownFire)
