@@ -45,6 +45,29 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         
         // Add to scene
         scene.addChild(self)
+        
+        
+        /*
+            Example Gaussian blur
+         */
+        /*
+            let glowEffectNode = SKEffectNode()
+            let glowShapeNode = SKShapeNode(circleOfRadius: self.size.width / 4)
+            glowShapeNode.fillColor = .white
+            glowShapeNode.strokeColor = .white
+            glowEffectNode.addChild(glowShapeNode)
+            self.addChild(glowEffectNode)
+            
+            let blurFilter = CIFilter(name: "CIGaussianBlur")
+            blurFilter?.setValue(20, forKey: kCIInputRadiusKey)
+            glowEffectNode.filter = blurFilter
+            glowEffectNode.shouldRasterize = true
+            glowEffectNode.shouldEnableEffects = true
+            
+            // For the white polarity:
+            glowShapeNode.fillColor = .white
+            glowShapeNode.strokeColor = .white
+         */
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -76,7 +99,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     private func initWeapon() {
         // Default weapon
         // Laser beam weapon
-        let laserAmmo = AstralWeaponAmmoType.singleShot
+        let laserAmmo = AstralWeaponAmmoType.beamWhite
         let defaultWeapon = AstralWeapon(gameScene: self.initialScene,
                                          name: "",
                                          damage: 1,

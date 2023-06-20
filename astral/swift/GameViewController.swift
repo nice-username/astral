@@ -14,6 +14,17 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let scene = AstralMainMenuScene(size: view.bounds.size)
+        if let view = self.view as! SKView? {
+            scene.scaleMode = .aspectFill
+            view.presentScene(scene)
+            view.ignoresSiblingOrder = true
+            view.showsFPS = true
+            view.showsNodeCount = true
+        }
+        
+        
+        /*
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
         // including entities and graphs.
         if let scene = GKScene(fileNamed: "GameScene") {
@@ -38,6 +49,7 @@ class GameViewController: UIViewController {
                 }
             }
         }
+        */
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

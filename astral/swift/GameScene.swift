@@ -13,6 +13,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var entities = [GKEntity]()
     // var graphs = [String : GKGraph]()
     
+    private var state : AstralGameStateManager!
     private var lastUpdateTime : TimeInterval = 0
     private var touchStartPosition: CGPoint?
     private var player : AstralPlayer?
@@ -28,6 +29,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     
     override func sceneDidLoad() {
+        self.state = AstralGameStateManager()
+        
         self.backgroundColor = .black
         self.collisionHandler = AstralCollisionHandler()
         
@@ -40,57 +43,74 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         fireButton = SKSpriteNode(imageNamed: "weapon_use_button")
         self.addChild(fireButton)
+        
         fireButton!.xScale = 3
         fireButton!.yScale = 3
         fireButton!.texture?.filteringMode = .nearest
         fireButton.position.x += self.frame.width  / 2.0 - fireButton.size.width  + 32
         fireButton.position.y -= self.frame.height / 2.0 - fireButton.size.height - 360
         
-        
         self.parallaxBg = AstralParallaxBackground(size: self.size)
         self.parallaxBg.xScale = 5.0
         self.parallaxBg.yScale = 5.0
-        // self.parallaxBg.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
-        self.addChild(self.parallaxBg)
+        self.parallaxBg.position = CGPoint(x: 0, y: self.size.height / 2)
+        // self.addChild(self.parallaxBg)
         
         self.physicsWorld.gravity = .zero
         self.physicsWorld.contactDelegate = self
         self.createBoundaries()
         
-        
-        self.enemies.append(AstralEnemy(scene: self, maxHP: 20))
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let newEnemy = AstralEnemy(scene: self, maxHP: 20)
-            newEnemy.position.y = 1000
-            self.enemies.append(newEnemy)
-        }
-        
+        /*
+            self.enemies.append(AstralEnemy(scene: self, maxHP: 20))
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                let newEnemy = AstralEnemy(scene: self, maxHP: 20)
+                newEnemy.position.y = 1000
+                self.enemies.append(newEnemy)
+            }
+        */
         
         // test dialog
-        let speaker = AstralDialogSpeaker(at: CGPoint(x: -150.0, y: -72.0))
-        let test1   = AstralDialogSmall(dialogText: "host", dialogWidth: 7.0)
-        let test2   = AstralDialogSmall(dialogText: "status", dialogWidth: 46.0)
-        let test3   = AstralDialogSmall(dialogText: "connection", dialogWidth: 65.0)
-        let test4   = AstralDialogSmall(dialogText: "frequency", dialogWidth: 62.0)
-        self.addChild(test1)
-        self.addChild(test2)
-        self.addChild(test3)
-        self.addChild(test4)
-        self.addChild(speaker)
-                
-        test2.position.y -= 48.0
-        test3.position.y -= 96.0
-        test4.position.y -= 144.0
+        /*
+            let speaker = AstralDialogSpeaker(at: CGPoint(x: -150.0, y: -472.0))
+            let test1   = AstralDialogSmall(dialogText: "host", dialogWidth: 7.0)
+            let test2   = AstralDialogSmall(dialogText: "status", dialogWidth: 46.0)
+            let test3   = AstralDialogSmall(dialogText: "connection", dialogWidth: 65.0)
+            let test4   = AstralDialogSmall(dialogText: "frequency", dialogWidth: 62.0)
+            self.addChild(test1)
+            self.addChild(test2)
+            self.addChild(test3)
+            self.addChild(test4)
+            self.addChild(speaker)
+                    
+            test2.position.y -= 48.0
+            test3.position.y -= 96.0
+            test4.position.y -= 144.0
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                test1.extendWidthTo(targetWidth: 34.0, overTime: 0.250)
+            }
+        */
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            test1.extendWidthTo(targetWidth: 34.0, overTime: 0.250)
-        }
+        let textIntro = ["", "Wow that's so long lmfaooo"]
+        let textBox = AstralDialogTextBox(scale: 4.0,
+                                          backgroundSpriteName: "DialogTextBox00",
+                                          textPages: textIntro,
+                                          font: "BitPotion",
+                                          charDisplayDuration: 0.075, arrowSpriteName: "DialogArrow")
+        self.addChild(textBox)
+         
         
+        let font = AstralBitmapFont(font: "munro_bitmap")
+        let label = font.createLabel(withText: "Planet: Mars", maxWidth: 400.0, soundFileName: "blip")
+        self.addChild(label)
+        label.zPosition = 4
+        label.position = CGPoint(x: -200, y: 32.0)
         
         // Init audio .. ?
-        // let audio1 = SKAction.playSoundFileNamed("impact00",waitForCompletion: false)
+        let audio1 = SKAction.playSoundFileNamed("impact00",waitForCompletion: false)
     }
-    
+
     
     private func createBoundaries() {
         let xOffset = 80.0
@@ -126,6 +146,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
+        
         var hitButton = false
         for t in touches {
             let point = t.location(in: self)
@@ -193,7 +214,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if self.holdingDownFire && self.player!.weapons[0].canFire() {
             self.player!.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
         }
-        self.parallaxBg.update(dt, joystickDirection: self.joystick.direction)
+        
+        if self.parallaxBg != nil {
+            self.parallaxBg.update(dt, joystickDirection: self.joystick.direction)
+        }
         self.player?.update(joystick: self.joystick, currentTime: currentTime, deltaTime: dt, holdingFire: self.holdingDownFire)
         
         

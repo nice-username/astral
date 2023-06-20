@@ -9,7 +9,6 @@ import Foundation
 import SpriteKit
 
 class AstralParticleSystem: SKNode {
-
     private let emitterNode: SKEmitterNode
     
     init(player: SKSpriteNode) {
