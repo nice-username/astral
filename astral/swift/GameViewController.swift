@@ -14,6 +14,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         let scene = AstralMainMenuScene(size: view.bounds.size)
         if let view = self.view as! SKView? {
             scene.scaleMode = .aspectFill
@@ -50,6 +51,7 @@ class GameViewController: UIViewController {
             }
         }
         */
+        
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
