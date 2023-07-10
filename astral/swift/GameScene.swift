@@ -54,13 +54,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.parallaxBg.xScale = 5.0
         self.parallaxBg.yScale = 5.0
         self.parallaxBg.position = CGPoint(x: 0, y: self.size.height / 2)
-        // self.addChild(self.parallaxBg)
+        self.addChild(self.parallaxBg)
         
         self.physicsWorld.gravity = .zero
         self.physicsWorld.contactDelegate = self
         self.createBoundaries()
         
-        /*
             self.enemies.append(AstralEnemy(scene: self, maxHP: 20))
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -68,7 +67,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 newEnemy.position.y = 1000
                 self.enemies.append(newEnemy)
             }
-        */
         
         // test dialog
         /*
@@ -102,7 +100,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
          
         
         let font = AstralBitmapFont(font: "munro_bitmap")
-        let label = font.createLabel(withText: "Planet: Mars", maxWidth: 400.0, soundFileName: "blip")
+        let label = font.createLabel(withText: "Corbo is a loser! And he smells kind of stinky.  Can it make three lines asks stinky man?", maxWidth: 400.0, soundFileName: "blip")
         self.addChild(label)
         label.zPosition = 4
         label.position = CGPoint(x: -200, y: 32.0)

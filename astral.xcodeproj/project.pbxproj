@@ -20,6 +20,11 @@
 		7C1F5C3A29FD326E00DB6438 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3929FD326E00DB6438 /* GameScene.sks */; };
 		7C1F5C3C29FD35C800DB6438 /* AstralPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */; };
 		7C1F5C3E29FD36B100DB6438 /* AstralPolarity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */; };
+		7C24D1CE2A582C61004D1DE7 /* AstralMainMenuBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C24D1CD2A582C61004D1DE7 /* AstralMainMenuBackground.swift */; };
+		7C24D1DF2A595CAF004D1DE7 /* MainMenuBackground02.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C24D1DB2A595CAF004D1DE7 /* MainMenuBackground02.atlas */; };
+		7C24D1E02A595CAF004D1DE7 /* MainMenuBackground01.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C24D1DC2A595CAF004D1DE7 /* MainMenuBackground01.atlas */; };
+		7C24D1E12A595CAF004D1DE7 /* MainMenuBackground03.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C24D1DD2A595CAF004D1DE7 /* MainMenuBackground03.atlas */; };
+		7C24D1E32A595CCB004D1DE7 /* MainMenuBackground00.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C24D1E22A595CCB004D1DE7 /* MainMenuBackground00.atlas */; };
 		7C26511C29FF49720013B36E /* Joystick.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C26511B29FF49720013B36E /* Joystick.atlas */; };
 		7C26511F29FF49ED0013B36E /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C26511E29FF49ED0013B36E /* Direction.swift */; };
 		7C26512129FF4A5C0013B36E /* AstralJoystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C26512029FF4A5C0013B36E /* AstralJoystick.swift */; };
@@ -29,6 +34,7 @@
 		7C2AB7E92A06830E0026328A /* BeamWhite01WarmUp.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C2AB7E82A06830E0026328A /* BeamWhite01WarmUp.atlas */; };
 		7C36D0162A07ED05005F3354 /* BeamWhite02WarmUp.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C36D0152A07ED05005F3354 /* BeamWhite02WarmUp.atlas */; };
 		7C37CC5B2A0BD01F00EA9DD3 /* BeamWhite00.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C37CC5A2A0BD01F00EA9DD3 /* BeamWhite00.atlas */; };
+		7C37D7722A4E9B9E000364B7 /* menu_select.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7C37D7712A4E9B9E000364B7 /* menu_select.wav */; };
 		7C3D1A8E2A3F103C00643BCF /* AstralMainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3D1A8D2A3F103C00643BCF /* AstralMainMenuScene.swift */; };
 		7C3D1A942A44418000643BCF /* MenuCursor.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C3D1A932A44418000643BCF /* MenuCursor.atlas */; };
 		7C47DE5B2A245F0000113BF2 /* blip.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7C47DE5A2A245F0000113BF2 /* blip.wav */; };
@@ -101,6 +107,11 @@
 		7C1F5C3929FD326E00DB6438 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPlayer.swift; sourceTree = "<group>"; };
 		7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPolarity.swift; sourceTree = "<group>"; };
+		7C24D1CD2A582C61004D1DE7 /* AstralMainMenuBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralMainMenuBackground.swift; sourceTree = "<group>"; };
+		7C24D1DB2A595CAF004D1DE7 /* MainMenuBackground02.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MainMenuBackground02.atlas; sourceTree = "<group>"; };
+		7C24D1DC2A595CAF004D1DE7 /* MainMenuBackground01.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MainMenuBackground01.atlas; sourceTree = "<group>"; };
+		7C24D1DD2A595CAF004D1DE7 /* MainMenuBackground03.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MainMenuBackground03.atlas; sourceTree = "<group>"; };
+		7C24D1E22A595CCB004D1DE7 /* MainMenuBackground00.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MainMenuBackground00.atlas; sourceTree = "<group>"; };
 		7C26511B29FF49720013B36E /* Joystick.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = Joystick.atlas; sourceTree = "<group>"; };
 		7C26511E29FF49ED0013B36E /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		7C26512029FF4A5C0013B36E /* AstralJoystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralJoystick.swift; sourceTree = "<group>"; };
@@ -110,6 +121,7 @@
 		7C2AB7E82A06830E0026328A /* BeamWhite01WarmUp.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite01WarmUp.atlas; sourceTree = "<group>"; };
 		7C36D0152A07ED05005F3354 /* BeamWhite02WarmUp.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite02WarmUp.atlas; sourceTree = "<group>"; };
 		7C37CC5A2A0BD01F00EA9DD3 /* BeamWhite00.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite00.atlas; sourceTree = "<group>"; };
+		7C37D7712A4E9B9E000364B7 /* menu_select.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = menu_select.wav; sourceTree = "<group>"; };
 		7C3D1A8D2A3F103C00643BCF /* AstralMainMenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AstralMainMenuScene.swift; sourceTree = "<group>"; };
 		7C3D1A932A44418000643BCF /* MenuCursor.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MenuCursor.atlas; sourceTree = "<group>"; };
 		7C47DE5A2A245F0000113BF2 /* blip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = blip.wav; sourceTree = "<group>"; };
@@ -249,6 +261,7 @@
 				7CD4D0F22A2560D300ECE47D /* AstralGameState.swift */,
 				7CD4D0F42A2564F100ECE47D /* AstralGameStateManager.swift */,
 				7C26512029FF4A5C0013B36E /* AstralJoystick.swift */,
+				7C24D1CD2A582C61004D1DE7 /* AstralMainMenuBackground.swift */,
 				7C3D1A8D2A3F103C00643BCF /* AstralMainMenuScene.swift */,
 				7C81E0D029FF9D92005FB6EC /* AstralParallaxBackground.swift */,
 				7C81E0D229FF9E7E005FB6EC /* AstralParallaxBackgroundLayer.swift */,
@@ -269,6 +282,10 @@
 		7C26511D29FF49770013B36E /* atlas */ = {
 			isa = PBXGroup;
 			children = (
+				7C24D1E22A595CCB004D1DE7 /* MainMenuBackground00.atlas */,
+				7C24D1DC2A595CAF004D1DE7 /* MainMenuBackground01.atlas */,
+				7C24D1DB2A595CAF004D1DE7 /* MainMenuBackground02.atlas */,
+				7C24D1DD2A595CAF004D1DE7 /* MainMenuBackground03.atlas */,
 				7C3D1A932A44418000643BCF /* MenuCursor.atlas */,
 				7C37CC5A2A0BD01F00EA9DD3 /* BeamWhite00.atlas */,
 				7C2AB7E22A0659C30026328A /* BeamWhite00WarmUp.atlas */,
@@ -333,6 +350,7 @@
 			isa = PBXGroup;
 			children = (
 				7C47DE5A2A245F0000113BF2 /* blip.wav */,
+				7C37D7712A4E9B9E000364B7 /* menu_select.wav */,
 				7CAA6B182A035D5A00EBEA1E /* impact00.wav */,
 			);
 			path = audio;
@@ -451,16 +469,21 @@
 				7C1F5C0F29FD316300DB6438 /* Main.storyboard in Resources */,
 				7C280F5C2A1ABB0C002385D7 /* munro_bitmap.fnt in Resources */,
 				7C37CC5B2A0BD01F00EA9DD3 /* BeamWhite00.atlas in Resources */,
+				7C24D1DF2A595CAF004D1DE7 /* MainMenuBackground02.atlas in Resources */,
 				7CAA6B172A029A1600EBEA1E /* AstralEnemyType00Hit.atlas in Resources */,
+				7C24D1E12A595CAF004D1DE7 /* MainMenuBackground03.atlas in Resources */,
+				7C24D1E32A595CCB004D1DE7 /* MainMenuBackground00.atlas in Resources */,
 				7CC78B9C2A11143D0060AE54 /* Munro-2LYe.ttf in Resources */,
 				7C2AB7E32A0659C30026328A /* BeamWhite00WarmUp.atlas in Resources */,
 				7C2AB7E92A06830E0026328A /* BeamWhite01WarmUp.atlas in Resources */,
 				7C1F5C3A29FD326E00DB6438 /* GameScene.sks in Resources */,
 				7CAA6B192A035D5A00EBEA1E /* impact00.wav in Resources */,
+				7C37D7722A4E9B9E000364B7 /* menu_select.wav in Resources */,
 				7C8D13662A0E7EE700C81D85 /* visitor1.ttf in Resources */,
 				7C26511C29FF49720013B36E /* Joystick.atlas in Resources */,
 				7C8D13672A0E7EE700C81D85 /* visitor2.ttf in Resources */,
 				7CAA6B102A02775700EBEA1E /* AstralEnemyType00.atlas in Resources */,
+				7C24D1E02A595CAF004D1DE7 /* MainMenuBackground01.atlas in Resources */,
 				7CAA6AFA2A00E5A100EBEA1E /* Particle.xcassets in Resources */,
 				7C47DE5B2A245F0000113BF2 /* blip.wav in Resources */,
 				7C3D1A942A44418000643BCF /* MenuCursor.atlas in Resources */,
@@ -501,6 +524,7 @@
 				7CC2F9DE29FF75FC003CA700 /* testScene.swift in Sources */,
 				7CD4D0F32A2560D300ECE47D /* AstralGameState.swift in Sources */,
 				7C81E0D129FF9D92005FB6EC /* AstralParallaxBackground.swift in Sources */,
+				7C24D1CE2A582C61004D1DE7 /* AstralMainMenuBackground.swift in Sources */,
 				7C8D136B2A0F5A6500C81D85 /* AstralDialogSpeaker.swift in Sources */,
 				7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */,
 				7C1F5C0A29FD316300DB6438 /* GameScene.swift in Sources */,
