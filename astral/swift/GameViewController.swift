@@ -20,14 +20,16 @@ class GameViewController: UIViewController {
             scene.scaleMode = .aspectFill
             view.presentScene(scene)
             view.ignoresSiblingOrder = true
-            view.showsFPS = true
-            view.showsNodeCount = true
+            view.showsFPS            = true
+            view.showsNodeCount      = true
         }
         
         
-        /*
+        
+        
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
         // including entities and graphs.
+        /*
         if let scene = GKScene(fileNamed: "GameScene") {
             
             // Get the SKScene from the loaded GKScene
@@ -51,6 +53,7 @@ class GameViewController: UIViewController {
             }
         }
         */
+        
         
     }
 

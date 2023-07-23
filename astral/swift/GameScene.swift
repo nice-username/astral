@@ -100,7 +100,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
          
         
         let font = AstralBitmapFont(font: "munro_bitmap")
-        let label = font.createLabel(withText: "Corbo is a loser! And he smells kind of stinky.  Can it make three lines asks stinky man?", maxWidth: 400.0, soundFileName: "blip")
+        let label = font.createLabel(withText: "Hi CatZ. I was demoing this feature to Corbo", maxWidth: 400.0, soundFileName: "blip")
         self.addChild(label)
         label.zPosition = 4
         label.position = CGPoint(x: -200, y: 32.0)

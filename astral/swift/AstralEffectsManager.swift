@@ -20,7 +20,7 @@ class AstralEffectsManager {
         let croppedTexture = SKTexture(rect: cropRect, in: nodeTexture)
         let displacedNode = SKSpriteNode(texture: croppedTexture)
         
-        displacedNode.alpha = 0.7
+        displacedNode.alpha = CGFloat.random(in: 0.25...0.75)
         displacedNode.xScale = 3.0
         displacedNode.yScale = 3.0
         displacedNode.texture?.filteringMode = .nearest

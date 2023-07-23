@@ -17,12 +17,15 @@ import SpriteKit
 /// An SKTexture's dimensions are limited to 4096x4096.
 ///
 class AstralMainMenuBackground {
+    public var lastTextureShowing : Bool = false
     public var nodes: [SKSpriteNode] = []
-    private let atlas: SKTextureAtlas
+    public let atlas: SKTextureAtlas
+    public var isInTransition: Bool = false
     private var textureNames: [String]
     private var textureIndex = 0
     private var nextNodePositionY: CGFloat = 0.0
     private var parent: SKScene
+    
 
 
     // We keep track of the bottom node to know when to add a new one at the top
@@ -39,13 +42,9 @@ class AstralMainMenuBackground {
         atlas = SKTextureAtlas(named: atlasNamed)
         self.textureNames = atlas.textureNames.sorted()
         self.parent = parent // assign the parent reference
-        // Initialize the first three nodes
-        for _ in 0..<3 {
-            let node = addNewNodeAtTop()
-            self.nodes.append(node)
-            parent.addChild(node) // add to parent when initializing
-        }
+        self.resetBackground(calledFromInit: true)
     }
+    
 
     func shiftNodes() {
         // Remove the bottom node when it goes off-screen
@@ -65,10 +64,9 @@ class AstralMainMenuBackground {
         nodes.append(removedNode) // add it back to the nodes array
     }
 
-    
     func scroll() {
         // Adjust as necessary
-        let scrollSpeed: CGFloat = 1.0
+        let scrollSpeed: CGFloat = 4.0
         for node in nodes {
             node.position.y -= scrollSpeed
         }
@@ -87,24 +85,48 @@ class AstralMainMenuBackground {
         node.alpha  = 0.75 
         node.texture?.filteringMode = .nearest
         node.position.x = node.frame.width / 2
+        
         // position the new node above the top node
         node.position.y = nextNodePositionY - 1
+        
         // update the next node's y-position
         nextNodePositionY += node.size.height
         node.zPosition = -1
         node.isHidden = false
-        print("Adding \(textureName) to \(node.position)")
+        
         // cycle through the sorted texture names
         self.textureIndex = (textureIndex + 1) % self.textureNames.count
+        self.lastTextureShowing = (textureIndex == self.textureNames.count - 1)
 
         return node
     }
     
-    func setNodesVisibility(visible: Bool) {
-        for node in self.nodes {
-            node.isHidden = !visible
+    
+    func resetBackground(calledFromInit: Bool = false) {        
+        // Reset the variables
+        self.textureIndex = 0
+        self.nextNodePositionY = 0.0
+        self.lastTextureShowing = false
+
+        // If not called from the initializer, remove old nodes
+        if !calledFromInit {
+            for node in self.nodes {
+                node.removeFromParent()
+            }
+            self.nodes.removeAll()
+        }
+
+        // Add the initial nodes back
+        for _ in 0..<3 {
+            let node = addNewNodeAtTop()
+            if node.parent == nil {
+                self.nodes.append(node)
+                parent.addChild(node)
+            }
         }
     }
+
+
     
     func addNodesToParent() {
         for node in nodes {

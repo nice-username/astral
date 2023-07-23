@@ -52,6 +52,8 @@ class AstralMainMenuScene: SKScene {
     var currentBackgroundIndex = 0
     var currentBackground : SKSpriteNode!
     var nextBackground : SKSpriteNode!
+    var isTransitioning = false
+
 
 
     override func didMove(to view: SKView) {
@@ -90,13 +92,20 @@ class AstralMainMenuScene: SKScene {
                                                   index: 1)
 
         let optionsMenuItem = AstralMainMenuItem(withText: "Options",
-                                                 position: CGPoint(x: size.width / 2, y: size.height * 0.4),
+                                                 position: CGPoint(x: size.width / 2, y: size.height * 0.35),
                                                  action: { print("Options Selected") },
+                                                 isLocked: false,
+                                                 lockedText: nil,
+                                                 index: 3)
+        
+        let editorMenuItem  = AstralMainMenuItem(withText: "Editor",
+                                                 position: CGPoint(x: size.width / 2, y: size.height * 0.40),
+                                                 action: { print("Editor Selected") },
                                                  isLocked: false,
                                                  lockedText: nil,
                                                  index: 2)
                                                  
-        menuItems = [newGameMenuItem, continueMenuItem, optionsMenuItem]
+        menuItems = [newGameMenuItem, continueMenuItem, optionsMenuItem, editorMenuItem]
         menuItems.forEach { menuItem in
             addChild(menuItem.labelNode)
         }
@@ -165,7 +174,7 @@ class AstralMainMenuScene: SKScene {
     
     
     func setupBackgrounds() {
-        let atlasNames = ["MainMenuBackground02", "MainMenuBackground01", "MainMenuBackground00", "MainMenuBackground03"]
+        let atlasNames = ["MainMenuBackground00", "MainMenuBackground01", "MainMenuBackground02", "MainMenuBackground03"]
         
         self.backgrounds = atlasNames.map { AstralMainMenuBackground(atlasNamed: $0, parent: self) }
         
@@ -184,48 +193,80 @@ class AstralMainMenuScene: SKScene {
         }
     }
 
-    
+    func switchBackgrounds(oldBg: AstralMainMenuBackground, newBg: AstralMainMenuBackground) {
+        oldBg.nodes.forEach { node in
+            node.isHidden = true
+            node.removeFromParent()
+        }
+
+        for node in newBg.nodes {
+            if node.parent == nil {
+                self.addChild(node)
+            }
+        }
+
+        newBg.nodes.forEach { $0.isHidden = false }
+    }
+
     func transitionBackgrounds(oldBg: AstralMainMenuBackground, newBg: AstralMainMenuBackground,
-                               flickerCountRange: ClosedRange<Int> = 3...6,
-                               flickerDurationRange: ClosedRange<TimeInterval> = 0.10...0.20,
-                               waitDurationRange: ClosedRange<TimeInterval> = 0.05...0.10,
+                               flickerCountRange: ClosedRange<Int> = 3...7,
+                               waitDurationRange: ClosedRange<TimeInterval> = 0.0625...0.25,
                                completion: @escaping () -> Void) {
         let totalFlickerCount = Int.random(in: flickerCountRange)
         
-        newBg.nodes.forEach { $0.isHidden = true } // Start with the new background nodes hidden.
-        
-        let flicker = SKAction.customAction(withDuration: 0.0) { _, _ in
-            newBg.nodes.forEach { $0.isHidden = !$0.isHidden }
-            oldBg.nodes.forEach { $0.isHidden = !$0.isHidden }
-        }
+        // Set the isInTransition flag
+        oldBg.isInTransition = true
+        newBg.isInTransition = true
 
-        // Add the new background nodes to the scene.
-        newBg.nodes.forEach { self.addChild($0) }
-        
-        func performFlicker(count: Int) {
-            if count < totalFlickerCount {
-                let waitDuration = Double.random(in: waitDurationRange)
-                let flickerSequence = SKAction.sequence([flicker, SKAction.wait(forDuration: waitDuration)])
-                newBg.topNode!.run(flickerSequence) {
-                    performFlicker(count: count + 1)
-                }
-            } else {
-                newBg.nodes.forEach { $0.isHidden = false } // Ensure all new nodes are visible after flickering.
-                oldBg.nodes.forEach { $0.isHidden = true }  // Ensure all old nodes are hidden after flickering.
-                completion()
-                
-                // Remove the old background nodes from the scene.
-                oldBg.nodes.forEach { $0.removeFromParent() }
+        // Add the new background's nodes to the scene if not already added.
+        for node in newBg.nodes {
+            if node.parent == nil {
+                self.addChild(node)
             }
         }
+
+        // Create an array of actions
+        var actions: [SKAction] = []
         
-        performFlicker(count: 0)
+        for i in 0..<totalFlickerCount {
+            let waitDuration = Double.random(in: waitDurationRange)
+
+            let flickerAction: SKAction
+            if i % 2 == 0 {
+                flickerAction = SKAction.run { [weak self] in
+                    self?.switchBackgrounds(oldBg: oldBg, newBg: newBg)
+                }
+            } else {
+                flickerAction = SKAction.run { [weak self] in
+                    self?.switchBackgrounds(oldBg: newBg, newBg: oldBg)  // Switch old and new backgrounds
+                }
+            }
+            let flickerSequence = SKAction.sequence([flickerAction, SKAction.wait(forDuration: waitDuration)])
+            actions.append(flickerSequence)
+        }
+        
+        // Add a completion action to the sequence
+        let finalAction = SKAction.run {
+            self.switchBackgrounds(oldBg: oldBg, newBg: newBg)
+            oldBg.isInTransition = false
+            newBg.isInTransition = false
+            completion()
+        }
+        actions.append(finalAction)
+        
+        // Combine actions into a final sequence
+        let finalAnim = SKAction.sequence(actions)
+        
+        // Run final animation on the new background's top node
+        self.run(finalAnim)
     }
+
+
 
     
     
     
-    func startBackgroundTransitions(after time: ClosedRange<Double> = 16.0...20.0) {
+    func startBackgroundTransitions(after time: ClosedRange<Double> = 5.0...5.1) {
         let transitionDuration = Double.random(in: time)
         DispatchQueue.main.asyncAfter(deadline: .now() + transitionDuration) { [weak self] in
             guard let self = self else { return }
@@ -234,11 +275,13 @@ class AstralMainMenuScene: SKScene {
             let oldBackground = self.backgrounds[self.currentBackgroundIndex]
             
             // Calculate the index of the new background
-            self.currentBackgroundIndex = (self.currentBackgroundIndex + 1) % self.backgrounds.count
-            let newBackground = self.backgrounds[self.currentBackgroundIndex]
+            let nextBackground = (self.currentBackgroundIndex + 1) % self.backgrounds.count
+            let newBackground = self.backgrounds[nextBackground]
             
-            // Perform the transition
+             // Perform the transition
             self.transitionBackgrounds(oldBg: oldBackground, newBg: newBackground) {
+                self.currentBackgroundIndex = nextBackground
+                
                 // Start the next transition
                 self.startBackgroundTransitions()
             }
@@ -253,6 +296,16 @@ class AstralMainMenuScene: SKScene {
     }
     
     
+    
+    func resetBackgrounds(except currentIndex: Int) {
+        print("Reset")
+        for (index, background) in backgrounds.enumerated() {
+            if index != currentIndex {
+                background.resetBackground()
+            }
+        }
+    }
+
     
     
     func createTrailAction(to destination: CGPoint, duration: TimeInterval) -> SKAction {
@@ -310,12 +363,20 @@ class AstralMainMenuScene: SKScene {
     
     // Called before each frame is rendered
     override func update(_ currentTime: TimeInterval) {
-        // Scroll the current background
-        if self.currentBackgroundIndex < self.backgrounds.count {
-            let currentBackground = self.backgrounds[self.currentBackgroundIndex]
-            currentBackground.scroll()
+        for background in self.backgrounds {
+            if background.isInTransition || background === self.backgrounds[self.currentBackgroundIndex] {
+                background.scroll()
+                /*
+                if let bottomNode = currentBackground.bottomNode {
+                    if currentBackground.lastTextureShowing {
+                        }
+                    }
+                }
+                */
+            }
         }
     }
+
 
     
 }
