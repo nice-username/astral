@@ -6,41 +6,53 @@
 //
 
 import Foundation
-
+import SpriteKit
 
 class AstralGameStateManager {
-    var gameState: AstralGameState = .mainMenu
+    var gameViewController: SKView? {
+        didSet {
+            print("gameViewController set: \(gameViewController != nil)")
+        }
+    }
+    
+    static let shared = AstralGameStateManager()
+
+    // Prevent direct initialization
+    public init() {}
     
     private(set) var currentState: AstralGameState? {
         didSet {
-            // Add behavior when state changes if necessary
+            // Perform the transition when state changes
             switch currentState {
             case .mainMenu:
-                
+                // transition(to: MenuScene.self)
                 break
             case .optionsMenu:
-                // Your code when transitioning to optionsMenu
+                // transition to the corresponding scene
                 break
             case .inGame:
-                // Your code when transitioning to inGame
+                // transition(to: AstralStage.self)
                 break
             case .inGameCutscene:
-                // Your code when transitioning to inGameCutscene
+                // transition to the corresponding scene
                 break
             case .inGameVictory:
-                // Your code when transitioning to inGameVictory
+                // transition to the corresponding scene
                 break
             case .inGameDefeat:
-                // Your code when transitioning to inGameDefeat
+                // transition to the corresponding scene
                 break
             case .stageSelect:
-                // Your code when transitioning to stageSelect
+                // transition to the corresponding scene
                 break
             case .shop:
-                // Your code when transitioning to shop
+                // transition to the corresponding scene
                 break
             case .equipmentSelection:
-                // Your code when transitioning to equipmentSelection
+                // transition to the corresponding scene
+                break
+            case .editor:
+                transition(to: AstralStageEditor.self)
                 break
             case .none:
                 break
@@ -48,9 +60,17 @@ class AstralGameStateManager {
         }
     }
     
-    func enterState(_ state: AstralGameState) {
-        self.gameState = state
+    func transitionTo(_ state: AstralGameState) {
+        self.currentState = state
     }
     
-    // Additional methods related to managing game state can be added here
+    private func transition<T: SKScene>(to sceneType: T.Type, transition: SKTransition = SKTransition.push(with: .left, duration: 0.35)) {
+        if gameViewController != nil {
+            let sceneToPresent = sceneType.init(size: gameViewController!.bounds.size)
+            sceneToPresent.scaleMode = .aspectFill
+            gameViewController!.presentScene(sceneToPresent, transition: transition)
+        } else {
+            print("Hey you never set the fucken view before calling transition ;\\")
+        }
+    }
 }

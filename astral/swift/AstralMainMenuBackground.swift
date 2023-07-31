@@ -66,7 +66,7 @@ class AstralMainMenuBackground {
 
     func scroll() {
         // Adjust as necessary
-        let scrollSpeed: CGFloat = 4.0
+        let scrollSpeed: CGFloat = 2.0
         for node in nodes {
             node.position.y -= scrollSpeed
         }
@@ -82,7 +82,7 @@ class AstralMainMenuBackground {
         let node = SKSpriteNode(texture: texture)
         node.xScale = 2.0
         node.yScale = 2.0
-        node.alpha  = 0.75 
+        node.alpha  = 0.75
         node.texture?.filteringMode = .nearest
         node.position.x = node.frame.width / 2
         

@@ -16,5 +16,6 @@ enum AstralGameState {
     case inGameDefeat
     case stageSelect
     case shop
+    case editor
     case equipmentSelection
 }

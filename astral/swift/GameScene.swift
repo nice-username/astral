@@ -104,9 +104,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(label)
         label.zPosition = 4
         label.position = CGPoint(x: -200, y: 32.0)
-        
-        // Init audio .. ?
-        let audio1 = SKAction.playSoundFileNamed("impact00",waitForCompletion: false)
     }
 
     

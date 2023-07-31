@@ -40,9 +40,9 @@ struct AstralMainMenuItem {
 
 
 
-class AstralMainMenuScene: SKScene {
-    var state: AstralGameStateManager?
-    var audioPlayer: AVAudioPlayer?
+class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
+    var gameState: AstralGameStateManager?
+    private var audioPlayers: [AVAudioPlayer] = []
     var logo: SKSpriteNode!
     var menuItems: [AstralMainMenuItem] = []
     var selectedItem: Int?
@@ -54,15 +54,16 @@ class AstralMainMenuScene: SKScene {
     var nextBackground : SKSpriteNode!
     var isTransitioning = false
 
-
-
+    
     override func didMove(to view: SKView) {
+        self.gameState = AstralGameStateManager()
+        gameState?.gameViewController = self.view
+        
         self.backgroundColor = SKColor.black
         
-        self.loadAudioFiles()
         self.setupBackgrounds()
         
-        // Add logo
+        // Create logo
         let logoNode = SKSpriteNode(imageNamed: "logo1")
         logoNode.position = CGPoint(x: size.width/2, y: size.height*0.75)
         logoNode.xScale = 3.0
@@ -71,6 +72,19 @@ class AstralMainMenuScene: SKScene {
         logoNode.texture?.filteringMode = .nearest
         self.addChild(logoNode)
         
+        // Create box
+        let boxSize = CGSize(width: frame.width, height: logoNode.size.height + 80)
+        let blackBox = SKSpriteNode(color: .white, size: boxSize)
+        blackBox.position = CGPoint(x: frame.midX, y: logoNode.position.y)
+        blackBox.zPosition = logoNode.zPosition - 1
+        blackBox.alpha = 0.333333
+        blackBox.blendMode = .subtract
+        self.addChild(blackBox)
+        
+        // create scanlines
+        loopScanlines(on: blackBox, count: 4...12, height: 1...3, duration: (1/3))
+
+                
         AstralEffectsManager.shared.displaceSpriteAnimated(for: logoNode,
                                                            repeatRate: 0.005 ... 0.02,
                                                            widthRange:  0.05 ... 0.7,
@@ -100,7 +114,7 @@ class AstralMainMenuScene: SKScene {
         
         let editorMenuItem  = AstralMainMenuItem(withText: "Editor",
                                                  position: CGPoint(x: size.width / 2, y: size.height * 0.40),
-                                                 action: { print("Editor Selected") },
+                                                 action: { self.editorAction() },
                                                  isLocked: false,
                                                  lockedText: nil,
                                                  index: 2)
@@ -126,16 +140,72 @@ class AstralMainMenuScene: SKScene {
     
     
     
-    func loadAudioFiles() {
-        if let url = Bundle.main.url(forResource: "menu_select", withExtension: "wav") {
-            do {
-                self.audioPlayer = try AVAudioPlayer(contentsOf: url)
-                self.audioPlayer?.prepareToPlay()
-            } catch {
-                print("Could not load sound file.")
-            }
+    func editorAction() {
+        if(selectedItem == 2) {
+            self.gameState?.transitionTo(.editor)
         }
     }
+    
+    
+    func addScanlines(to sprite: SKSpriteNode, count: ClosedRange<Int>, height: ClosedRange<CGFloat>, color: UIColor = .black) {
+        for _ in count {
+            let height = floor(CGFloat.random(in: height))
+            let line = SKSpriteNode(color: .black, size: CGSize(width: sprite.size.width, height: height))
+            line.position.y = CGFloat.random(in: -(sprite.size.height / 2)...(sprite.size.height / 2))
+            line.alpha = 0.5
+            sprite.addChild(line)
+            
+            // Decide the animation duration randomly
+            let duration = Double.random(in: 0.75...2.5)
+            let originPos  = line.position.y
+            var randomPos1 = CGFloat.random(in: 8...20)
+            let lineTopEdgeY = line.position.y + line.size.height / 2
+            if lineTopEdgeY + randomPos1 > sprite.size.height / 2 {
+                randomPos1 = (sprite.size.height / 2) - lineTopEdgeY
+            }
+            
+            // Create a move up action
+            let moveUp = SKAction.moveBy(x: 0, y: randomPos1, duration: duration)
+            
+            // Create a reset position action
+            let resetPosition = SKAction.moveTo(y: originPos, duration: 0)
+            
+            // Sequence of move up and reset
+            let sequence = SKAction.sequence([moveUp, resetPosition])
+            
+            // Repeat forever
+            let loop = SKAction.repeatForever(sequence)
+            
+            // Run the loop action on the line
+            line.run(loop)
+        }
+    }
+    
+    
+    func loopScanlines(on sprite: SKSpriteNode, count: ClosedRange<Int>, height: ClosedRange<CGFloat>, duration: TimeInterval) {
+        // Define a block that adds scanlines
+        let addScanlinesBlock = SKAction.run { [weak sprite] in
+            guard let sprite = sprite else { return }
+            self.addScanlines(to: sprite, count: count, height: height)
+        }
+        
+        // Define a block that removes scanlines
+        let removeScanlinesBlock = SKAction.run { [weak sprite] in
+            guard let sprite = sprite else { return }
+            sprite.children.forEach { if $0 is SKSpriteNode { $0.removeFromParent() } }
+        }
+
+        // Sequence of adding, waiting and then removing scanlines
+        let sequence = SKAction.sequence([addScanlinesBlock, .wait(forDuration: duration), removeScanlinesBlock])
+
+        // Loop the sequence forever
+        let loop = SKAction.repeatForever(sequence)
+        
+        sprite.run(loop, withKey: "scanlines")
+    }
+
+
+    
     
     func vibrate(style: UIImpactFeedbackGenerator.FeedbackStyle) {
         let generator = UIImpactFeedbackGenerator(style: style)
@@ -349,17 +419,36 @@ class AstralMainMenuScene: SKScene {
         let location = touch.location(in: self)
         
         if let menuItem = menuItem(atPoint: location) {
-            self.audioPlayer?.play()
             self.vibrate(style: .medium)
-            if self.selectedItem != menuItem.index {
-                moveCursor(to: menuItem)
-                self.selectedItem = menuItem.index
-            }
             if let action = menuItem.action {
                 action()
             }
+            if self.selectedItem != menuItem.index {
+                self.playSound()
+                moveCursor(to: menuItem)
+                self.selectedItem = menuItem.index
+            }
         }
     }
+    
+    
+    
+    private func playSound() {
+        if let url = Bundle.main.url(forResource: "menu_select", withExtension: "wav") {
+            do {
+                let player = try AVAudioPlayer(contentsOf: url)
+                player.prepareToPlay()
+                player.play()
+
+                // Clean up the player once it has finished playing
+                player.delegate = self
+                self.audioPlayers.append(player)
+            } catch {
+                print("Could not load sound file.")
+            }
+        }
+    }
+
     
     // Called before each frame is rendered
     override func update(_ currentTime: TimeInterval) {
@@ -374,6 +463,16 @@ class AstralMainMenuScene: SKScene {
                 }
                 */
             }
+        }
+    }
+    
+    
+    
+    // Part of AVAudioPlayerDelegate
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        // Once a sound finishes playing, remove it from the array to free up resources
+        if let index = self.audioPlayers.firstIndex(of: player) {
+            self.audioPlayers.remove(at: index)
         }
     }
 

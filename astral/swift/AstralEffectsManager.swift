@@ -24,8 +24,8 @@ class AstralEffectsManager {
         displacedNode.xScale = 3.0
         displacedNode.yScale = 3.0
         displacedNode.texture?.filteringMode = .nearest
-        displacedNode.position.x = node.position.x + CGFloat.random(in: -100...100)
-        displacedNode.position.y = node.position.y + CGFloat.random(in: -50...50)
+        displacedNode.position.x = node.position.x + CGFloat.random(in: -125...125)
+        displacedNode.position.y = node.position.y + CGFloat.random(in: -40...40)
         displacedNode.zPosition = node.zPosition - 1
         node.parent?.addChild(displacedNode)
 
@@ -65,5 +65,28 @@ class AstralEffectsManager {
 
 
     
-    // Other effects go here
+    func createTransparentLine(on sprite: SKSpriteNode, thickness: CGFloat, yPosition: CGFloat) -> SKNode {
+        let container = SKNode()
+
+        // Create a mask that has a clear line across it
+        let mask = SKSpriteNode(color: .white, size: sprite.size)
+        let line = SKSpriteNode(color: .clear, size: CGSize(width: sprite.size.width, height: thickness))
+        line.position.y = yPosition - sprite.size.height / 2
+        mask.addChild(line)
+        
+        let cropNode = SKCropNode()
+        cropNode.maskNode = mask
+        cropNode.addChild(sprite.copy() as! SKSpriteNode) // Make a copy of the sprite to avoid "already has a parent" error
+        
+        container.addChild(cropNode)
+        
+        return container
+    }
+
+    
+    func createLine(on sprite: SKSpriteNode, thickness: CGFloat, yPosition: CGFloat, color: UIColor) {
+    }
+
+
+
 }
