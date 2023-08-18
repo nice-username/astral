@@ -10,6 +10,7 @@ import SpriteKit
 
 class AstralStageEditor: SKScene {
     let toolbar = AstralStageEditorToolbar(frame: CGRect(x: 0, y: 0, width: 64, height: UIScreen.main.bounds.height))
+    public var toolbarBgColor : UIColor?
 
     override init(size: CGSize) {
         super.init(size: size)
@@ -19,6 +20,7 @@ class AstralStageEditor: SKScene {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupToolbar()
+        self.toolbarBgColor = toolbar.backgroundColor
     }
     
     func setupToolbar() {
@@ -56,7 +58,6 @@ class AstralStageEditor: SKScene {
     }
     
     
-    
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let touchLocation = gesture.location(in: self.view)
         
@@ -64,15 +65,15 @@ class AstralStageEditor: SKScene {
         let rightEdge = self.view!.frame.size.width
         let mainToolbarThreshold: CGFloat = 64
         let subMenuThreshold: CGFloat = 96
-        let fullToolbarWidth: CGFloat = 224 + 64 // Main + Sub
-        
+        let fullToolbarWidth: CGFloat = 224 + 64
+
         // Initial touch detection
         if gesture.state == .began && rightEdge - touchLocation.x <= mainToolbarThreshold {
             toolbar.validGestureStarted = true
         }
         
         guard toolbar.validGestureStarted else { return }
-        
+
         let translation = gesture.translation(in: self.view)
         
         switch gesture.state {
@@ -83,48 +84,63 @@ class AstralStageEditor: SKScene {
             
             toolbar.frame = newFrame
             
-            // Cursor snapping and submenu handling
-            if rightEdge - newFrame.origin.x < subMenuThreshold {
+            let swipeDistance = rightEdge - newFrame.origin.x
+            let mainToolbarOpacity: CGFloat
+            let subToolbarOpacity: CGFloat
+
+            if swipeDistance <= mainToolbarThreshold {
+                mainToolbarOpacity = 1
+                subToolbarOpacity = 0
+            } else if swipeDistance <= 192 { // Use 192px as the threshold for full sub-toolbar opacity
+                let subToolbarRange: CGFloat = 192 - mainToolbarThreshold
+                subToolbarOpacity = (swipeDistance - mainToolbarThreshold) / subToolbarRange
+                mainToolbarOpacity = 1 - subToolbarOpacity
+            } else {
+                mainToolbarOpacity = 0
+                subToolbarOpacity = 1
+            }
+
+            toolbar.stackView.alpha = mainToolbarOpacity
+            toolbar.toolbarSubMenu.alpha = subToolbarOpacity
+            toolbar.backgroundColor = self.toolbarBgColor?.withAlphaComponent(mainToolbarOpacity)
+
+            if swipeDistance < subMenuThreshold {
                 toolbar.snapCursorToButton(at: touchLocation)
-                // Animate the sub-menu buttons from transparent to opaque based on how far the toolbar has been pulled
-                let opacity = min(1, (newFrame.origin.x - (rightEdge - subMenuThreshold)) / (fullToolbarWidth - subMenuThreshold))
-                toolbar.toolbarSubMenu.setAlpha(1 - opacity)
             }
             
             gesture.setTranslation(.zero, in: self.view)
             
         case .ended, .cancelled:
-            let finalTranslationX = rightEdge - toolbar.frame.origin.x
-            if finalTranslationX >= subMenuThreshold {
+            if rightEdge - toolbar.frame.origin.x >= subMenuThreshold {
                 revealToolbar()
             } else {
                 hideToolbar()
             }
-            
         default:
             break
         }
-        
+
         if gesture.state == .ended || gesture.state == .cancelled || gesture.state == .failed {
             toolbar.validGestureStarted = false
         }
     }
+
     
     func closeSubMenu() {
         toolbar.secondaryToolbarOpened = false
     }
     
-
     func revealToolbar() {
         UIView.animate(withDuration: 0.25, animations: {
             self.toolbar.stackView.alpha = 0
             self.toolbar.selectionCursor.alpha = 0
             self.toolbar.backgroundColor = .none
-            self.toolbar.toolbarSubMenu.setAlpha(1)
+            self.toolbar.toolbarSubMenu.alpha = 1
             self.toolbar.frame.origin.x = self.view!.frame.size.width - (224 + 64)
         })
     }
 
+    
     func hideToolbar() {
         UIView.animate(withDuration: 0.25, animations: {
             self.toolbar.stackView.alpha = 1
@@ -134,7 +150,7 @@ class AstralStageEditor: SKScene {
             let b = CGFloat( 48 / 255.0 )
             let a = CGFloat( 255 / 255.0 )
             self.toolbar.backgroundColor = UIColor(red: r, green: g, blue: b, alpha: a)
-            self.toolbar.toolbarSubMenu.setAlpha(0)
+            self.toolbar.toolbarSubMenu.alpha = 0
             self.toolbar.frame.origin.x = self.view!.frame.size.width
         })
     }
