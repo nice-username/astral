@@ -12,6 +12,13 @@ import UIKit
 struct AstralStageEditorToolbarAction {
     let title: String
     let imageName: String
+    let action: (() -> Void)?
+    
+    init(title: String, imageName: String, action: (() -> Void)? = nil) {
+        self.title = title
+        self.imageName = imageName
+        self.action = action
+    }
 }
 
 enum AstralStageEditorToolbarSubViewType {
@@ -21,7 +28,7 @@ enum AstralStageEditorToolbarSubViewType {
         switch self {
         case .file:
             return [
-                AstralStageEditorToolbarAction(title: "Create new", imageName: "new"),
+                AstralStageEditorToolbarAction(title: "Create new", imageName: "new", action: { print("?")} ),
                 AstralStageEditorToolbarAction(title: "Open", imageName: "open"),
                 AstralStageEditorToolbarAction(title: "Save", imageName: "save"),
                 AstralStageEditorToolbarAction(title: "Rename", imageName: "edit"),
@@ -56,6 +63,8 @@ class AstralStageEditorToolbarSubView: UIView {
     var titleLabel: UILabel = UILabel()
     var titleSeparator: UIView = UIView()
     var titleIcon: UIImageView?
+    var leftConstraint: NSLayoutConstraint!
+
     
     init(type: AstralStageEditorToolbarSubViewType) {
         self.type = type
@@ -72,8 +81,9 @@ class AstralStageEditorToolbarSubView: UIView {
         self.stackView.axis = .vertical
         self.stackView.distribution = .fillEqually
         self.stackView.spacing = 1
+        self.stackView.alignment = .fill
         self.stackView.backgroundColor = .black
-        self.backgroundColor = .lightGray
+        self.backgroundColor = .darkGray
         
         self.setTitle()
     }
@@ -168,16 +178,16 @@ class AstralStageEditorToolbarSubView: UIView {
     }
     
     
-    
-     
     func updateButtons() {
         self.buttons.removeAll()
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         let actions = type.actions
+        var buttonIndex = 0
         for action in actions {
             let button = UIButton(type: .custom)
             button.setTitle(action.title, for: .normal)
+            
             button.setImage(UIImage(named: action.imageName), for: .normal)
             button.imageView?.contentMode = .scaleAspectFit
             button.imageView?.clipsToBounds = true
@@ -187,6 +197,11 @@ class AstralStageEditorToolbarSubView: UIView {
             button.contentHorizontalAlignment = .left
             button.setTitleColor(.black, for: .normal)
             button.backgroundColor = .white
+
+            if action.action != nil {
+                button.addAction(UIAction(handler: { _ in action.action!() }), for: .touchUpInside)
+                button.tag = buttonIndex
+            }
             
             // Set the image view size
             button.imageView?.translatesAutoresizingMaskIntoConstraints = false
@@ -199,6 +214,7 @@ class AstralStageEditorToolbarSubView: UIView {
             
             stackView.addArrangedSubview(button)
             buttons.append(button)
+            buttonIndex += 1
         }
         
         self.resizeStackView()

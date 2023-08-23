@@ -6,14 +6,7 @@
 //import Foundation
 import SpriteKit
 
-class AstralParallaxBackground: SKNode {
-    
-    struct Layer {
-        let imageName: String
-        var isVisible: Bool
-        let scrollingSpeed: CGFloat
-    }
-    
+class AstralParallaxBackground: SKNode {    
     private let size: CGSize
     private var layers: [AstralParallaxBackgroundLayer]
     

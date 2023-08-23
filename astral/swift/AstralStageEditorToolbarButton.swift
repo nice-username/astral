@@ -20,7 +20,7 @@ class AstralStageEditorToolbarButton: UIButton {
     let submenuString: String
     let submenuImage: UIImage
     private var submenuLabel: UILabel?
-
+    weak var delegate: AstralStageEditorToolbarButtonDelegate?
 
     
     override var intrinsicContentSize: CGSize {
@@ -97,6 +97,6 @@ class AstralStageEditorToolbarButton: UIButton {
     }
     
     @objc func buttonTapped() {
-        action()
+        delegate?.didTapButton(self)
     }
 }

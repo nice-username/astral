@@ -12,8 +12,7 @@ class AstralStageEditorToolbar: UIView {
     var stackView: UIStackView!
     var validGestureStarted = false
     var secondaryToolbarOpened = false
-    var subViewFullyOpen = false
-    
+    var subMenuIsOpen: Bool = false
     var toolbarSubMenu: AstralStageEditorToolbarSubView!
     var lastSelectedSubmenuType: AstralStageEditorToolbarSubViewType = .file
     var selectedSubmenuType: AstralStageEditorToolbarSubViewType = .file
@@ -33,7 +32,7 @@ class AstralStageEditorToolbar: UIView {
         let a = CGFloat( 255 / 255.0 )
         self.backgroundColor = UIColor(red: r, green: g, blue: b, alpha: a)
         self.addSubview(selectionCursor)
-    
+        
         self.stackView = UIStackView()
         self.stackView.axis = .vertical
         self.stackView.distribution = .equalSpacing
@@ -49,16 +48,6 @@ class AstralStageEditorToolbar: UIView {
             stackView.heightAnchor.constraint(equalToConstant: 64 * 4 + 4)
         ])
         
-        self.toolbarSubMenu = AstralStageEditorToolbarSubView(type: self.selectedSubmenuType)
-        self.addSubview(toolbarSubMenu)
-        
-        toolbarSubMenu.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            toolbarSubMenu.leftAnchor.constraint(equalTo: self.rightAnchor),
-            toolbarSubMenu.centerYAnchor.constraint(equalTo: self.centerYAnchor), // Centered with stackView
-            toolbarSubMenu.widthAnchor.constraint(equalToConstant: 224), // Fixed width
-            toolbarSubMenu.heightAnchor.constraint(equalTo: self.heightAnchor) // Same height as stackView
-        ])
     }
     
     required init?(coder: NSCoder) {
@@ -72,9 +61,7 @@ class AstralStageEditorToolbar: UIView {
     //
     func createSubBar() {
         print("createSubBar()")
-        self.setSubMenu(self.selectedSubmenuType)
-        // self.toolbarSubMenu.frame = CGRect(x: self.frame.size.width, y: 0, width: 64, height: self.frame.size.height)
-        self.addSubview(self.toolbarSubMenu)
+        self.toolbarSubMenu = AstralStageEditorToolbarSubView(type: self.selectedSubmenuType)
     }
     
     
@@ -94,38 +81,6 @@ class AstralStageEditorToolbar: UIView {
         }
     }
     
-    
-    
-    //
-    //
-    //
-    func setSubMenu(_ subViewType: AstralStageEditorToolbarSubViewType) {
-        // Define an array to hold the submenu options
-        let options: [AstralStageEditorToolbarButton]
-        switch subViewType {
-        case .file:
-            options = [
-                AstralStageEditorToolbarButton(icon: nil, action: {}, type: .secondLevel, submenuType: .file, submenuString: "File", submenuImage: UIImage(named: "file")),
-                AstralStageEditorToolbarButton(icon: nil, action: {}, type: .secondLevel, submenuType: .file, submenuString: "New", submenuImage: UIImage(named: "new"))
-            ]
-        case .transition:
-            options = [
-                AstralStageEditorToolbarButton(icon: nil, action: {}, type: .secondLevel, submenuType: .transition, submenuString: "Idk lol", submenuImage: UIImage(named: "menu"))
-            ]
-        case .path:
-            options = [
-                AstralStageEditorToolbarButton(icon: nil, action: {}, type: .secondLevel, submenuType: .transition, submenuString: "Idk lol", submenuImage: UIImage(named: "menu"))
-            ]
-        case .enemy:
-            options = [
-                AstralStageEditorToolbarButton(icon: nil, action: {}, type: .secondLevel, submenuType: .transition, submenuString: "Idk lol", submenuImage: UIImage(named: "menu"))
-            ]
-             
-        }
-        
-        // let subview = AstralStageEditorToolbarSubView(type: subViewType)
-        // self.toolbarSubMenu = subview
-    }
     
     
     
@@ -153,7 +108,6 @@ class AstralStageEditorToolbar: UIView {
     // Handles moving the cursor and defining what button is currently selected
     //
     func snapCursorToButton(at touchLocation: CGPoint) {
-    
         let closestButton = self.getClosestButton(to: touchLocation)
         let newY = closestButton.center.y + (self.frame.size.height / 2) - (closestButton.frame.size.height * 2) - 2
         UIView.animate(withDuration: 0.3333, delay: 0.0, options: .curveEaseOut) {
@@ -175,7 +129,6 @@ class AstralStageEditorToolbar: UIView {
         }
         
         if type != lastSelectedSubmenuType {
-            self.setSubMenu(type)
             self.toolbarSubMenu.type = type
             self.toolbarSubMenu.setTitle()            
             self.toolbarSubMenu.updateButtons()

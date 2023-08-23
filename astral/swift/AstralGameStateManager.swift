@@ -9,6 +9,9 @@ import Foundation
 import SpriteKit
 
 class AstralGameStateManager {
+    // Reference to the main UIViewController
+    var viewController: UIViewController?
+    
     var gameViewController: SKView? {
         didSet {
             print("gameViewController set: \(gameViewController != nil)")
@@ -54,6 +57,9 @@ class AstralGameStateManager {
             case .editor:
                 transition(to: AstralStageEditor.self)
                 break
+            case .editorParallaxBackgroundPicker:
+                transitionToViewController(AstralParallaxBackgroundLayerPicker())
+                break
             case .none:
                 break
             }
@@ -64,13 +70,21 @@ class AstralGameStateManager {
         self.currentState = state
     }
     
+    private func transitionToViewController(_ viewControllerToPresent: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
+        if let presentingViewController = viewController {
+            presentingViewController.present(viewControllerToPresent, animated: animated, completion: completion)
+        } else {
+            print("Never set the view controller before calling transition!")
+        }
+    }
+    
     private func transition<T: SKScene>(to sceneType: T.Type, transition: SKTransition = SKTransition.push(with: .left, duration: 0.35)) {
         if gameViewController != nil {
             let sceneToPresent = sceneType.init(size: gameViewController!.bounds.size)
             sceneToPresent.scaleMode = .aspectFill
             gameViewController!.presentScene(sceneToPresent, transition: transition)
         } else {
-            print("Hey you never set the fucken view before calling transition ;\\")
+            print("Never set the view before calling transition!")
         }
     }
 }
