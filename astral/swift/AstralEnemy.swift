@@ -168,7 +168,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         // Unused
     }
     
-    func moveBy(direction: JoystickDirection) {
+    func moveBy(direction: Direction) {
         let vector      = self.joystick.normalizedVelocity
         let posX        = self.position.x + vector!.dx * movementSpeed
         let posY        = self.position.y + vector!.dy * movementSpeed

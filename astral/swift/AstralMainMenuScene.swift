@@ -56,7 +56,7 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
 
     
     override func didMove(to view: SKView) {
-        self.gameState = AstralGameStateManager()
+        self.gameState = AstralGameStateManager.shared
         gameState?.gameViewController = self.view
         
         self.backgroundColor = SKColor.black

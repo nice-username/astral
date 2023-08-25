@@ -29,19 +29,20 @@ extension UIView {
 
 
 class AstralStageEditor: SKScene {
-    let toolbar = AstralStageEditorToolbar(frame: CGRect(x: 0, y: 0, width: 64, height: UIScreen.main.bounds.height))
+    var toolbar : AstralStageEditorToolbar?
     public var toolbarBgColor : UIColor?
     var panGestureHandler : UIPanGestureRecognizer?
 
     override init(size: CGSize) {
         super.init(size: size)
+        self.toolbar = AstralStageEditorToolbar(frame: .zero, scene: self)
         setupToolbar()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupToolbar()
-        self.toolbarBgColor = toolbar.backgroundColor
+        self.toolbarBgColor = toolbar?.backgroundColor
     }
     
     func setupToolbar() {
@@ -65,49 +66,37 @@ class AstralStageEditor: SKScene {
                                                          type: .topLevel,
                                                          submenuType: .enemy)
         
-        toolbar.setButtons([stageButton, transitionButton, pathButton, enemyButton])
+        toolbar?.setButtons([stageButton, transitionButton, pathButton, enemyButton])
     }
     
     override func didMove(to view: SKView) {
         super.didMove(to: view)
-        view.addSubview(toolbar)
-        toolbar.layer.zPosition = 2
-        toolbar.frame.origin.x = view.frame.size.width
+        view.addSubview(toolbar!)
+        toolbar?.layer.zPosition = 2
+        toolbar?.frame.origin.x = view.frame.size.width
         
         self.panGestureHandler = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
         view.addGestureRecognizer(panGestureHandler!)
 
-        toolbar.translatesAutoresizingMaskIntoConstraints = false
+        toolbar?.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            toolbar.topAnchor.constraint(equalTo: self.view!.topAnchor),
-            toolbar.bottomAnchor.constraint(equalTo: self.view!.bottomAnchor),
-            toolbar.leftAnchor.constraint(equalTo: self.view!.rightAnchor),
-            toolbar.widthAnchor.constraint(equalToConstant: 64)
+            toolbar!.topAnchor.constraint(equalTo: self.view!.topAnchor),
+            toolbar!.bottomAnchor.constraint(equalTo: self.view!.bottomAnchor),
+            toolbar!.leftAnchor.constraint(equalTo: self.view!.rightAnchor),
+            toolbar!.widthAnchor.constraint(equalToConstant: 64)
         ])
         
-        toolbar.createSubBar()
-        view.addSubview(toolbar.toolbarSubMenu)
+        toolbar?.createSubBar()
+        view.addSubview(toolbar!.toolbarSubMenu)
         
-        toolbar.toolbarSubMenu.translatesAutoresizingMaskIntoConstraints = false
-        toolbar.toolbarSubMenu.leftConstraint = toolbar.toolbarSubMenu.leftAnchor.constraint(equalTo: self.toolbar.rightAnchor)
+        toolbar?.toolbarSubMenu.translatesAutoresizingMaskIntoConstraints = false
+        toolbar?.toolbarSubMenu.leftConstraint = toolbar?.toolbarSubMenu.leftAnchor.constraint(equalTo: self.toolbar!.rightAnchor)
         NSLayoutConstraint.activate([
-            toolbar.toolbarSubMenu.leftConstraint,
-            toolbar.toolbarSubMenu.topAnchor.constraint(equalTo: self.toolbar.topAnchor),
-            toolbar.toolbarSubMenu.widthAnchor.constraint(equalToConstant: 224),
-            toolbar.toolbarSubMenu.heightAnchor.constraint(equalTo: self.toolbar.heightAnchor)
+            toolbar!.toolbarSubMenu.leftConstraint,
+            toolbar!.toolbarSubMenu.topAnchor.constraint(equalTo: self.toolbar!.topAnchor),
+            toolbar!.toolbarSubMenu.widthAnchor.constraint(equalToConstant: 224),
+            toolbar!.toolbarSubMenu.heightAnchor.constraint(equalTo: self.toolbar!.heightAnchor)
         ])
-        
-        
-        self.view?.isUserInteractionEnabled = true
-        self.toolbar.isUserInteractionEnabled = true
-        self.toolbar.toolbarSubMenu.isUserInteractionEnabled = true
-        self.toolbar.toolbarSubMenu.stackView.isUserInteractionEnabled = true
-        
-        self.view?.clipsToBounds = false
-        self.toolbar.clipsToBounds = false
-        self.toolbar.toolbarSubMenu.clipsToBounds = false
-        self.toolbar.toolbarSubMenu.stackView.clipsToBounds = false
-        
     }
     
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
@@ -121,23 +110,23 @@ class AstralStageEditor: SKScene {
 
         // Initial touch detection
         if gesture.state == .began && rightEdge - touchLocation.x <= mainToolbarThreshold {
-            toolbar.validGestureStarted = true
+            toolbar?.validGestureStarted = true
         }
         
-        guard toolbar.validGestureStarted else { return }
+        guard toolbar!.validGestureStarted else { return }
 
         let translation = gesture.translation(in: self.view)
         
         switch gesture.state {
         case .began, .changed:
-            var newFrame = toolbar.frame
+            var newFrame = toolbar!.frame
             newFrame.origin.x += translation.x
             newFrame.origin.x = max(newFrame.origin.x, self.view!.frame.size.width - fullToolbarWidth)
             
-            toolbar.frame = newFrame
-            let newOriginX = max(toolbar.frame.origin.x + translation.x, self.view!.frame.size.width - fullToolbarWidth)
-            let delta = newOriginX - toolbar.frame.origin.x
-            self.toolbar.toolbarSubMenu.frame.origin.x += delta
+            toolbar?.frame = newFrame
+            let newOriginX = max(toolbar!.frame.origin.x + translation.x, self.view!.frame.size.width - fullToolbarWidth)
+            let delta = newOriginX - toolbar!.frame.origin.x
+            self.toolbar?.toolbarSubMenu.frame.origin.x += delta
             
             let swipeDistance = rightEdge - newFrame.origin.x
             let mainToolbarOpacity: CGFloat
@@ -156,10 +145,10 @@ class AstralStageEditor: SKScene {
             }
 
             self.setContentAlpha(mainToolbarOpacity)
-            toolbar.toolbarSubMenu.alpha = subToolbarOpacity
+            toolbar?.toolbarSubMenu.alpha = subToolbarOpacity
 
             if swipeDistance < subMenuThreshold {
-                toolbar.snapCursorToButton(at: touchLocation)
+                toolbar?.snapCursorToButton(at: touchLocation)
             }
             
             /*
@@ -189,7 +178,7 @@ class AstralStageEditor: SKScene {
             gesture.setTranslation(.zero, in: self.view)
             
         case .ended, .cancelled:
-            if rightEdge - toolbar.frame.origin.x >= subMenuThreshold {
+            if rightEdge - toolbar!.frame.origin.x >= subMenuThreshold {
                 revealToolbar()
             } else {
                 hideToolbar()
@@ -199,30 +188,30 @@ class AstralStageEditor: SKScene {
         }
 
         if gesture.state == .ended || gesture.state == .cancelled || gesture.state == .failed {
-            toolbar.validGestureStarted = false
+            toolbar?.validGestureStarted = false
         }
     }
 
     
     func setContentAlpha(_ alpha: CGFloat) {
-        self.toolbar.stackView.arrangedSubviews.forEach { $0.alpha = alpha }
-        self.toolbar.selectionCursor.alpha = alpha
+        self.toolbar?.stackView.arrangedSubviews.forEach { $0.alpha = alpha }
+        self.toolbar?.selectionCursor.alpha = alpha
         let r = CGFloat( 24 / 255.0 )
         let g = CGFloat( 32 / 255.0 )
         let b = CGFloat( 48 / 255.0 )
         let a = alpha
-        self.toolbar.backgroundColor = UIColor(red: r, green: g, blue: b, alpha: a)
-        self.toolbar.backgroundColor = backgroundColor
+        self.toolbar!.backgroundColor = UIColor(red: r, green: g, blue: b, alpha: a)
+        self.toolbar!.backgroundColor = backgroundColor
     }
     
     func revealToolbar() {
         UIView.animate(withDuration: 0.25, animations: {
             self.setContentAlpha(0)
-            self.toolbar.toolbarSubMenu.alpha = 1
-            self.toolbar.frame.origin.x = self.view!.frame.size.width - (224 + 64)
-            self.toolbar.toolbarSubMenu.frame.origin.x = self.view!.frame.size.width - 224
+            self.toolbar?.toolbarSubMenu.alpha = 1
+            self.toolbar!.frame.origin.x = self.view!.frame.size.width - (224 + 64)
+            self.toolbar?.toolbarSubMenu.frame.origin.x = self.view!.frame.size.width - 224
         }, completion: { _ in
-            self.toolbar.subMenuIsOpen = true
+            self.toolbar?.subMenuIsOpen = true
         } )
     }
 
@@ -230,11 +219,11 @@ class AstralStageEditor: SKScene {
     func hideToolbar() {
         UIView.animate(withDuration: 0.25, animations: {
             self.setContentAlpha(1)
-            self.toolbar.toolbarSubMenu.alpha = 0
-            self.toolbar.frame.origin.x = self.view!.frame.size.width
-            self.toolbar.toolbarSubMenu.frame.origin.x = self.view!.frame.size.width + self.toolbar.frame.width
+            self.toolbar?.toolbarSubMenu.alpha = 0
+            self.toolbar!.frame.origin.x = self.view!.frame.size.width
+            self.toolbar?.toolbarSubMenu.frame.origin.x = self.view!.frame.size.width + self.toolbar!.frame.width
         }, completion: { _ in
-            self.toolbar.subMenuIsOpen = false
+            self.toolbar?.subMenuIsOpen = false
         } )
     }
 }

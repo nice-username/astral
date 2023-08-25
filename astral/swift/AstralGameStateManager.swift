@@ -9,19 +9,11 @@ import Foundation
 import SpriteKit
 
 class AstralGameStateManager {
-    // Reference to the main UIViewController
-    var viewController: UIViewController?
-    
-    var gameViewController: SKView? {
-        didSet {
-            print("gameViewController set: \(gameViewController != nil)")
-        }
-    }
-    
     static let shared = AstralGameStateManager()
-
-    // Prevent direct initialization
     public init() {}
+    
+    var gameViewController: SKView?
+    var viewController: UIViewController?
     
     private(set) var currentState: AstralGameState? {
         didSet {
@@ -70,9 +62,19 @@ class AstralGameStateManager {
         self.currentState = state
     }
     
-    private func transitionToViewController(_ viewControllerToPresent: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
+    public func transitionToViewController(_ viewControllerToPresent: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
         if let presentingViewController = viewController {
-            presentingViewController.present(viewControllerToPresent, animated: animated, completion: completion)
+            
+            let transition = CATransition()
+            transition.duration = 0.35
+            transition.type = CATransitionType.push
+            transition.subtype = CATransitionSubtype.fromRight
+            transition.timingFunction = CAMediaTimingFunction(name:CAMediaTimingFunctionName.easeInEaseOut)
+            self.gameViewController!.window!.layer.add(transition, forKey: kCATransition)
+            viewControllerToPresent.modalPresentationStyle = .fullScreen
+            viewControllerToPresent.isModalInPresentation = true
+            presentingViewController.present(viewControllerToPresent, animated: false, completion: nil)
+            // presentingViewController.present(viewControllerToPresent, animated: animated, completion: completion)
         } else {
             print("Never set the view controller before calling transition!")
         }

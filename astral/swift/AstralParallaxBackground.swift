@@ -34,7 +34,7 @@ class AstralParallaxBackground: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(_ delta: TimeInterval, joystickDirection: JoystickDirection) {
+    func update(_ delta: TimeInterval, joystickDirection: Direction) {
         let speedFactor: CGFloat = {
             switch joystickDirection {
                 case .up:

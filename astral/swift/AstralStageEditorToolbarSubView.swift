@@ -7,18 +7,12 @@
 
 import Foundation
 import UIKit
+import SpriteKit
 
 
 struct AstralStageEditorToolbarAction {
     let title: String
     let imageName: String
-    let action: (() -> Void)?
-    
-    init(title: String, imageName: String, action: (() -> Void)? = nil) {
-        self.title = title
-        self.imageName = imageName
-        self.action = action
-    }
 }
 
 enum AstralStageEditorToolbarSubViewType {
@@ -28,7 +22,7 @@ enum AstralStageEditorToolbarSubViewType {
         switch self {
         case .file:
             return [
-                AstralStageEditorToolbarAction(title: "Create new", imageName: "new", action: { print("?")} ),
+                AstralStageEditorToolbarAction(title: "Create new", imageName: "new"),
                 AstralStageEditorToolbarAction(title: "Open", imageName: "open"),
                 AstralStageEditorToolbarAction(title: "Save", imageName: "save"),
                 AstralStageEditorToolbarAction(title: "Rename", imageName: "edit"),
@@ -57,6 +51,8 @@ enum AstralStageEditorToolbarSubViewType {
 
 
 class AstralStageEditorToolbarSubView: UIView {
+    var scene: SKScene
+    var gameState: AstralGameStateManager?    
     var type: AstralStageEditorToolbarSubViewType
     var buttons: [UIButton] = []
     var stackView: UIStackView!
@@ -66,7 +62,9 @@ class AstralStageEditorToolbarSubView: UIView {
     var leftConstraint: NSLayoutConstraint!
 
     
-    init(type: AstralStageEditorToolbarSubViewType) {
+    init(type: AstralStageEditorToolbarSubViewType, scene: SKScene) {
+        self.scene = scene
+        self.gameState = AstralGameStateManager.shared
         self.type = type
         
         super.init(frame: .zero)
@@ -197,11 +195,8 @@ class AstralStageEditorToolbarSubView: UIView {
             button.contentHorizontalAlignment = .left
             button.setTitleColor(.black, for: .normal)
             button.backgroundColor = .white
-
-            if action.action != nil {
-                button.addAction(UIAction(handler: { _ in action.action!() }), for: .touchUpInside)
-                button.tag = buttonIndex
-            }
+            button.tag = buttonIndex
+            button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
             
             // Set the image view size
             button.imageView?.translatesAutoresizingMaskIntoConstraints = false
@@ -218,5 +213,48 @@ class AstralStageEditorToolbarSubView: UIView {
         }
         
         self.resizeStackView()
+    }
+    
+    
+    
+    @objc private func buttonTapped(_ sender: UIButton) {
+        guard let index = buttons.firstIndex(of: sender) else { return }
+        switch type {
+        case .file:
+            self.handleFileAction(at: index)
+        case .transition:
+            self.handleTransitionAction(at: index)
+        case .path:
+            break
+        case .enemy:
+            break
+        }
+    }
+    
+    private func handleFileAction(at index: Int) {
+        switch index {
+        case 0:
+            print("?")
+        case 1:
+            print("Open")
+        case 2:
+            break
+        default:
+            break
+        }
+    }
+    
+    
+    private func handleTransitionAction(at index: Int) {
+        switch index {
+        case 0:
+            self.gameState?.transitionTo(.editorParallaxBackgroundPicker)
+        case 1:
+            print("Location")
+        case 2:
+            print("Animation")
+        default:
+            break
+        }
     }
 }

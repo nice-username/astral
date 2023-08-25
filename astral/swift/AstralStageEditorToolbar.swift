@@ -7,8 +7,10 @@
 
 import Foundation
 import UIKit
+import SpriteKit
 
 class AstralStageEditorToolbar: UIView {
+    var scene : SKScene
     var stackView: UIStackView!
     var validGestureStarted = false
     var secondaryToolbarOpened = false
@@ -24,7 +26,8 @@ class AstralStageEditorToolbar: UIView {
         return view
     }()
     
-    override init(frame: CGRect) {
+    required init(frame: CGRect, scene: SKScene) {
+        self.scene = scene
         super.init(frame: frame)
         let r = CGFloat( 24 / 255.0 )
         let g = CGFloat( 32 / 255.0 )
@@ -47,7 +50,6 @@ class AstralStageEditorToolbar: UIView {
             stackView.widthAnchor.constraint(equalTo: self.widthAnchor),
             stackView.heightAnchor.constraint(equalToConstant: 64 * 4 + 4)
         ])
-        
     }
     
     required init?(coder: NSCoder) {
@@ -60,8 +62,7 @@ class AstralStageEditorToolbar: UIView {
     //
     //
     func createSubBar() {
-        print("createSubBar()")
-        self.toolbarSubMenu = AstralStageEditorToolbarSubView(type: self.selectedSubmenuType)
+        self.toolbarSubMenu = AstralStageEditorToolbarSubView(type: self.selectedSubmenuType, scene: self.scene)
     }
     
     

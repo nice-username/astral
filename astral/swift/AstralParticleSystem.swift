@@ -25,7 +25,7 @@ class AstralParticleSystem: SKNode {
     }
     
     
-    func update(player: AstralPlayer, joystickDirection: JoystickDirection) {
+    func update(player: AstralPlayer, joystickDirection: Direction) {
         var angle: CGFloat = -90.0
         var multiplierSpeed: CGFloat = 1.0
         var multiplierBirthRate: CGFloat = 1.0

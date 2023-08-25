@@ -9,7 +9,7 @@ import Foundation
 
 struct AstralEnemyOrder {
     enum AstralEnemyActionType {
-        case move(JoystickDirection)
+        case move(Direction)
         case turnRight(TimeInterval)
         case turnLeft(TimeInterval)
         case turnToBase(TimeInterval)

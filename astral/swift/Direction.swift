@@ -6,7 +6,7 @@
 //
 import Foundation
 
-enum JoystickDirection: Int {
+enum Direction: Int {
     case up
     case upRight
     case right
