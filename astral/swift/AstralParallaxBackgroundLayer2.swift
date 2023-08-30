@@ -13,20 +13,18 @@ import SpriteKit
 class AstralParallaxBackgroundLayer2: SKNode {
     private var atlas: SKTextureAtlas
     private var layers: [SKSpriteNode] = []
-    private var opacity: CGFloat
     private var scrollingSpeed: CGFloat
     private var scrollingDirection: CGVector
     private var shouldLoop: Bool
     private var textureIndex = 2
     private var nextNodePositionY: CGFloat = 0.0
+    
 
-
-    init(atlasNamed: String, direction: CGVector, speed: CGFloat = 1.0, opacity: CGFloat = 1, shouldLoop: Bool = false) {
+    init(atlasNamed: String, direction: CGVector, speed: CGFloat = 1.0, shouldLoop: Bool = false) {
         self.atlas = SKTextureAtlas(named: atlasNamed)
         self.scrollingSpeed = speed
         self.scrollingDirection = direction
         self.shouldLoop = shouldLoop
-        self.opacity = opacity
         super.init()
         
         // Initialize the first three textures
@@ -59,6 +57,19 @@ class AstralParallaxBackgroundLayer2: SKNode {
         }
     }
     
+    func updateOpacity(opacity: CGFloat) {
+        self.alpha = opacity
+    }
+
+    func updateSpeed(speed: CGFloat) {
+        scrollingSpeed = speed
+    }
+
+    func getSpeed() -> CGFloat {
+        return scrollingSpeed
+    }
+
+    
     private func addNewLayer(textureName: String) {
         let texture = self.atlas.textureNamed(textureName)
         
@@ -76,7 +87,6 @@ class AstralParallaxBackgroundLayer2: SKNode {
         self.addChild(node)
         self.layers.append(node)
     }
-    
     
     func update(deltaTime: TimeInterval) {
         let scrollAmount = scrollingDirection.dy * scrollingSpeed
@@ -97,8 +107,7 @@ class AstralParallaxBackgroundLayer2: SKNode {
             }
         }
     }
-
-
+    
     private func updateTextureForLoopingLayer(layer: SKSpriteNode) {
         // If you want to cycle through different textures, you can update the layer's texture here
         // Increment textureIndex and wrap it around if it goes past the number of textures in the atlas
@@ -106,8 +115,6 @@ class AstralParallaxBackgroundLayer2: SKNode {
         let textureName = atlas.textureNames.sorted()[textureIndex]
         layer.texture = atlas.textureNamed(textureName)
     }
-
-
 }
 
 

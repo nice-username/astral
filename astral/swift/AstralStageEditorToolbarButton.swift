@@ -20,7 +20,6 @@ class AstralStageEditorToolbarButton: UIButton {
     let submenuString: String
     let submenuImage: UIImage
     private var submenuLabel: UILabel?
-    weak var delegate: AstralStageEditorToolbarButtonDelegate?
 
     
     override var intrinsicContentSize: CGSize {
@@ -63,7 +62,6 @@ class AstralStageEditorToolbarButton: UIButton {
         if let iconImage = icon {
             self.setImage(iconImage, for: .normal)
         }
-        self.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         
         switch self.type {
         case .topLevel:
@@ -94,9 +92,5 @@ class AstralStageEditorToolbarButton: UIButton {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    @objc func buttonTapped() {
-        delegate?.didTapButton(self)
     }
 }

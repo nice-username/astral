@@ -9,7 +9,7 @@ import Foundation
 import SpriteKit
 
 
-
+//
 //    Debug views outside their parent frame
 /*
 extension UIView {
@@ -29,14 +29,17 @@ extension UIView {
 
 
 class AstralStageEditor: SKScene {
-    var toolbar : AstralStageEditorToolbar?
-    public var toolbarBgColor : UIColor?
-    var panGestureHandler : UIPanGestureRecognizer?
+    private var toolbar : AstralStageEditorToolbar?
+    private var panGestureHandler : UIPanGestureRecognizer?
+    private var toolbarBgColor : UIColor?
+    private var backgrounds : [AstralParallaxBackgroundLayer2] = []
+    
 
     override init(size: CGSize) {
         super.init(size: size)
         self.toolbar = AstralStageEditorToolbar(frame: .zero, scene: self)
         setupToolbar()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLayerAdded(_:)), name: .layerAdded, object: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -98,6 +101,7 @@ class AstralStageEditor: SKScene {
             toolbar!.toolbarSubMenu.heightAnchor.constraint(equalTo: self.toolbar!.heightAnchor)
         ])
     }
+    
     
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let touchLocation = gesture.location(in: self.view)
@@ -225,5 +229,17 @@ class AstralStageEditor: SKScene {
         }, completion: { _ in
             self.toolbar?.subMenuIsOpen = false
         } )
+    }
+    
+    //
+    // Handle ".layerAdded" messages sent by AstralParallaxBackgroundLayerPicker
+    //
+    @objc private func handleLayerAdded(_ notification: NSNotification) {
+        if let userInfo = notification.userInfo,
+           let layer = userInfo["layer"] as? AstralParallaxBackgroundLayer2 {
+            layer.removeFromParent()
+            self.backgrounds.append(layer)
+            self.addChild(layer)
+        }
     }
 }
