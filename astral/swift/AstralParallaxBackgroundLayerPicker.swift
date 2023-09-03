@@ -26,9 +26,11 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     private var skView: SKView!
     private var scene: AstralParallaxBackgroundLayerPickerScene!
     private var parallaxBackgrounds: [AstralParallaxBackgroundLayer2] = []
+    private var currentIndex: Int = 0
     private var currentBackground: AstralParallaxBackgroundLayer2!
     private var nextBackground: AstralParallaxBackgroundLayer2!
     private var previousBackground: AstralParallaxBackgroundLayer2!
+    
     
     // UI
     private var titleLabel: UILabel!
@@ -86,8 +88,6 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     @objc func handleBackgroundSwipe(gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: self.skView)
         let threshold = self.view.bounds.size.width / 3.0
-        let sceneWidth = scene.size.width
-        let sceneHeight = scene.size.height
         
         switch gesture.state {
         case .began:
@@ -100,25 +100,14 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
             previousBackground.position.x += translation.x
             
         case .ended:
-            // Decide if we commit to the swipe or revert
             if abs(totalTranslationX) > threshold {
-                if totalTranslationX > 0 {
-                    // User swiped to the right
-                    swap(&currentBackground, &previousBackground)
-                } else {
-                    // User swiped to the left
-                    swap(&currentBackground, &nextBackground)
-                }
-                self.setTitleLabel(currentBackground.getAtlasName())
-                // Reset positions
-                currentBackground.position = CGPoint(x: sceneWidth / 2.0, y: sceneHeight / 2.0)
-                nextBackground.position.x = currentBackground.position.x + currentBackground.getWidth()
-                previousBackground.position.x = currentBackground.position.x - currentBackground.getWidth()
+                // Update current index based on swipe direction
+                currentIndex = (totalTranslationX > 0) ? (currentIndex - 1 + parallaxBackgrounds.count) % parallaxBackgrounds.count : (currentIndex + 1) % parallaxBackgrounds.count
+                // Update current, next, and previous background references
+                setCurrentBackground(withAnimationDuration: 0.166667)
             } else {
-                // Revert the backgrounds to their original positions
-                currentBackground.position = CGPoint(x: sceneWidth / 2.0, y: sceneHeight / 2.0)
-                nextBackground.position.x = currentBackground.position.x + currentBackground.getWidth()
-                previousBackground.position.x = currentBackground.position.x - currentBackground.getWidth()
+                // Just reset the position
+                resetBackgroundPositions(withAnimationDuration: 0.166667)
             }
             totalTranslationX = 0.0
 
@@ -126,6 +115,35 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
             break
         }
         gesture.setTranslation(.zero, in: self.view)
+    }
+    
+    
+
+    private func setCurrentBackground(withAnimationDuration duration: TimeInterval) {
+        currentBackground = parallaxBackgrounds[currentIndex]
+        nextBackground = parallaxBackgrounds[(currentIndex + 1) % parallaxBackgrounds.count]
+        previousBackground = parallaxBackgrounds[(currentIndex - 1 + parallaxBackgrounds.count) % parallaxBackgrounds.count]
+        
+        self.setTitleLabel(currentBackground.getAtlasName())
+
+        // Animate Reset positions
+        let sceneWidth = scene.size.width
+        let currentMoveAction = SKAction.moveTo(x: sceneWidth / 2.0, duration: duration)
+        let nextMoveAction = SKAction.moveTo(x: sceneWidth / 2.0 + currentBackground.getWidth(), duration: duration)
+        let prevMoveAction = SKAction.moveTo(x: sceneWidth / 2.0 - currentBackground.getWidth(), duration: duration)
+        currentBackground.run(currentMoveAction)
+        nextBackground.run(nextMoveAction)
+        previousBackground.run(prevMoveAction)
+    }
+
+    private func resetBackgroundPositions(withAnimationDuration duration: TimeInterval) {
+        let sceneWidth = scene.size.width
+        let currentMoveAction = SKAction.moveTo(x: sceneWidth / 2.0, duration: duration)
+        let nextMoveAction = SKAction.moveTo(x: sceneWidth / 2.0 + currentBackground.getWidth(), duration: duration)
+        let prevMoveAction = SKAction.moveTo(x: sceneWidth / 2.0 - currentBackground.getWidth(), duration: duration)
+        currentBackground.run(currentMoveAction)
+        nextBackground.run(nextMoveAction)
+        previousBackground.run(prevMoveAction)
     }
 
 
