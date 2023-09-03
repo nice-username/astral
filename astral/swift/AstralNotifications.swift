@@ -8,5 +8,7 @@
 import Foundation
 
 extension NSNotification.Name {
+    static let playMap    = NSNotification.Name("playMap")
+    static let stopMap    = NSNotification.Name("stopMap")
     static let layerAdded = NSNotification.Name("layerAdded")
 }

@@ -28,11 +28,23 @@ extension UIView {
 
 
 
-class AstralStageEditor: SKScene {
+class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
+    private var state : AstralGameStateManager!
     private var toolbar : AstralStageEditorToolbar?
+    private var player : AstralPlayer?
+    private var joystick: AstralJoystick!
+    private var collisionHandler : AstralCollisionHandler?
     private var panGestureHandler : UIPanGestureRecognizer?
     private var toolbarBgColor : UIColor?
     private var backgrounds : [AstralParallaxBackgroundLayer2] = []
+    private var progress: CGFloat            = 0.0
+    private var timeScale: CGFloat           = 1.0
+    private var lastUpdateTime: TimeInterval = 0.0
+    private var isPlaying: Bool              = false
+    private var holdingDownFire: Bool        = false
+
+
+
     
 
     override init(size: CGSize) {
@@ -40,6 +52,9 @@ class AstralStageEditor: SKScene {
         self.toolbar = AstralStageEditorToolbar(frame: .zero, scene: self)
         setupToolbar()
         NotificationCenter.default.addObserver(self, selector: #selector(handleLayerAdded(_:)), name: .layerAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(play(_:)), name: .playMap, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stop(_:)), name: .stopMap, object: nil)
+        self.state = AstralGameStateManager.shared
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -240,6 +255,33 @@ class AstralStageEditor: SKScene {
             layer.removeFromParent()
             self.backgrounds.append(layer)
             self.addChild(layer)
+            layer.reset()
+        }
+    }
+    
+    @objc private func play(_ notification: NSNotification) {
+        isPlaying = true
+    }
+
+    @objc private func stop(_ notification: NSNotification) {
+        isPlaying = false
+        for bg in backgrounds {
+            bg.reset()
+        }
+        progress = 0.0  // Resetting the stage
+    }
+        
+    override func update(_ currentTime: TimeInterval) {
+        if lastUpdateTime == 0 {
+            lastUpdateTime = currentTime
+        }
+        let deltaTime = currentTime - lastUpdateTime
+        lastUpdateTime = currentTime
+        if isPlaying {
+            self.progress += deltaTime * timeScale
+            for bg in backgrounds {
+                bg.update(deltaTime: deltaTime)
+            }
         }
     }
 }

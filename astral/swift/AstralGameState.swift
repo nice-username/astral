@@ -19,4 +19,6 @@ enum AstralGameState {
     case editor
     case equipmentSelection
     case editorParallaxBackgroundPicker
+    case editorPlay
+    case editorStop
 }

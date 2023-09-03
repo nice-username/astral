@@ -27,6 +27,7 @@ enum AstralStageEditorToolbarSubViewType {
                 AstralStageEditorToolbarAction(title: "Save", imageName: "save"),
                 AstralStageEditorToolbarAction(title: "Rename", imageName: "edit"),
                 AstralStageEditorToolbarAction(title: "Stage length", imageName: "length"),
+                AstralStageEditorToolbarAction(title: "Start", imageName: "play"),
                 AstralStageEditorToolbarAction(title: "Main menu", imageName: "exit")
             ]
         case .transition:
@@ -211,10 +212,12 @@ class AstralStageEditorToolbarSubView: UIView {
             buttons.append(button)
             buttonIndex += 1
         }
+        if type == .file {
+            
+        }
         
         self.resizeStackView()
     }
-    
     
     
     @objc private func buttonTapped(_ sender: UIButton) {
@@ -239,6 +242,16 @@ class AstralStageEditorToolbarSubView: UIView {
             print("Open")
         case 2:
             break
+        case 5:
+            if self.gameState?.currentState == .editorPlay {
+                self.buttons[5].setImage(UIImage(named: "play"), for: .normal)
+                self.buttons[5].setTitle("Play", for: .normal)
+                self.gameState?.transitionTo(.editorStop)
+            } else {
+                self.buttons[5].setImage(UIImage(named: "stop"), for: .normal)
+                self.buttons[5].setTitle("Stop", for: .normal)
+                self.gameState?.transitionTo(.editorPlay)
+            }
         default:
             break
         }

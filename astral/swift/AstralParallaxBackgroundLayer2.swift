@@ -12,6 +12,7 @@ import SpriteKit
 
 class AstralParallaxBackgroundLayer2: SKNode {
     private var atlas: SKTextureAtlas
+    private var atlasName: String
     private var layers: [SKSpriteNode] = []
     private var scrollingSpeed: CGFloat
     private var scrollingDirection: CGVector
@@ -22,6 +23,7 @@ class AstralParallaxBackgroundLayer2: SKNode {
 
     init(atlasNamed: String, direction: CGVector, speed: CGFloat = 1.0, shouldLoop: Bool = false) {
         self.atlas = SKTextureAtlas(named: atlasNamed)
+        self.atlasName = atlasNamed
         self.scrollingSpeed = speed
         self.scrollingDirection = direction
         self.shouldLoop = shouldLoop
@@ -68,6 +70,10 @@ class AstralParallaxBackgroundLayer2: SKNode {
     func getSpeed() -> CGFloat {
         return scrollingSpeed
     }
+    
+    func getAtlasName() -> String {
+        return atlasName
+    }
 
     
     private func addNewLayer(textureName: String) {
@@ -89,8 +95,11 @@ class AstralParallaxBackgroundLayer2: SKNode {
     }
     
     func update(deltaTime: TimeInterval) {
-        let scrollAmount = scrollingDirection.dy * scrollingSpeed
+        let targetFPS: CGFloat = 60.0
+        let adjustedSpeed = scrollingSpeed * targetFPS
 
+        let scrollAmount  = round( (scrollingDirection.dy * adjustedSpeed * deltaTime) * 100) / 100
+        
         for layer in layers {
             layer.position.y -= scrollAmount
         }
@@ -115,6 +124,24 @@ class AstralParallaxBackgroundLayer2: SKNode {
         let textureName = atlas.textureNames.sorted()[textureIndex]
         layer.texture = atlas.textureNamed(textureName)
     }
+    
+    func reset() {
+        // Reset layers to their initial state
+        self.removeAllChildren()
+        self.layers.removeAll()
+        
+        // Reset initial variables
+        self.textureIndex = 2
+        self.nextNodePositionY = 0.0
+        
+        // Initialize the first three textures
+        let textureNames = atlas.textureNames.sorted()
+        for i in 0..<min(textureNames.count, 3) {
+            let textureName = textureNames[i]
+            addNewLayer(textureName: textureName)
+        }
+    }
+
 }
 
 

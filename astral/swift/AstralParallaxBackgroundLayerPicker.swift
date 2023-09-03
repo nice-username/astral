@@ -20,21 +20,26 @@ protocol AstralParallaxPickerDelegate: AnyObject {
 class AstralParallaxBackgroundLayerPicker: UIViewController {
     public var gameState: AstralGameStateManager?
     public var currentAtlas: String?
-    public var delegate: AstralParallaxPickerDelegate?
-    private var parallaxBackground: AstralParallaxBackgroundLayer2!
+    private var totalTranslationX: CGFloat = 0.0
+    
+    // backgrounds
+    private var skView: SKView!
+    private var scene: AstralParallaxBackgroundLayerPickerScene!
+    private var parallaxBackgrounds: [AstralParallaxBackgroundLayer2] = []
+    private var currentBackground: AstralParallaxBackgroundLayer2!
+    private var nextBackground: AstralParallaxBackgroundLayer2!
+    private var previousBackground: AstralParallaxBackgroundLayer2!
+    
+    // UI
     private var titleLabel: UILabel!
     private var confirmButton: UIButton!
     private var cancelButton: UIButton!
     private var topBlurView: UIVisualEffectView!
     private var bottomBlurView: UIVisualEffectView!
-    private var skView: SKView!
-    private var scene: AstralParallaxBackgroundLayerPickerScene!
     private var panGesture: UIGestureRecognizer!
-
-    
     
     // Layer Submenu Controls
-    var controlsRevealed = false
+    public  var controlsRevealed = false
     private var controlScrollView: UIScrollView!
     private var opacitySlider: UISlider!
     private var speedSlider: UISlider!
@@ -44,6 +49,7 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     private var speedLabel: UILabel!
     private var directionLabel: UILabel!
     private var endingLabel: UILabel!
+    
 
 
     
@@ -77,27 +83,90 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     
     
     
+    @objc func handleBackgroundSwipe(gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: self.skView)
+        let threshold = self.view.bounds.size.width / 3.0
+        let sceneWidth = scene.size.width
+        let sceneHeight = scene.size.height
+        
+        switch gesture.state {
+        case .began:
+            totalTranslationX = 0.0
+        case .changed:
+            // Translate current, next, and previous backgrounds horizontally
+            totalTranslationX += translation.x
+            currentBackground.position.x += translation.x
+            nextBackground.position.x += translation.x
+            previousBackground.position.x += translation.x
+            
+        case .ended:
+            // Decide if we commit to the swipe or revert
+            if abs(totalTranslationX) > threshold {
+                if totalTranslationX > 0 {
+                    // User swiped to the right
+                    swap(&currentBackground, &previousBackground)
+                } else {
+                    // User swiped to the left
+                    swap(&currentBackground, &nextBackground)
+                }
+                self.setTitleLabel(currentBackground.getAtlasName())
+                // Reset positions
+                currentBackground.position = CGPoint(x: sceneWidth / 2.0, y: sceneHeight / 2.0)
+                nextBackground.position.x = currentBackground.position.x + currentBackground.getWidth()
+                previousBackground.position.x = currentBackground.position.x - currentBackground.getWidth()
+            } else {
+                // Revert the backgrounds to their original positions
+                currentBackground.position = CGPoint(x: sceneWidth / 2.0, y: sceneHeight / 2.0)
+                nextBackground.position.x = currentBackground.position.x + currentBackground.getWidth()
+                previousBackground.position.x = currentBackground.position.x - currentBackground.getWidth()
+            }
+            totalTranslationX = 0.0
+
+        default:
+            break
+        }
+        gesture.setTranslation(.zero, in: self.view)
+    }
+
+
+
+    
+    
     private func setupSpriteKit(atlasNamed: String) {
+        currentAtlas = atlasNamed
         skView = SKView(frame: view.bounds)
         scene = AstralParallaxBackgroundLayerPickerScene(size: view.bounds.size)
         
         self.view.addSubview(skView)
         scene.view?.showsNodeCount = true
         scene.backgroundColor = .black
-        
         skView.presentScene(scene)
     
-        let scrollDown = CGVector(dx: 0, dy: 1)
-        parallaxBackground = AstralParallaxBackgroundLayer2(atlasNamed: atlasNamed, direction: scrollDown, speed: 1.0, shouldLoop: true)
-        
-        // Position it behind everything
-        parallaxBackground.zPosition = 1
-        parallaxBackground.position = CGPoint(x: scene.size.width / 2.0, y: scene.size.height / 2.0)
+        let swipeBackground = UIPanGestureRecognizer(target: self, action: #selector(handleBackgroundSwipe))
+        skView.addGestureRecognizer(swipeBackground)
 
-        // Add the parallax background to the scene
-        scene.parallaxBackground = parallaxBackground
-        scene.addChild(parallaxBackground)
-        self.currentAtlas = atlasNamed
+        
+        let scrollDown = CGVector(dx: 0, dy: 1)
+        let atlases = ["MainMenuBackground00", "MainMenuBackground01", "MainMenuBackground02","MainMenuBackground03","RoughOceanSeas"]
+        for atlas in atlases {
+            let bg = AstralParallaxBackgroundLayer2(atlasNamed: atlas, direction: scrollDown, speed: 1.0, shouldLoop: true)
+            bg.zPosition = 1
+            bg.position = CGPoint(x: scene.size.width / 2.0, y: scene.size.height / 2.0)
+            parallaxBackgrounds.append(bg)
+            scene.parallaxBackgrounds.append(bg)
+        }
+
+        // Add the first three parallax backgrounds to the scene
+        self.previousBackground = parallaxBackgrounds[0]
+        self.currentBackground  = parallaxBackgrounds[1]
+        self.nextBackground     = parallaxBackgrounds[2]
+        self.scene.addChild(self.previousBackground)
+        self.scene.addChild(self.currentBackground)
+        self.scene.addChild(self.nextBackground)
+        
+        // Position the next and previous backgrounds appropraitely
+        self.previousBackground.position.x -= self.currentBackground.getWidth()
+        self.nextBackground.position.x     += self.currentBackground.getWidth()
     }
     
     
@@ -108,7 +177,9 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
         let heightOffset = 96.0
         
         topBlurEffectView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: heightOffset + 24.0)
-        bottomBlurEffectView.frame = CGRect(x: 0, y: view.bounds.height - heightOffset, width: view.bounds.width, height: heightOffset * 2.5)
+        bottomBlurEffectView.frame = CGRect(x: 0, y: view.bounds.height - heightOffset,
+                                            width: view.bounds.width,
+                                            height: heightOffset * 2.5)
         view.addSubview(topBlurEffectView)
         view.addSubview(bottomBlurEffectView)
         
@@ -212,6 +283,11 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     }
     
     
+    private func setTitleLabel(_ title: String) {
+        titleLabel.text = title
+    }
+    
+    
     
     func setupControlScrollView() {
         // Initialize the ScrollView
@@ -233,7 +309,7 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
         opacityLabel = opacityPair.label
         opacitySlider = opacityPair.control as? UISlider
         
-        let speedPair = createSliderControlPair(labelText: "Speed", 0.0625, 8.0, Float(self.parallaxBackground.speed))
+        let speedPair = createSliderControlPair(labelText: "Speed", 0.0625, 8.0, Float(self.currentBackground.speed))
         speedLabel = speedPair.label
         speedSlider = speedPair.control as? UISlider
         
@@ -241,9 +317,9 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
         directionLabel = directionPair.label
         directionSegment = directionPair.control as? UISegmentedControl
         
-        let loopingPair = createSegmentControlPair(labelText: "Ending", items: ["Stop", "Loop", "Fade", "Rvrse"], selectedItem: 1)
-        endingLabel = loopingPair.label
-        endingSegment = loopingPair.control as? UISegmentedControl
+        let endingPair = createSegmentControlPair(labelText: "Outro", items: ["Scroll", "Stop", "Fade", "Loop"], selectedItem: 1)
+        endingLabel = endingPair.label
+        endingSegment = endingPair.control as? UISegmentedControl
         
         controlScrollView.addSubview(directionLabel)
         controlScrollView.addSubview(directionSegment)
@@ -265,11 +341,11 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     
     
     @objc func handleOpacityChange(sender: UISlider) {
-        parallaxBackground.updateOpacity(opacity: CGFloat(sender.value))
+        currentBackground.updateOpacity(opacity: CGFloat(sender.value))
     }
 
     @objc func handleSpeedChange(sender: UISlider) {
-        parallaxBackground.updateSpeed(speed: CGFloat(sender.value))
+        currentBackground.updateSpeed(speed: CGFloat(sender.value))
     }
 
     
@@ -354,7 +430,7 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     }
     
     @objc private func confirmButtonTapped() {
-        NotificationCenter.default.post(name: .layerAdded, object: nil, userInfo: ["layer": parallaxBackground!])
+        NotificationCenter.default.post(name: .layerAdded, object: nil, userInfo: ["layer": currentBackground!])
         self.dismiss(animated: true)
     }
 
@@ -368,4 +444,3 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     }
     
 }
-

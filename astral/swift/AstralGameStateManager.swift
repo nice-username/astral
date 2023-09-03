@@ -52,6 +52,12 @@ class AstralGameStateManager {
             case .editorParallaxBackgroundPicker:
                 transitionToViewController(AstralParallaxBackgroundLayerPicker())
                 break
+            case .editorPlay:
+                self.throwEventMessage(name: .playMap)
+                break
+            case .editorStop:
+                self.throwEventMessage(name: .stopMap)
+                break
             case .none:
                 break
             }
@@ -60,6 +66,10 @@ class AstralGameStateManager {
     
     func transitionTo(_ state: AstralGameState) {
         self.currentState = state
+    }
+    
+    func throwEventMessage(name: NSNotification.Name, userInfo: [AnyHashable : Any]? = nil) {
+        NotificationCenter.default.post(name: name, object: nil, userInfo: userInfo)
     }
     
     public func transitionToViewController(_ viewControllerToPresent: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {

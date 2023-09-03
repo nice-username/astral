@@ -9,12 +9,27 @@ import Foundation
 import SpriteKit
 
 class AstralParallaxBackgroundLayerPickerScene: SKScene {
-    var parallaxBackground: AstralParallaxBackgroundLayer2!
+    public  var parallaxBackgrounds: [AstralParallaxBackgroundLayer2] = []
     private var lastUpdateTime: TimeInterval = 0
     
     override func update(_ currentTime: TimeInterval) {
+        if lastUpdateTime == 0 {
+          lastUpdateTime = currentTime
+        }
+        
         let deltaTime = currentTime - lastUpdateTime
-        parallaxBackground.update(deltaTime: deltaTime)
+        
+        if parallaxBackgrounds.indices.contains(1) {
+            // parallaxBackgrounds[1].update(deltaTime: deltaTime)
+            // print("hello?")
+        }
+        
+        if deltaTime < 1.0 {
+            for bg in self.parallaxBackgrounds {
+                bg.update(deltaTime: deltaTime)
+            }
+        }
+        
         lastUpdateTime = currentTime
     }
 }

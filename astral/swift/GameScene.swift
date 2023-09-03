@@ -11,7 +11,6 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var entities = [GKEntity]()
-    // var graphs = [String : GKGraph]()
     
     private var state : AstralGameStateManager!
     private var lastUpdateTime : TimeInterval = 0
@@ -29,7 +28,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     
     override func sceneDidLoad() {
-        self.state = AstralGameStateManager()
+        self.state = AstralGameStateManager.shared
         
         self.backgroundColor = .black
         self.collisionHandler = AstralCollisionHandler()

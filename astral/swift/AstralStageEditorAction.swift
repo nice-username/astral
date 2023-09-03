@@ -12,6 +12,7 @@ enum AstralStageEditorAction {
     case transitionMenu
     case pathMenu
     case enemyMenu
+    case testMenu
     
     case stageCreate
     case stageRename
