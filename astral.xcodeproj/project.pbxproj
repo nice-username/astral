@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		7C1F5C0429FD316300DB6438 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0329FD316300DB6438 /* AppDelegate.swift */; };
 		7C1F5C0829FD316300DB6438 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0729FD316300DB6438 /* Actions.sks */; };
-		7C1F5C0A29FD316300DB6438 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0929FD316300DB6438 /* GameScene.swift */; };
 		7C1F5C0C29FD316300DB6438 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0B29FD316300DB6438 /* GameViewController.swift */; };
 		7C1F5C0F29FD316300DB6438 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0D29FD316300DB6438 /* Main.storyboard */; };
 		7C1F5C1129FD316400DB6438 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C1F5C1029FD316400DB6438 /* Assets.xcassets */; };
@@ -39,6 +38,7 @@
 		7C3D1A8E2A3F103C00643BCF /* AstralMainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3D1A8D2A3F103C00643BCF /* AstralMainMenuScene.swift */; };
 		7C3D1A942A44418000643BCF /* MenuCursor.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C3D1A932A44418000643BCF /* MenuCursor.atlas */; };
 		7C47DE5B2A245F0000113BF2 /* blip.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7C47DE5A2A245F0000113BF2 /* blip.wav */; };
+		7C611FB12AA81F1800FC04D8 /* AstralInputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C611FB02AA81F1800FC04D8 /* AstralInputHandler.swift */; };
 		7C6B66C12A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6B66C02A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift */; };
 		7C6B66C62A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6B66C52A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift */; };
 		7C6B66C82A98864300BC1BD0 /* RoughOceanSeas.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C6B66C72A98864300BC1BD0 /* RoughOceanSeas.atlas */; };
@@ -75,6 +75,7 @@
 		7CC2F9DE29FF75FC003CA700 /* testScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC2F9DD29FF75FC003CA700 /* testScene.swift */; };
 		7CC78B9A2A1113380060AE54 /* BitPotion.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CC78B992A1113380060AE54 /* BitPotion.ttf */; };
 		7CC78B9C2A11143D0060AE54 /* Munro-2LYe.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7CC78B9B2A11143D0060AE54 /* Munro-2LYe.ttf */; };
+		7CC794DB2AAF3C3C00B29230 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C1F5C0929FD316300DB6438 /* GameScene.swift */; };
 		7CD4D0F32A2560D300ECE47D /* AstralGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD4D0F22A2560D300ECE47D /* AstralGameState.swift */; };
 		7CD4D0F52A2564F100ECE47D /* AstralGameStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD4D0F42A2564F100ECE47D /* AstralGameStateManager.swift */; };
 		7CD7B0112A1106FD0097B142 /* AstralDialogTextBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CD7B0102A1106FD0097B142 /* AstralDialogTextBox.swift */; };
@@ -136,6 +137,7 @@
 		7C3D1A8D2A3F103C00643BCF /* AstralMainMenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AstralMainMenuScene.swift; sourceTree = "<group>"; };
 		7C3D1A932A44418000643BCF /* MenuCursor.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = MenuCursor.atlas; sourceTree = "<group>"; };
 		7C47DE5A2A245F0000113BF2 /* blip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = blip.wav; sourceTree = "<group>"; };
+		7C611FB02AA81F1800FC04D8 /* AstralInputHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralInputHandler.swift; sourceTree = "<group>"; };
 		7C6B66C02A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralParallaxBackgroundLayer2.swift; sourceTree = "<group>"; };
 		7C6B66C52A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralParallaxBackgroundLayerPickerScene.swift; sourceTree = "<group>"; };
 		7C6B66C72A98864300BC1BD0 /* RoughOceanSeas.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = RoughOceanSeas.atlas; sourceTree = "<group>"; };
@@ -265,9 +267,7 @@
 		7C1F5C3629FD317400DB6438 /* swift */ = {
 			isa = PBXGroup;
 			children = (
-				7CC2F9DD29FF75FC003CA700 /* testScene.swift */,
 				7C1F5C0329FD316300DB6438 /* AppDelegate.swift */,
-				7C1F5C0929FD316300DB6438 /* GameScene.swift */,
 				7C280F572A1ABA4E002385D7 /* AstralBitmapFont.swift */,
 				7CAA6B002A02492D00EBEA1E /* AstralCollisionHandler.swift */,
 				7C8D136C2A0F725700C81D85 /* AstralDialogColor.swift */,
@@ -276,34 +276,37 @@
 				7CD7B0102A1106FD0097B142 /* AstralDialogTextBox.swift */,
 				7CB67F922A4C47F600ED3333 /* AstralEffectsManager.swift */,
 				7CAA6B0D2A026EEA00EBEA1E /* AstralEnemy.swift */,
-				7C8D13602A0E323100C81D85 /* AstralEnemyWave.swift */,
 				7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */,
+				7C8D13602A0E323100C81D85 /* AstralEnemyWave.swift */,
 				7CD4D0F22A2560D300ECE47D /* AstralGameState.swift */,
 				7CD4D0F42A2564F100ECE47D /* AstralGameStateManager.swift */,
+				7C611FB02AA81F1800FC04D8 /* AstralInputHandler.swift */,
 				7C26512029FF4A5C0013B36E /* AstralJoystick.swift */,
 				7C24D1CD2A582C61004D1DE7 /* AstralMainMenuBackground.swift */,
-				7CE340C02A9F2E0600C16C28 /* AstralNotifications.swift */,
-				7CF8BC3D2A90CB3700E904BF /* AstralParallaxBackgroundLayerPicker.swift */,
-				7C6B66C52A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift */,
 				7C3D1A8D2A3F103C00643BCF /* AstralMainMenuScene.swift */,
+				7CE340C02A9F2E0600C16C28 /* AstralNotifications.swift */,
 				7C81E0D029FF9D92005FB6EC /* AstralParallaxBackground.swift */,
 				7C81E0D229FF9E7E005FB6EC /* AstralParallaxBackgroundLayer.swift */,
 				7C6B66C02A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift */,
+				7CF8BC3D2A90CB3700E904BF /* AstralParallaxBackgroundLayerPicker.swift */,
+				7C6B66C52A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift */,
 				7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */,
 				7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */,
-				7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */,
 				7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */,
+				7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */,
 				7C338B812A6D9AAB00EC4844 /* AstralStageEditor.swift */,
 				7C86902C2A7842AC00AD307F /* AstralStageEditorAction.swift */,
+				7C86902A2A7763A700AD307F /* AstralStageEditorToolbar.swift */,
 				7C8690262A77635700AD307F /* AstralStageEditorToolbarButton.swift */,
 				7C8690282A77638900AD307F /* AstralStageEditorToolbarSubView.swift */,
-				7C86902A2A7763A700AD307F /* AstralStageEditorToolbar.swift */,
 				7CAA6B022A02599000EBEA1E /* AstralUnit.swift */,
 				7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */,
 				7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */,
-				7C1F5C0B29FD316300DB6438 /* GameViewController.swift */,
-				7C26511E29FF49ED0013B36E /* Direction.swift */,
 				7CAA6AFE2A020C5600EBEA1E /* CGPoint.swift */,
+				7C26511E29FF49ED0013B36E /* Direction.swift */,
+				7C1F5C0929FD316300DB6438 /* GameScene.swift */,
+				7C1F5C0B29FD316300DB6438 /* GameViewController.swift */,
+				7CC2F9DD29FF75FC003CA700 /* testScene.swift */,
 			);
 			path = swift;
 			sourceTree = "<group>";
@@ -559,9 +562,9 @@
 				7C24D1CE2A582C61004D1DE7 /* AstralMainMenuBackground.swift in Sources */,
 				7C8D136B2A0F5A6500C81D85 /* AstralDialogSpeaker.swift in Sources */,
 				7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */,
-				7C1F5C0A29FD316300DB6438 /* GameScene.swift in Sources */,
 				7C86902B2A7763A700AD307F /* AstralStageEditorToolbar.swift in Sources */,
 				7C1F5C3C29FD35C800DB6438 /* AstralPlayer.swift in Sources */,
+				7CC794DB2AAF3C3C00B29230 /* GameScene.swift in Sources */,
 				7CAA6B032A02599000EBEA1E /* AstralUnit.swift in Sources */,
 				7C1F5C0C29FD316300DB6438 /* GameViewController.swift in Sources */,
 				7C8D13612A0E323100C81D85 /* AstralEnemyWave.swift in Sources */,
@@ -575,6 +578,7 @@
 				7C8690272A77635700AD307F /* AstralStageEditorToolbarButton.swift in Sources */,
 				7CC2F9DA29FF68C7003CA700 /* AstralWeapon.swift in Sources */,
 				7CB67F932A4C47F600ED3333 /* AstralEffectsManager.swift in Sources */,
+				7C611FB12AA81F1800FC04D8 /* AstralInputHandler.swift in Sources */,
 				7C3D1A8E2A3F103C00643BCF /* AstralMainMenuScene.swift in Sources */,
 				7C8D13632A0E7CC300C81D85 /* AstralDialogSmall.swift in Sources */,
 				7CAA6B012A02492D00EBEA1E /* AstralCollisionHandler.swift in Sources */,

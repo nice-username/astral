@@ -118,32 +118,58 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
     }
     
     
-
     private func setCurrentBackground(withAnimationDuration duration: TimeInterval) {
-        currentBackground = parallaxBackgrounds[currentIndex]
-        nextBackground = parallaxBackgrounds[(currentIndex + 1) % parallaxBackgrounds.count]
-        previousBackground = parallaxBackgrounds[(currentIndex - 1 + parallaxBackgrounds.count) % parallaxBackgrounds.count]
+        currentBackground.removeFromParent()
+        nextBackground.removeFromParent()
+        previousBackground.removeFromParent()
         
-        self.setTitleLabel(currentBackground.getAtlasName())
-
-        // Animate Reset positions
+        currentBackground.zPosition = 2
+        let nextIndex = (currentIndex + 1) % parallaxBackgrounds.count
+        let prevIndex = (currentIndex - 1 + parallaxBackgrounds.count) % parallaxBackgrounds.count
+        
+        if totalTranslationX > 0 {
+            nextBackground.zPosition = 1
+            previousBackground.zPosition = 2
+        } else {
+            nextBackground.zPosition = 2
+            previousBackground.zPosition = 1
+        }
+        
+        currentBackground = parallaxBackgrounds[currentIndex]
+        nextBackground = parallaxBackgrounds[nextIndex]
+        previousBackground = parallaxBackgrounds[prevIndex]
+        
+        // Set initial positions before adding to scene
         let sceneWidth = scene.size.width
+        scene.addChild(currentBackground)
+        scene.addChild(nextBackground)
+        scene.addChild(previousBackground)
+        
+        // Cancel any existing actions
+        currentBackground.removeAllActions()
+        nextBackground.removeAllActions()
+        previousBackground.removeAllActions()
+
+        // Now do the animation
         let currentMoveAction = SKAction.moveTo(x: sceneWidth / 2.0, duration: duration)
         let nextMoveAction = SKAction.moveTo(x: sceneWidth / 2.0 + currentBackground.getWidth(), duration: duration)
         let prevMoveAction = SKAction.moveTo(x: sceneWidth / 2.0 - currentBackground.getWidth(), duration: duration)
-        currentBackground.run(currentMoveAction)
-        nextBackground.run(nextMoveAction)
-        previousBackground.run(prevMoveAction)
+        
+        currentBackground.run(currentMoveAction, withKey: "pan")
+        nextBackground.run(nextMoveAction, withKey: "pan")
+        previousBackground.run(prevMoveAction, withKey: "pan")
+        self.setTitleLabel(self.currentBackground.getAtlasName())
     }
+
 
     private func resetBackgroundPositions(withAnimationDuration duration: TimeInterval) {
         let sceneWidth = scene.size.width
         let currentMoveAction = SKAction.moveTo(x: sceneWidth / 2.0, duration: duration)
         let nextMoveAction = SKAction.moveTo(x: sceneWidth / 2.0 + currentBackground.getWidth(), duration: duration)
         let prevMoveAction = SKAction.moveTo(x: sceneWidth / 2.0 - currentBackground.getWidth(), duration: duration)
-        currentBackground.run(currentMoveAction)
-        nextBackground.run(nextMoveAction)
-        previousBackground.run(prevMoveAction)
+        currentBackground.run(currentMoveAction, withKey: "pan")
+        nextBackground.run(nextMoveAction, withKey: "pan")
+        previousBackground.run(prevMoveAction, withKey: "pan")
     }
 
 

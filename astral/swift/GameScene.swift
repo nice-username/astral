@@ -21,6 +21,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     private var fireButton : SKSpriteNode!
     private var holdingDownFire : Bool = false
     private var collisionHandler : AstralCollisionHandler?
+    private var input : AstralInputHandler?
     var enemies: [AstralEnemy] = []
     var enemy: AstralEnemy?
     var fireTouch: UITouch?
@@ -35,6 +36,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.lastUpdateTime = 0
         self.player = AstralPlayer(scene: self)
+        self.addChild(player!)
+        player?.xScale = 1.5
+        player?.yScale = 1.5
+        player?.texture?.filteringMode = .nearest
+        
         self.collisionHandler?.player = self.player
         
         joystick = AstralJoystick()
@@ -59,13 +65,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         self.createBoundaries()
         
-            self.enemies.append(AstralEnemy(scene: self, maxHP: 20))
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                let newEnemy = AstralEnemy(scene: self, maxHP: 20)
-                newEnemy.position.y = 1000
-                self.enemies.append(newEnemy)
-            }
+        self.enemies.append(AstralEnemy(scene: self, maxHP: 20))
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let newEnemy = AstralEnemy(scene: self, maxHP: 20)
+            newEnemy.position.y = 1000
+            self.enemies.append(newEnemy)
+        }
         
         // test dialog
         /*
@@ -99,10 +105,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
          
         
         let font = AstralBitmapFont(font: "munro_bitmap")
-        let label = font.createLabel(withText: "Hi CatZ. I was demoing this feature to Corbo", maxWidth: 400.0, soundFileName: "blip")
+        let label = font.createLabel(withText: "Yeah we're hella writing text af lmao", maxWidth: 400.0, soundFileName: "blip")
         self.addChild(label)
         label.zPosition = 4
         label.position = CGPoint(x: -200, y: 32.0)
+        
+        self.input = AstralInputHandler(scene: self, player: player!, joystick: joystick)
+        input?.fireButton = self.fireButton
+        
+        self.size = CGSize(width: 750.0, height: 1334.0)
+        print("w: \(self.frame.width), h:\(self.frame.height)")
     }
 
     
@@ -114,113 +126,52 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         body.collisionBitMask = AstralPhysicsCategory.boundary
         body.contactTestBitMask = AstralPhysicsCategory.bulletPlayer | AstralPhysicsCategory.bulletEnemy | AstralPhysicsCategory.enemy | AstralPhysicsCategory.player
         
-        let hitbox = SKShapeNode(rect: bounds)
-        hitbox.lineWidth = 5.0
+        // let hitbox = SKShapeNode(rect: bounds)
+        // hitbox.lineWidth = 5.0
         // self.addChild(hitbox)
         
         self.physicsBody = body
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if(self.touchStartPosition != nil) {
-            let currentPosition = pos
-            let dx = currentPosition.x - self.touchStartPosition!.x
-            let screenWidth = UIScreen.main.bounds.width
-            let input = -(dx / screenWidth)
-            player!.setSprite(inputValue: input)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
         self.collisionHandler?.handleContact(contact: contact)
     }
     
+    
+    
+    //
+    // Pass all of the gameplay input to a separate file to be dealt with over there...
+    //
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        
-        var hitButton = false
-        for t in touches {
-            let point = t.location(in: self)
-            if fireButton.contains(point) {
-                hitButton = true
-                self.fireTouch = t
-                self.holdingDownFire = true
-            } else if self.joystickTouch == nil {
-                self.joystickTouch = t
-                self.touchStartPosition = point
-            }
-        }
-        
-        if !hitButton {
-            self.joystick.touchesBegan(touches, with: event)
-        } else {
-            self.player?.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
-        }
+        input!.touchesBegan(touches, with: event)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            if touch == self.fireTouch {
-                // The touch is on the fire button
-            } else if touch == self.joystickTouch {
-                self.touchMoved(toPoint: touch.location(in: self))
-                self.joystick.touchesMoved(touches, with: event)
-            }
-        }
+        input!.touchesMoved(touches, with: event)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            if touch == fireTouch {
-                // The touch ended on the fire button
-                // player?.releaseFireButton()
-                self.fireTouch = nil
-                self.holdingDownFire = false
-                self.player?.weapons[0].isWarmingUp = false
-            } else if touch == self.joystickTouch {
-                let animationDuration: TimeInterval = 0.4141 // Change this value to adjust the total animation duration
-                self.player!.animateToRestingPosition(duration: animationDuration)
-                self.touchStartPosition = nil
-                self.joystickTouch = nil
-                self.joystick.touchesEnded(touches, with: event)
-            }
-        }
+        input!.touchesEnded(touches, with: event)
     }
     
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
     
+    
+
     
     override func update(_ currentTime: TimeInterval) {
-        // Initialize _lastUpdateTime
         if (self.lastUpdateTime == 0) {
             self.lastUpdateTime = currentTime
         }
         
-        // Calculate time since last update
         let dt = currentTime - self.lastUpdateTime
-        
-        // Update entities
-        if self.holdingDownFire && self.player!.weapons[0].canFire() {
-            self.player!.weapons[0].fire(unit: self.player!, collider: AstralPhysicsCategory.bulletPlayer)
-        }
         
         if self.parallaxBg != nil {
             self.parallaxBg.update(dt, joystickDirection: self.joystick.direction)
         }
-        self.player?.update(joystick: self.joystick, currentTime: currentTime, deltaTime: dt, holdingFire: self.holdingDownFire)
-        
+        input?.update(currentTime, deltaTime: dt)
         
         for e in enemies {
             e.update(currentTime: currentTime, deltaTime: dt)
-        }
-        
-        if let normalizedVelocity = joystick.normalizedVelocity, let player = player {
-            player.moveBy(normalizedVelocity)
         }
         
         self.lastUpdateTime = currentTime

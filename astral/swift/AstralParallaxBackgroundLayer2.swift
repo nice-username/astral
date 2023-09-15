@@ -29,6 +29,7 @@ class AstralParallaxBackgroundLayer2: SKNode {
         self.shouldLoop = shouldLoop
         super.init()
         
+        self.isUserInteractionEnabled = false
         // Initialize the first three textures
         let textureNames = atlas.textureNames.sorted()
         for i in 0..<min(textureNames.count, 3) {

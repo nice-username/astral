@@ -35,8 +35,8 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         
         self.name                   = "player"
         self.zPosition              = 2
-        self.xScale                 = 1.5
-        self.yScale                 = 1.5
+        self.xScale                 = 1
+        self.yScale                 = 1
         self.texture?.filteringMode = .nearest
         self.initPhysics()
         self.initParticles()
@@ -44,7 +44,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         self.initWeapon()
         
         // Add to scene
-        scene.addChild(self)
+        // scene.addChild(self)
         
         
         /*

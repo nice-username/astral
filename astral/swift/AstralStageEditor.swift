@@ -33,7 +33,8 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var toolbar : AstralStageEditorToolbar?
     private var player : AstralPlayer?
     private var joystick: AstralJoystick!
-    private var collisionHandler : AstralCollisionHandler?
+    private var collision : AstralCollisionHandler?
+    private var input : AstralInputHandler?
     private var panGestureHandler : UIPanGestureRecognizer?
     private var toolbarBgColor : UIColor?
     private var backgrounds : [AstralParallaxBackgroundLayer2] = []
@@ -41,26 +42,15 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var timeScale: CGFloat           = 1.0
     private var lastUpdateTime: TimeInterval = 0.0
     private var isPlaying: Bool              = false
-    private var holdingDownFire: Bool        = false
+    private var fireButton : SKSpriteNode?
 
-
-
-    
 
     override init(size: CGSize) {
         super.init(size: size)
-        self.toolbar = AstralStageEditorToolbar(frame: .zero, scene: self)
-        setupToolbar()
-        NotificationCenter.default.addObserver(self, selector: #selector(handleLayerAdded(_:)), name: .layerAdded, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(play(_:)), name: .playMap, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(stop(_:)), name: .stopMap, object: nil)
-        self.state = AstralGameStateManager.shared
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        setupToolbar()
-        self.toolbarBgColor = toolbar?.backgroundColor
     }
     
     func setupToolbar() {
@@ -87,6 +77,65 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         toolbar?.setButtons([stageButton, transitionButton, pathButton, enemyButton])
     }
     
+    override func sceneDidLoad() {
+        self.size = CGSize(width: 750.0, height: 1334.0)
+        self.backgroundColor = .black
+        
+        self.toolbar = AstralStageEditorToolbar(frame: .zero, scene: self)
+        setupToolbar()
+        self.toolbarBgColor = toolbar?.backgroundColor
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLayerAdded(_:)), name: .layerAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(play(_:)), name: .playMap, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(stop(_:)), name: .stopMap, object: nil)
+        self.state = AstralGameStateManager.shared
+        
+        self.collision = AstralCollisionHandler()
+        self.physicsWorld.gravity = .zero
+        self.physicsWorld.contactDelegate = self
+        self.createBoundaries()
+        
+        self.player = AstralPlayer(scene: self)
+        self.player?.xScale = 1.5
+        self.player?.yScale = 1.5        
+        self.collision?.player = self.player
+        
+        self.player?.position.x += self.frame.width / 2.0
+        self.player?.position.y += self.frame.height / 5.0
+        joystick = AstralJoystick()
+        self.addChild(joystick)
+        
+        self.input = AstralInputHandler(scene: self, player: player!, joystick: joystick)
+        
+        fireButton = SKSpriteNode(imageNamed: "ui_fire_button_up")
+        self.addChild(fireButton!)
+        
+        fireButton!.xScale = 3
+        fireButton!.yScale = 3
+        fireButton!.texture?.filteringMode = .nearest
+        fireButton?.position.x += self.frame.width / 4
+        fireButton?.position.y += self.frame.height / 8 - 64
+        fireButton?.zPosition = 2
+        input?.fireButton = fireButton
+        
+        print("x: \(self.xScale), y:\(self.yScale)")
+        print("w: \(self.frame.width), h:\(self.frame.height)")
+        joystick.zPosition = 2
+        
+        
+    }
+    
+    
+    private func createBoundaries() {
+        let xOffset = 80.0
+        let bounds = CGRect(x: self.frame.minX + (xOffset / 2.0), y: self.frame.minY, width: self.size.width - xOffset, height: self.size.height)
+        let body = SKPhysicsBody(edgeLoopFrom: bounds)
+        body.categoryBitMask = AstralPhysicsCategory.boundary
+        body.collisionBitMask = AstralPhysicsCategory.boundary
+        body.contactTestBitMask = AstralPhysicsCategory.bulletPlayer | AstralPhysicsCategory.bulletEnemy | AstralPhysicsCategory.enemy | AstralPhysicsCategory.player
+        self.physicsBody = body
+    }
+    
+        
     override func didMove(to view: SKView) {
         super.didMove(to: view)
         view.addSubview(toolbar!)
@@ -94,6 +143,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         toolbar?.frame.origin.x = view.frame.size.width
         
         self.panGestureHandler = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+        panGestureHandler?.cancelsTouchesInView = false
         view.addGestureRecognizer(panGestureHandler!)
 
         toolbar?.translatesAutoresizingMaskIntoConstraints = false
@@ -255,22 +305,33 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             layer.removeFromParent()
             self.backgrounds.append(layer)
             self.addChild(layer)
+            layer.xScale = 1.5
+            layer.yScale = 1.5
+            layer.position.x += layer.getWidth() / 3
             layer.reset()
         }
     }
     
     @objc private func play(_ notification: NSNotification) {
         isPlaying = true
+        // panGestureHandler?.isEnabled = false
+        self.addChild(player!)
     }
 
     @objc private func stop(_ notification: NSNotification) {
         isPlaying = false
+        player!.removeFromParent()
+        // panGestureHandler?.isEnabled = true
         for bg in backgrounds {
             bg.reset()
         }
-        progress = 0.0  // Resetting the stage
+        progress = 0.0
     }
-        
+    
+    
+    //
+    // Called each game tick
+    //
     override func update(_ currentTime: TimeInterval) {
         if lastUpdateTime == 0 {
             lastUpdateTime = currentTime
@@ -279,9 +340,41 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         lastUpdateTime = currentTime
         if isPlaying {
             self.progress += deltaTime * timeScale
+            input?.update(currentTime, deltaTime: deltaTime)
             for bg in backgrounds {
                 bg.update(deltaTime: deltaTime)
             }
+        }
+    }
+    
+    
+    //
+    // Handle collision
+    //
+    func didBegin(_ contact: SKPhysicsContact) {
+        self.collision?.handleContact(contact: contact)
+    }
+    
+    
+    
+    //
+    // Pass all of the gameplay input to a separate file to be dealt with over there...
+    //
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isPlaying {
+            input!.touchesBegan(touches, with: event)
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isPlaying {
+            input!.touchesMoved(touches, with: event)
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if isPlaying {
+            input!.touchesEnded(touches, with: event)
         }
     }
 }
