@@ -39,7 +39,6 @@ class AstralInputHandler {
     func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard touches.first != nil else { return }
         
-        // print("started")
         var hitButton = false
         for t in touches {
             let point = t.location(in: scene)
@@ -47,6 +46,8 @@ class AstralInputHandler {
                 hitButton = true
                 self.fireTouch = t
                 self.holdingDownFire = true
+                let downTexture = SKTexture(imageNamed: "ui_fire_button_down")
+                fireButton.texture = downTexture
             } else if self.joystickTouch == nil {
                 self.joystickTouch = t
                 self.touchStartPosition = point
@@ -61,7 +62,6 @@ class AstralInputHandler {
     }
     
     func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // print("moved 1")
         for touch in touches {
             if touch == self.fireTouch {
             } else if touch == self.joystickTouch {
@@ -72,9 +72,10 @@ class AstralInputHandler {
     }
     
     func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // print("ended")
         for touch in touches {
             if touch == fireTouch {
+                let upTexture = SKTexture(imageNamed: "ui_fire_button_up")
+                fireButton.texture = upTexture
                 self.fireTouch = nil
                 self.holdingDownFire = false
                 self.player.weapons[0].isWarmingUp = false

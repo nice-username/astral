@@ -170,12 +170,9 @@ class AstralJoystick: SKNode {
         let deltaY = location.y - joystickPosition.y
         
         // No direction if touch is within the deadZone
-        /*
         if hypot(deltaX, deltaY) < self.deadZoneArea {
             return .none
         }
-        */
-         
         
         let angle = atan2(deltaY, deltaX)
         

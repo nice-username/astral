@@ -106,9 +106,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         
         self.input = AstralInputHandler(scene: self, player: player!, joystick: joystick)
         
-        fireButton = SKSpriteNode(imageNamed: "ui_fire_button_up")
-        self.addChild(fireButton!)
-        
+        fireButton = SKSpriteNode(imageNamed: "ui_fire_button_up")        
         fireButton!.xScale = 3
         fireButton!.yScale = 3
         fireButton!.texture?.filteringMode = .nearest
@@ -314,14 +312,14 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     
     @objc private func play(_ notification: NSNotification) {
         isPlaying = true
-        // panGestureHandler?.isEnabled = false
         self.addChild(player!)
+        self.addChild(fireButton!)
     }
 
     @objc private func stop(_ notification: NSNotification) {
         isPlaying = false
         player!.removeFromParent()
-        // panGestureHandler?.isEnabled = true
+        fireButton?.removeFromParent()
         for bg in backgrounds {
             bg.reset()
         }
