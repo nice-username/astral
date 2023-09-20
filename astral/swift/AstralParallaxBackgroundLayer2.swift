@@ -10,6 +10,7 @@ import SpriteKit
 
 
 
+
 class AstralParallaxBackgroundLayer2: SKNode {
     private var atlas: SKTextureAtlas
     private var atlasName: String
