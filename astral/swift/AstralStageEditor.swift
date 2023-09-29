@@ -34,7 +34,10 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var player : AstralPlayer?
     private var joystick: AstralJoystick!
     private var collision : AstralCollisionHandler?
+    private var fileManager : AstralStageFileManager = AstralStageFileManager()
     private var input : AstralInputHandler?
+    private var metadata : AstralStageMetadata?
+    private var stageName : String = ""
     private var panGestureHandler : UIPanGestureRecognizer?
     private var toolbarBgColor : UIColor?
     private var backgrounds : [AstralParallaxBackgroundLayer2] = []
@@ -43,7 +46,9 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var lastUpdateTime: TimeInterval = 0.0
     private var isPlaying: Bool              = false
     private var fireButton : SKSpriteNode?
-
+    private var path = AstralStageEditorPath()
+    private var pathRenderer: AstralPathRenderer!
+    private var pathStart: CGPoint?
 
     override init(size: CGSize) {
         super.init(size: size)
@@ -87,6 +92,8 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(handleLayerAdded(_:)), name: .layerAdded, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(play(_:)), name: .playMap, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(stop(_:)), name: .stopMap, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(saveStage(_:)), name: .saveFile, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadStage(_:)), name: .loadFile, object: nil)
         self.state = AstralGameStateManager.shared
         
         self.collision = AstralCollisionHandler()
@@ -119,7 +126,15 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         print("w: \(self.frame.width), h:\(self.frame.height)")
         joystick.zPosition = 2
         
+        fileManager = AstralStageFileManager()
+        metadata = AstralStageMetadata(name: "stage1",
+                                       author: "me",
+                                       description: "stage1",
+                                       dateCreated: Date(),
+                                       dateOpened: Date(),
+                                       dateModified: Date() )
         
+        self.pathRenderer = AstralPathRenderer(scene: self)
     }
     
     
@@ -310,6 +325,80 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    //
+    // Handle ".saveFile" messages sent by the toolbar
+    //
+    @objc private func saveStage(_ notification: NSNotification) {
+        let metadata = AstralStageMetadata(name: self.stageName,
+                                           author: "",
+                                           description: "",
+                                           dateCreated: Date(),
+                                           dateOpened: Date(),
+                                           dateModified: Date())
+        
+        // Convert each AstralParallaxBackgroundLayer to AstralParallaxBackgroundLayerData
+        let backgroundDataArray = backgrounds.map { layer in
+            return AstralParallaxBackgroundLayerData(
+                atlasName: layer.getAtlasName(),
+                scrollingSpeed: layer.getSpeed(),
+                scrollingDirection: layer.getDirection(),
+                shouldLoop: layer.getLoopFlag()
+            )
+        }
+        
+        // Create AstralStageData object
+        let stage = AstralStageData(metadata: metadata, backgrounds: backgroundDataArray)
+        
+        // Save the stage
+        fileManager.saveStage(stageData: stage, filename: "Stage1.json")
+    }
+    
+    
+    //
+    // Handle ".loadFile" messages sent by the toolbar
+    //
+    @objc private func loadStage(_ notification: NSNotification) {
+        // Load the stage
+        if let loadedStage = fileManager.loadStage(filename: "Stage1.json") {
+            // Load Metadata
+            self.metadata?.name = loadedStage.metadata.name
+            self.metadata?.author = loadedStage.metadata.author
+            self.metadata?.description = loadedStage.metadata.description
+            self.metadata?.dateCreated = loadedStage.metadata.dateCreated
+            self.metadata?.dateModified = loadedStage.metadata.dateModified
+            self.metadata?.dateOpened = Date()
+            
+            // Remove existing backgrounds from SKScene and clear array
+            for background in self.backgrounds {
+                background.removeFromParent()
+            }
+            self.backgrounds.removeAll()
+            
+            // Load Backgrounds
+            for backgroundData in loadedStage.backgrounds {
+                let newBackgroundLayer = AstralParallaxBackgroundLayer2(
+                    atlasNamed: backgroundData.atlasName,
+                    direction: backgroundData.scrollingDirection,
+                    speed: backgroundData.scrollingSpeed,
+                    shouldLoop: backgroundData.shouldLoop
+                )
+                newBackgroundLayer.xScale = 1.5
+                newBackgroundLayer.yScale = 1.5
+                newBackgroundLayer.position.x += newBackgroundLayer.getWidth() / 1.5
+                newBackgroundLayer.position.y += newBackgroundLayer.getHeight() / 3
+                self.backgrounds.append(newBackgroundLayer)
+                 
+                // Add new background layers to your SKScene
+                self.addChild(newBackgroundLayer)
+            }
+        } else {
+            print("Failed to load stage.")
+        }
+    }
+
+    
+    
+    
     @objc private func play(_ notification: NSNotification) {
         isPlaying = true
         self.addChild(player!)
@@ -362,17 +451,52 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         if isPlaying {
             input!.touchesBegan(touches, with: event)
         }
+        
+        // Start drawing path
+        if let touch = touches.first {
+            if toolbar?.selectedSubmenuType == .path {
+                pathStart = touch.location(in: self)
+            }
+        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isPlaying {
             input!.touchesMoved(touches, with: event)
         }
+        
+        if toolbar?.selectedSubmenuType == .path {
+            if let touch = touches.first, let start = pathStart {
+                let currentPoint = touch.location(in: self)
+                let distance = sqrt(pow(currentPoint.x - start.x, 2) + pow(currentPoint.y - start.y, 2))
+                 
+                // Only draw the temporary line if the user has dragged far enough
+                if distance > 10 { // TODO: Replace 10 with a variable for the minimum distance
+                    pathRenderer.drawTemporaryLine(from: start, to: currentPoint)
+                }
+            }
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isPlaying {
             input!.touchesEnded(touches, with: event)
+        }
+        if toolbar?.selectedSubmenuType == .path {
+            if let touch = touches.first, let start = pathStart {
+                let endPoint = touch.location(in: self)
+                let distance = sqrt(pow(endPoint.x - start.x, 2) + pow(endPoint.y - start.y, 2))
+                
+                // Only make the line permanent if the user has dragged far enough
+                if distance > 10 {
+                    path.addSegment(type: .line(start: start, end: endPoint))
+                    pathRenderer.drawPermanentLines(from: path)
+                }
+                
+                // Reset for the next line
+                self.pathStart = nil
+                pathRenderer.removeTemporaryLine()
+            }
         }
     }
 }

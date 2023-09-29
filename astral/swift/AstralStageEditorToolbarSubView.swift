@@ -55,6 +55,7 @@ class AstralStageEditorToolbarSubView: UIView {
     var scene: SKScene
     var gameState: AstralGameStateManager?    
     var type: AstralStageEditorToolbarSubViewType
+    var fileManager: AstralStageFileManager?
     var buttons: [UIButton] = []
     var stackView: UIStackView!
     var titleLabel: UILabel = UILabel()
@@ -235,13 +236,19 @@ class AstralStageEditorToolbarSubView: UIView {
     }
     
     private func handleFileAction(at index: Int) {
+        self.fileManager = AstralStageFileManager()
+        
         switch index {
         case 0:
-            print("?")
+            print("New")
         case 1:
-            print("Open")
+            NotificationCenter.default.post(name: .loadFile, object: nil)
         case 2:
-            break
+            NotificationCenter.default.post(name: .saveFile, object: nil)
+        case 3:
+            print("rename")
+        case 4:
+            print("set length")
         case 5:
             if self.gameState?.currentState == .editorPlay {
                 self.buttons[5].setImage(UIImage(named: "play"), for: .normal)

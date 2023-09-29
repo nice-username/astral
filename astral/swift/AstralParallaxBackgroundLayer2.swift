@@ -76,6 +76,14 @@ class AstralParallaxBackgroundLayer2: SKNode {
     func getAtlasName() -> String {
         return atlasName
     }
+    
+    func getDirection() -> CGVector {
+        return scrollingDirection
+    }
+    
+    func getLoopFlag() -> Bool {
+        return shouldLoop
+    }
 
     
     private func addNewLayer(textureName: String) {
