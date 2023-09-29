@@ -10,7 +10,7 @@ import SpriteKit
 
 class AstralInputHandler {
     private var player: AstralPlayer
-    private var scene : SKNode
+    private var scene : SKScene
     private var joystick : AstralJoystick
     private var touchStartPosition: CGPoint?
     private var fireTouch: UITouch?
@@ -18,7 +18,7 @@ class AstralInputHandler {
     public  var fireButton : SKSpriteNode!          // TODO:  This probably doesn't belong here
     private var holdingDownFire: Bool = false
     
-    init(scene: SKNode, player: AstralPlayer, joystick: AstralJoystick) {
+    init(scene: SKScene, player: AstralPlayer, joystick: AstralJoystick) {
         self.scene = scene
         self.player = player
         self.joystick = joystick

@@ -17,7 +17,6 @@ class GameViewController: UIViewController {
         let gameStateManager = AstralGameStateManager.shared
         gameStateManager.viewController = self
         
-        
         let scene = AstralMainMenuScene(size: view.bounds.size)
         if let view = self.view as! SKView? {
             scene.scaleMode = .aspectFill
@@ -26,7 +25,6 @@ class GameViewController: UIViewController {
             view.showsFPS            = true
             view.showsNodeCount      = true
         }
-        
         
         
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
@@ -55,6 +53,7 @@ class GameViewController: UIViewController {
             }
         }
         */
+        
         
         
     }
