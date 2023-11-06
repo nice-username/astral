@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SpriteKit
 
 
 
@@ -29,6 +30,7 @@ enum AstralPathSegmentType {
 class AstralPathSegment {
     var type: AstralPathSegmentType
     var nodes: [AstralPathNode] = []
+    var directionArrow: SKShapeNode?
     
     init(type: AstralPathSegmentType) {
         self.type = type
@@ -50,6 +52,39 @@ class AstralPathSegment {
     func updateNode(at index: Int, with point: CGPoint, order: AstralEnemyOrder) {
         nodes[index].point = point
         nodes[index].order = order
+    }
+    
+    // get the center and facing angle of the segment for drawing arrows
+    func midPointAndAngle() -> (CGPoint, CGFloat) {
+        switch type {
+        case .line(let start, let end):
+            let midPoint = CGPoint(x: (start.x + end.x) / 2, y: (start.y + end.y) / 2)
+            let angle = atan2(end.y - start.y, end.x - start.x)
+            let adjustedAngle = angle - (CGFloat.pi / 2)
+            return (midPoint, adjustedAngle)
+        case .bezier(let start, _, _, let end):
+            // For Bezier segments, this will only be approximate
+            let midPoint = CGPoint(x: (start.x + end.x) / 2, y: (start.y + end.y) / 2)
+            let angle = atan2(end.y - start.y, end.x - start.x)
+            let adjustedAngle = angle - (CGFloat.pi / 2)
+            return (midPoint, adjustedAngle)
+        }
+    }
+    
+    // Helper function to get the start point of the segment
+    func startPoint() -> CGPoint {
+        switch type {
+        case .line(let start, _), .bezier(let start, _, _, _):
+            return start
+        }
+    }
+
+    // Helper function to get the end point of the segment
+    func endPoint() -> CGPoint {
+        switch type {
+        case .line(_, let end), .bezier(_, _, _, let end):
+            return end
+        }
     }
 }
 
