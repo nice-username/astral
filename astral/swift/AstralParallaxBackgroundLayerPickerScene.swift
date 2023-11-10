@@ -26,7 +26,7 @@ class AstralParallaxBackgroundLayerPickerScene: SKScene {
         
         if deltaTime < 1.0 {
             for bg in self.parallaxBackgrounds {
-                bg.update(deltaTime: deltaTime)
+                bg.update(deltaTime: deltaTime, gestureYChange: 0)
             }
         }
         

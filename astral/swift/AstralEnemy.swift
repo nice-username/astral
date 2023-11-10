@@ -10,11 +10,10 @@ import SpriteKit
 
 
 class AstralEnemy: SKSpriteNode, AstralUnit {
-    
     // Properties
     var health: Int = 100
     var maxHealth: Int = 100
-    var movementSpeed: CGFloat = 5.0
+    var movementSpeed: CGFloat = 150.0
     var textures: [SKTexture] = []
     var texturesWhite: [SKTexture] = []
     var polarity: AstralPolarity = .white
@@ -28,6 +27,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     var speedUpChangeTimeLeft: Double = 0.0
     var speedDownChangeTimeLeft: Double = 0.0
     private var targetRestingFrame: Int = 6
+    var currentPath: AstralStageEditorPath?
     
     // AstralEnemy-specific properties
     // var firingPattern: AstralFiringPattern?
@@ -84,30 +84,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         self.texture?.filteringMode = .nearest
         
         // Add to scene
-        self.position.y += 900
         scene.addChild(self)
-        
-        let exampleOrders : [AstralEnemyOrder] = [  
-            AstralEnemyOrder(type: .move(.down),        duration: 1.2),
-            AstralEnemyOrder(type: .move(.downLeft),    duration: 0),
-            AstralEnemyOrder(type: .turnLeft(0.75),     duration: 0.6),
-            AstralEnemyOrder(type: .rest(0.75),         duration: 0.0),
-            AstralEnemyOrder(type: .fire,               duration: 0.36),
-            AstralEnemyOrder(type: .fireStop,           duration: 0.14),
-            AstralEnemyOrder(type: .stop,               duration: 0.12),
-            AstralEnemyOrder(type: .move(.right),       duration: 0.0),
-            AstralEnemyOrder(type: .turnRight(1.5),     duration: 1.25),
-            AstralEnemyOrder(type: .stop,               duration: 0.0),
-            AstralEnemyOrder(type: .rest(0.75),         duration: 0.75),
-            AstralEnemyOrder(type: .move(.upLeft),      duration: 0.0),
-            AstralEnemyOrder(type: .turnLeft(0.50),     duration: 0.25),
-            AstralEnemyOrder(type: .fire,               duration: 0.50),
-            AstralEnemyOrder(type: .fireStop,           duration: 0.0),
-            AstralEnemyOrder(type: .rest(0.75),         duration: 0.5),
-            AstralEnemyOrder(type: .stop,               duration: 1.0)
-        ]
-        self.orders = exampleOrders
-        self.runOrders()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -161,11 +138,6 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     
     func stop() {
         self.joystick.direction = .none
-    }
-    
-    
-    func moveBy(_ vector: CGVector) {
-        // Unused
     }
     
     func moveBy(direction: Direction) {
@@ -250,6 +222,9 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     }
     
     
+    // Needed to comply to protocol
+    func moveBy(_ vector: CGVector) {
+    }
     
     
     //
@@ -328,8 +303,37 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     }
 
 
+    //
+    // For moving along a given path
+    //
+    private func calculateMovementDuration(from startPoint: CGPoint, to endPoint: CGPoint, speed: CGFloat) -> TimeInterval {
+        let distance = startPoint.distanceTo(endPoint)
+        return TimeInterval(distance / speed)
+    }
     
-    
+    func followPath(_ path: AstralStageEditorPath) {
+        var actions: [SKAction] = []
+
+        for segment in path.segments {
+            switch segment.type {
+            case .line(let start, let end):
+                let duration = calculateMovementDuration(from: start, to: end, speed: movementSpeed)
+                let moveAction = SKAction.move(to: end, duration: duration)
+                actions.append(moveAction)
+            case .bezier(let start, let control1, let control2, let end):
+                let bezierPath = UIBezierPath()
+                bezierPath.move(to: start)
+                bezierPath.addCurve(to: end, controlPoint1: control1, controlPoint2: control2)
+                let duration = calculateMovementDuration(from: start, to: end, speed: movementSpeed)
+                let followCurveAction = SKAction.follow(bezierPath.cgPath, asOffset: false, orientToPath: true, duration: duration)
+                actions.append(followCurveAction)
+            }
+            // Add behavior actions here based on nodes or other criteria
+        }
+
+        let sequence = SKAction.sequence(actions)
+        self.run(sequence)
+    }
     
     //
     // Execute orders

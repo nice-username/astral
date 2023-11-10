@@ -8,26 +8,6 @@
 import Foundation
 import SpriteKit
 
-
-//
-//    Debug views outside their parent frame
-/*
-extension UIView {
-    @objc func reportSuperviews(filtering:Bool = true) {
-        var currentSuper : UIView? = self.superview
-        print("reporting on \(self)\n")
-        while let ancestor = currentSuper {
-            let ok = ancestor.bounds.contains(ancestor.convert(self.frame, from: self.superview))
-            let report = "it is \(ok ? "inside" : "OUTSIDE") \(ancestor)\n"
-            if !filtering || !ok { print(report) }
-            currentSuper = ancestor.superview
-        }
-    }
-}
-*/
-
-
-
 class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var gameState : AstralGameStateManager!
     private var editorState : AstralStageEditorState = .idle
@@ -40,8 +20,11 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var metadata : AstralStageMetadata?
     private var stageName : String = ""
     private var panGestureHandler : UIPanGestureRecognizer?
+    private var stageScrollRecognizer: UIPanGestureRecognizer!
     private var toolbarBgColor : UIColor?
     private var backgrounds : [AstralParallaxBackgroundLayer2] = []
+    private var stageHeight : Double = 0.0
+    
     
     // Stage playback
     private var progress: CGFloat            = 0.0
@@ -56,7 +39,6 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var pathRenderer: AstralPathRenderer!
     private var pathStart: CGPoint?
     private var pathOrigin: CGPoint?
-    private var isFirstPath : Bool = true
 
     override init(size: CGSize) {
         super.init(size: size)
@@ -91,6 +73,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     }
     
     override func sceneDidLoad() {
+        self.stageHeight = 5000.0
         self.size = CGSize(width: 750.0, height: 1334.0)
         self.backgroundColor = .black
         
@@ -161,8 +144,17 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         toolbar?.frame.origin.x = view.frame.size.width
         
         self.panGestureHandler = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture))
+        panGestureHandler?.minimumNumberOfTouches = 1
+        panGestureHandler?.maximumNumberOfTouches = 1
         panGestureHandler?.cancelsTouchesInView = false
         view.addGestureRecognizer(panGestureHandler!)
+        
+        // Event handler for scrolling up and down a stage:
+        stageScrollRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleStageScroll(_:)))
+        stageScrollRecognizer.minimumNumberOfTouches = 2
+        stageScrollRecognizer.maximumNumberOfTouches = 2
+        stageScrollRecognizer?.cancelsTouchesInView = false
+        view.addGestureRecognizer(stageScrollRecognizer)
 
         toolbar?.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -183,6 +175,21 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             toolbar!.toolbarSubMenu.widthAnchor.constraint(equalToConstant: 224),
             toolbar!.toolbarSubMenu.heightAnchor.constraint(equalTo: self.toolbar!.heightAnchor)
         ])
+    }
+
+    // Handle the stage scroll pan gesture
+    @objc private func handleStageScroll(_ recognizer: UIPanGestureRecognizer) {
+        let translation = recognizer.translation(in: recognizer.view)
+        scrollStage(by: translation.y)
+        recognizer.setTranslation(CGPoint.zero, in: recognizer.view)
+    }
+    
+    func scrollStage(by deltaY: CGFloat) {
+        // progress -= deltaY
+        // progress = max(0, min(progress, stageHeight))
+        backgrounds.forEach { $0.update(deltaTime: 0, gestureYChange: deltaY) }
+        updateEditorProgress(gestureDistance: deltaY)
+        print("progress: \(progress)")
     }
     
     
@@ -405,20 +412,44 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     
     
     @objc private func play(_ notification: NSNotification) {
+        progress = 0.0
+        for bg in backgrounds {
+            bg.reset()
+        }
+        
         isPlaying = true
         self.addChild(player!)
         self.addChild(fireButton!)
+        self.togglePaths(show: false)
+        
+        let enemy = AstralEnemy(scene: self, maxHP: 20)
+        if !self.pathManager.paths.isEmpty {
+            enemy.position = pathManager.paths[0].segments[0].startPoint()
+            enemy.followPath(pathManager.paths[0])
+        }
     }
 
     @objc private func stop(_ notification: NSNotification) {
         isPlaying = false
         player!.removeFromParent()
         fireButton?.removeFromParent()
+        self.togglePaths(show: true)
         for bg in backgrounds {
             bg.reset()
         }
         progress = 0.0
     }
+    
+    //
+    // Set progress based on scroll gesture
+    //
+    func updateEditorProgress(gestureDistance: CGFloat) {
+        // Adjust based on game speed and FPS (60 FPS assumed)
+        let progressPerFrame = timeScale / 60 // Assuming deltaTime is 1/60 for 60 FPS
+        progress += gestureDistance * progressPerFrame
+    }
+
+
     
     
     //
@@ -431,10 +462,11 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         let deltaTime = currentTime - lastUpdateTime
         lastUpdateTime = currentTime
         if isPlaying {
-            self.progress += deltaTime * timeScale
+            self.progress = min(self.progress + deltaTime * timeScale, stageHeight)
+            print("AstralStageEditor update() -> progress -> \(progress), deltaTime = \(deltaTime)")
             input?.update(currentTime, deltaTime: deltaTime)
             for bg in backgrounds {
-                bg.update(deltaTime: deltaTime)
+                bg.update(deltaTime: deltaTime, gestureYChange: 0)
             }
         }
     }
@@ -447,30 +479,16 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         self.collision?.handleContact(contact: contact)
     }
     
-    
-    
-    // TODO: this functionality and related variables seem like they should be tied to a different class
-    func getPathStart(fallback: CGPoint) -> CGPoint {
-        var start: CGPoint
-        if isFirstPath {
-            start = pathStart ?? fallback // Fallback if pathStart is nil for some reason
-            pathOrigin = start
-            isFirstPath = false
-        } else {
-            // Set start to the endPoint of the last segment in the path
-            if let lastSegment = path?.segments.last {
-                switch lastSegment.type {
-                case .line(_, let end):
-                    start = end
-                case .bezier(_, _, _, let end):
-                    start = end
-                }
-            } else {
-                // Fallback if pathOrigin is nil for some reason0
-                start = pathOrigin ?? fallback
+    //
+    // Set path visibility
+    //
+    private func togglePaths(show: Bool) {
+        for path in pathManager.paths {
+            for segment in path.segments {
+                segment.shape?.isHidden = !show
+                segment.directionArrow?.isHidden = !show
             }
         }
-        return start
     }
     
     
@@ -557,6 +575,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                                 // Here you can handle the logic for a completed path
                                 let lastSegment = path.segments[segmentIndex]
                                 pathRenderer.drawDirectionIndicator(for: lastSegment)
+                                pathRenderer.drawPermanentLine(for: lastSegment)
                             } else {
                                 // Add a new segment to the path
                                 let segmentIndex = path.addSegment(type: .line(start: start, end: endPoint))
@@ -566,8 +585,8 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                                 }
                                 let lastSegment = path.segments[segmentIndex]
                                 pathRenderer.drawDirectionIndicator(for: lastSegment)
+                                pathRenderer.drawPermanentLine(for: lastSegment)
                             }
-                            pathRenderer.drawPermanentLines(from: path)
                         }
                     }
                 // Handle other states if necessary

@@ -29,6 +29,7 @@ enum AstralPathSegmentType {
 
 class AstralPathSegment {
     var type: AstralPathSegmentType
+    var shape: SKShapeNode?
     var nodes: [AstralPathNode] = []
     var directionArrow: SKShapeNode?
     

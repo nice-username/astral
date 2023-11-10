@@ -20,7 +20,6 @@ class AstralParallaxBackgroundLayer2: SKNode {
     private var shouldLoop: Bool
     private var textureIndex = 2
     private var nextNodePositionY: CGFloat = 0.0
-    
 
     init(atlasNamed: String, direction: CGVector, speed: CGFloat = 1.0, shouldLoop: Bool = false) {
         self.atlas = SKTextureAtlas(named: atlasNamed)
@@ -104,24 +103,35 @@ class AstralParallaxBackgroundLayer2: SKNode {
         self.layers.append(node)
     }
     
-    func update(deltaTime: TimeInterval) {
+    func update(deltaTime: TimeInterval, gestureYChange: CGFloat) {
         let targetFPS: CGFloat = 60.0
         let adjustedSpeed = scrollingSpeed * targetFPS
 
-        let scrollAmount  = round( (scrollingDirection.dy * adjustedSpeed * deltaTime) * 100) / 100
-        
-        for layer in layers {
-            layer.position.y -= scrollAmount
+        if deltaTime > 0 {
+            let scrollAmount = round((scrollingDirection.dy * adjustedSpeed * deltaTime) * 100) / 100
+            updateLayerPositions(by: scrollAmount)
+        } else {
+            let scrollScaleFactor = 1.0
+            let editorScrollAmount = gestureYChange * scrollScaleFactor
+            updateLayerPositions(by: editorScrollAmount)
         }
 
+        handleLayerLooping()
+    }
+    
+    private func updateLayerPositions(by amount: CGFloat) {
+        for layer in layers {
+            layer.position.y -= amount
+        }
+    }
+    
+    private func handleLayerLooping() {
         // Check if the bottom layer has scrolled off the screen
         if let bottomLayer = layers.first, bottomLayer.position.y + bottomLayer.size.height < 0 {
             if shouldLoop {
-                // Move the bottom layer to the top
+                // Looping logic remains the same
                 bottomLayer.position.y = layers.last!.position.y + layers.last!.size.height
-                // Optionally update the texture to the next one in the sequence
                 updateTextureForLoopingLayer(layer: bottomLayer)
-                // Move the bottom layer to the last position in the array
                 layers.append(layers.removeFirst())
             }
         }
@@ -151,8 +161,4 @@ class AstralParallaxBackgroundLayer2: SKNode {
             addNewLayer(textureName: textureName)
         }
     }
-
 }
-
-
-
