@@ -179,17 +179,38 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
 
     // Handle the stage scroll pan gesture
     @objc private func handleStageScroll(_ recognizer: UIPanGestureRecognizer) {
-        let translation = recognizer.translation(in: recognizer.view)
-        scrollStage(by: translation.y)
-        recognizer.setTranslation(CGPoint.zero, in: recognizer.view)
+        switch recognizer.state {
+        case .changed:
+            let translation = recognizer.translation(in: recognizer.view)
+            scrollStage(by: translation.y)
+            recognizer.setTranslation(CGPoint.zero, in: recognizer.view)
+        case .ended:
+            let velocityY = recognizer.velocity(in: recognizer.view).y
+            decelerateScroll(withVelocity: velocityY)
+        default:
+            break
+        }
+    }
+    
+    // ChatGPT black magic deceleration algo
+    func decelerateScroll(withVelocity velocity: CGFloat) {
+        var currentVelocity = velocity
+        // Adjust this value as needed:
+        let decelerationRate = CGFloat(0.90)
+        Timer.scheduledTimer(withTimeInterval: 1/60.0, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            let deltaY = currentVelocity / 60.0
+            self.scrollStage(by: deltaY)
+            if abs(currentVelocity) < 1.0 {
+                timer.invalidate()
+            }
+            currentVelocity *= decelerationRate
+        }
     }
     
     func scrollStage(by deltaY: CGFloat) {
-        // progress -= deltaY
-        // progress = max(0, min(progress, stageHeight))
         backgrounds.forEach { $0.update(deltaTime: 0, gestureYChange: deltaY) }
         updateEditorProgress(gestureDistance: deltaY)
-        print("progress: \(progress)")
     }
     
     
@@ -463,7 +484,6 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         lastUpdateTime = currentTime
         if isPlaying {
             self.progress = min(self.progress + deltaTime * timeScale, stageHeight)
-            print("AstralStageEditor update() -> progress -> \(progress), deltaTime = \(deltaTime)")
             input?.update(currentTime, deltaTime: deltaTime)
             for bg in backgrounds {
                 bg.update(deltaTime: deltaTime, gestureYChange: 0)
@@ -502,7 +522,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         
         // Handle user using path drawing tool
         if let touch = touches.first {
-            if toolbar?.selectedSubmenuType == .path && self.toolbar!.layer.position.x == 425 {
+            if toolbar?.selectedSubmenuType == .path {
                 switch editorState {
                     case .idle:
                         // Start a new path
@@ -532,7 +552,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             input!.touchesMoved(touches, with: event)
         }
                 
-        if let touch = touches.first, toolbar?.selectedSubmenuType == .path && self.toolbar!.layer.position.x == 425 {
+        if let touch = touches.first, toolbar?.selectedSubmenuType == .path {
             switch editorState {
             case .drawingNewPath, .appendingToPath:
                 let currentPoint = touch.location(in: self)
@@ -555,7 +575,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             input!.touchesEnded(touches, with: event)
         }
         
-        if toolbar?.selectedSubmenuType == .path && self.toolbar!.layer.position.x == 425 {
+        if toolbar?.selectedSubmenuType == .path {
             let closePathDistanceThreshold     = 40.0
             let createSegmentDistanceThreshold = 20.0
             

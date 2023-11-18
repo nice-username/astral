@@ -4,12 +4,8 @@
 //
 //  Created by Joseph Haygood on 8/24/23.
 //
-
 import Foundation
 import SpriteKit
-
-
-
 
 class AstralParallaxBackgroundLayer2: SKNode {
     private var atlas: SKTextureAtlas
@@ -87,18 +83,13 @@ class AstralParallaxBackgroundLayer2: SKNode {
     
     private func addNewLayer(textureName: String) {
         let texture = self.atlas.textureNamed(textureName)
-        
         let node = SKSpriteNode(texture: texture)
         node.xScale = 2.0
         node.yScale = 2.0
         node.texture?.filteringMode = .nearest
         node.zPosition = -1
-        
         node.position.y = self.nextNodePositionY
         self.nextNodePositionY += node.size.height
-        
-        print("Adding texture at y: \(node.position.y), size: \(node.size.height * node.yScale)")
-        
         self.addChild(node)
         self.layers.append(node)
     }
