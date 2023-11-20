@@ -39,6 +39,9 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var pathRenderer: AstralPathRenderer!
     private var pathStart: CGPoint?
     private var pathOrigin: CGPoint?
+    
+    // test
+    private var drawer : BottomDrawerViewController = BottomDrawerViewController(minHeight: 96, maxHeight: 240)
 
     override init(size: CGSize) {
         super.init(size: size)

@@ -13,7 +13,7 @@ class AstralStageEditorPathManagerViewController: UIViewController {
     
     // MARK: - UI Components
     private var nameTextField: UITextField!
-    private var directionSwitch: UISwitch!
+    private var directionSwitch: UISegmentedControl!
     private var activationProgressSlider: UISlider!
     private var deactivationProgressSlider: UISlider!
     private var endBehaviorSegmentedControl: UISegmentedControl!
