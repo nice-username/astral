@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SpriteKit
 
-class AstralStageEditorPathManagerViewController: UIViewController {
+class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
     
     // MARK: - UI Components
     private var nameTextField: UITextField!

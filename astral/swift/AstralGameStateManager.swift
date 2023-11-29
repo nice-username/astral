@@ -99,4 +99,13 @@ class AstralGameStateManager {
             print("Never set the view before calling transition!")
         }
     }
+    
+    
+    func presentPathManager(viewController: AstralStageEditorPathManagerViewController) {
+        transitionToViewController(viewController, animated: true)
+    }
+    
+    func dismissPathManager(viewController: AstralStageEditorPathManagerViewController) {
+        viewController.dismiss(animated: true, completion: nil)
+    }
 }

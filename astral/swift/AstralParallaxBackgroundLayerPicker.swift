@@ -10,13 +10,6 @@ import UIKit
 import SpriteKit
 
 
-
-protocol AstralParallaxPickerDelegate: AnyObject {
-    func didPickLayer(_ layer: AstralParallaxBackgroundLayer2)
-}
-
-
-
 class AstralParallaxBackgroundLayerPicker: UIViewController {
     public var gameState: AstralGameStateManager?
     public var currentAtlas: String?

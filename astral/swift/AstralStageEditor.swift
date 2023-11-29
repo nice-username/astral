@@ -41,8 +41,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var pathOrigin: CGPoint?
     
     // test
-    private var drawer : BottomDrawerViewController = BottomDrawerViewController(minHeight: 96, maxHeight: 240)
-
+    private var pathManagerView : AstralStageEditorPathManagerViewController?
     override init(size: CGSize) {
         super.init(size: size)
     }
@@ -126,6 +125,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                                        dateModified: Date() )
         
         self.pathRenderer = AstralPathRenderer(scene: self)
+        self.pathManagerView = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 384)
     }
     
     
