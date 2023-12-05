@@ -8,7 +8,7 @@
 import Foundation
 import SpriteKit
 
-class AstralPathRenderer {
+class AstralStageEditorPathRenderer {
     weak var scene: SKScene? // Weak to prevent retain cycle
     var temporaryLineShape: SKShapeNode?
     

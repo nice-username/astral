@@ -8,6 +8,7 @@
 import Foundation
 
 
+
 class AstralStageEditorPathManager {
     var paths: [AstralStageEditorPath] = []
     var activePathIndex: Int?

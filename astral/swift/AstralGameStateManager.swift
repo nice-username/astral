@@ -12,8 +12,9 @@ class AstralGameStateManager {
     static let shared = AstralGameStateManager()
     public init() {}
     
-    var gameViewController: SKView?
+    var gameView: SKView?
     var viewController: UIViewController?
+    var pathManager: AstralStageEditorPathManagerViewController = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 288)
     
     private(set) var currentState: AstralGameState? {
         didSet {
@@ -74,13 +75,12 @@ class AstralGameStateManager {
     
     public func transitionToViewController(_ viewControllerToPresent: UIViewController, animated: Bool = true, completion: (() -> Void)? = nil) {
         if let presentingViewController = viewController {
-            
             let transition = CATransition()
             transition.duration = 0.35
             transition.type = CATransitionType.push
             transition.subtype = CATransitionSubtype.fromRight
             transition.timingFunction = CAMediaTimingFunction(name:CAMediaTimingFunctionName.easeInEaseOut)
-            self.gameViewController!.window!.layer.add(transition, forKey: kCATransition)
+            self.gameView!.window!.layer.add(transition, forKey: kCATransition)
             viewControllerToPresent.modalPresentationStyle = .fullScreen
             viewControllerToPresent.isModalInPresentation = true
             presentingViewController.present(viewControllerToPresent, animated: false, completion: nil)
@@ -91,21 +91,36 @@ class AstralGameStateManager {
     }
     
     private func transition<T: SKScene>(to sceneType: T.Type, transition: SKTransition = SKTransition.push(with: .left, duration: 0.35)) {
-        if gameViewController != nil {
-            let sceneToPresent = sceneType.init(size: gameViewController!.bounds.size)
+        if gameView != nil {
+            let sceneToPresent = sceneType.init(size: gameView!.bounds.size)
             sceneToPresent.scaleMode = .aspectFill
-            gameViewController!.presentScene(sceneToPresent, transition: transition)
+            gameView!.presentScene(sceneToPresent, transition: transition)
         } else {
             print("Never set the view before calling transition!")
         }
     }
     
     
-    func presentPathManager(viewController: AstralStageEditorPathManagerViewController) {
-        transitionToViewController(viewController, animated: true)
+    func presentPathManager() {
+        guard let presentingViewController = viewController else {
+            print("No presenting view controller set")
+            return
+        }
+        presentingViewController.addChild(pathManager)
+        presentingViewController.view.addSubview(pathManager.view)
+        presentingViewController.didMove(toParent: presentingViewController)
+        presentingViewController.view.frame = presentingViewController.view.frame
+        print("presented...?")
     }
-    
-    func dismissPathManager(viewController: AstralStageEditorPathManagerViewController) {
-        viewController.dismiss(animated: true, completion: nil)
+
+    func dismissPathManager() {
+        // Animate and remove the bottom drawer
+        UIView.animate(withDuration: 0.35, animations: { [self] in
+            pathManager.view.frame = CGRect(x: 0, y: self.viewController!.view.bounds.height, width: pathManager.view.frame.width, height: pathManager.view.frame.height)
+        }, completion: { _ in
+            self.pathManager.willMove(toParent: nil)
+            self.pathManager.view.removeFromSuperview()
+            self.pathManager.removeFromParent()
+        })
     }
 }

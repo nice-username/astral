@@ -10,6 +10,8 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
+    var bottomDrawer: BottomDrawerViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,7 +26,6 @@ class GameViewController: UIViewController {
             view.showsFPS            = true
             view.showsNodeCount      = true
         }
-        
         
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
         // including entities and graphs.
@@ -53,7 +54,6 @@ class GameViewController: UIViewController {
         }
         */
     }
-    
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {

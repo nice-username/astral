@@ -60,6 +60,7 @@
 		7C8D13672A0E7EE700C81D85 /* visitor2.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C8D13652A0E7EE700C81D85 /* visitor2.ttf */; };
 		7C8D136B2A0F5A6500C81D85 /* AstralDialogSpeaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8D136A2A0F5A6500C81D85 /* AstralDialogSpeaker.swift */; };
 		7C8D136D2A0F725700C81D85 /* AstralDialogColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C8D136C2A0F725700C81D85 /* AstralDialogColor.swift */; };
+		7C92CBA32B1F4BFB00730C39 /* AstralStageEditorPathInputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C92CBA22B1F4BFB00730C39 /* AstralStageEditorPathInputHandler.swift */; };
 		7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */; };
 		7CAA6AF62A00E0A100EBEA1E /* AstralParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */; };
 		7CAA6AF92A00E5A100EBEA1E /* Thruster.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */; };
@@ -168,6 +169,7 @@
 		7C8D13692A0E812B00C81D85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7C8D136A2A0F5A6500C81D85 /* AstralDialogSpeaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralDialogSpeaker.swift; sourceTree = "<group>"; };
 		7C8D136C2A0F725700C81D85 /* AstralDialogColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralDialogColor.swift; sourceTree = "<group>"; };
+		7C92CBA22B1F4BFB00730C39 /* AstralStageEditorPathInputHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralStageEditorPathInputHandler.swift; sourceTree = "<group>"; };
 		7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPhysicsCategory.swift; sourceTree = "<group>"; };
 		7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralParticleSystem.swift; sourceTree = "<group>"; };
 		7CAA6AF72A00E5A100EBEA1E /* Thruster.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Thruster.sks; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 				7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */,
 				7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */,
 				7C338B812A6D9AAB00EC4844 /* AstralStageEditor.swift */,
+				7C92CBA22B1F4BFB00730C39 /* AstralStageEditorPathInputHandler.swift */,
 				7CD4B7512B02355600E84B1B /* AstralStageEditorPathManagerViewController.swift */,
 				7C2E14952AF4254100787152 /* AstralStageEditorState.swift */,
 				7C2E14932AF1824E00787152 /* AstralStageEditorPathManager.swift */,
@@ -585,6 +588,7 @@
 				7CF8BC3E2A90CB3700E904BF /* AstralParallaxBackgroundLayerPicker.swift in Sources */,
 				7C81E0D129FF9D92005FB6EC /* AstralParallaxBackground.swift in Sources */,
 				7C24D1CE2A582C61004D1DE7 /* AstralMainMenuBackground.swift in Sources */,
+				7C92CBA32B1F4BFB00730C39 /* AstralStageEditorPathInputHandler.swift in Sources */,
 				7C8D136B2A0F5A6500C81D85 /* AstralDialogSpeaker.swift in Sources */,
 				7CB8B9A42B0ABCAB0055ED04 /* BottomDrawerViewController.swift in Sources */,
 				7CAA6AF42A00A7A700EBEA1E /* AstralPhysicsCategory.swift in Sources */,

@@ -35,6 +35,19 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
     private func setupUI() {
         // Initialize and configure UI components here
         // Add them as subviews and set constraints
+        let label = UILabel()
+        label.text = "Path name"
+        label.textAlignment = .center
+        label.textColor = .white
+        controlScrollView.addSubview(label)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: bottomBlurView.topAnchor),
+            label.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor),
+            label.heightAnchor.constraint(equalToConstant: 48)
+        ])
     }
 
     // MARK: - Load Data

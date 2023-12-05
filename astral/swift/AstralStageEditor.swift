@@ -34,11 +34,9 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var fireButton : SKSpriteNode?
     
     // Path drawing
-    private var path : AstralStageEditorPath?
+    private var pathInput : AstralStageEditorPathInputHandler!
     private var pathManager = AstralStageEditorPathManager()
-    private var pathRenderer: AstralPathRenderer!
-    private var pathStart: CGPoint?
-    private var pathOrigin: CGPoint?
+    private var pathRenderer: AstralStageEditorPathRenderer!
     
     // test
     private var pathManagerView : AstralStageEditorPathManagerViewController?
@@ -124,8 +122,9 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                                        dateOpened: Date(),
                                        dateModified: Date() )
         
-        self.pathRenderer = AstralPathRenderer(scene: self)
+        self.pathRenderer = AstralStageEditorPathRenderer(scene: self)
         self.pathManagerView = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 384)
+        self.pathInput = AstralStageEditorPathInputHandler(pathManager: pathManager, pathRenderer: pathRenderer, editorState: editorState)
     }
     
     
@@ -526,25 +525,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         // Handle user using path drawing tool
         if let touch = touches.first {
             if toolbar?.selectedSubmenuType == .path {
-                switch editorState {
-                    case .idle:
-                        // Start a new path
-                        let newPathIndex = pathManager.addNewPath()
-                        path = pathManager.paths[newPathIndex]
-                        pathStart = touch.location(in: self)
-                        pathOrigin = pathStart
-                        editorState = .drawingNewPath
-
-                    case .drawingNewPath, .appendingToPath:
-                        // Continue drawing the current path
-                        // ...
-                        break
-
-                    case .editingNode, .editingBezier:
-                        // These states will have their own logic, which you'll define later
-                        break
-                }
-                print(editorState)
+                pathInput.touchesBegan(touches, in: self)
             }
         }
     }
@@ -556,20 +537,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         }
                 
         if let touch = touches.first, toolbar?.selectedSubmenuType == .path {
-            switch editorState {
-            case .drawingNewPath, .appendingToPath:
-                let currentPoint = touch.location(in: self)
-                let start = pathStart ?? pathManager.lastSegmentEndPoint() ?? currentPoint
-                let distance = start.distanceTo(currentPoint)
-                if distance > 10 { // TODO: Replace 10 with a variable for the minimum distance
-                    pathRenderer.drawTemporaryLine(from: start, to: currentPoint)
-                }
-                pathRenderer.drawTemporaryLine(from: start, to: currentPoint)
-
-            // Handle other states if necessary
-            default:
-                break
-            }
+            pathInput.touchesMoved(touches, in: self)
         }
     }
     
@@ -579,44 +547,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         }
         
         if toolbar?.selectedSubmenuType == .path {
-            let closePathDistanceThreshold     = 40.0
-            let createSegmentDistanceThreshold = 20.0
-            
-            if let touch = touches.first, toolbar?.selectedSubmenuType == .path {
-                switch editorState {
-                case .drawingNewPath, .appendingToPath:
-                    let endPoint = touch.location(in: self)
-                    let start = pathStart ?? pathManager.lastSegmentEndPoint() ?? endPoint
-                    if let path = path {
-                        let distance = start.distanceTo(endPoint)
-                        pathRenderer.removeTemporaryLine()
-                        if distance > createSegmentDistanceThreshold {
-                            if let origin = pathOrigin, endPoint.distanceTo(origin) < closePathDistanceThreshold {
-                                // Snap to origin to close path
-                                let segmentIndex = path.addSegment(type: .line(start: start, end: origin))
-                                editorState = .idle
-                                // Here you can handle the logic for a completed path
-                                let lastSegment = path.segments[segmentIndex]
-                                pathRenderer.drawDirectionIndicator(for: lastSegment)
-                                pathRenderer.drawPermanentLine(for: lastSegment)
-                            } else {
-                                // Add a new segment to the path
-                                let segmentIndex = path.addSegment(type: .line(start: start, end: endPoint))
-                                pathStart = endPoint
-                                if editorState == .drawingNewPath {
-                                    editorState = .appendingToPath
-                                }
-                                let lastSegment = path.segments[segmentIndex]
-                                pathRenderer.drawDirectionIndicator(for: lastSegment)
-                                pathRenderer.drawPermanentLine(for: lastSegment)
-                            }
-                        }
-                    }
-                // Handle other states if necessary
-                default:
-                    break
-                }
-            }
+            pathInput.touchesEnded(touches, in: self)
         }
     }
 }

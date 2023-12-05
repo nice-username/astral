@@ -33,10 +33,6 @@ class BottomDrawerViewController: UIViewController {
         setupBlurEffect()
         setupControlScrollView()
         setupPanGesture()
-        
-        let (label1,slider,label2) = createSliderControls(labelText: "Hello", minValue: 1, maxValue: 100, initialValue: 10)
-        
-        controlScrollView.addSubview(label1)
     }
     
     private func setupBlurEffect() {

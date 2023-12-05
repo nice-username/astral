@@ -229,8 +229,20 @@ class AstralStageEditorToolbarSubView: UIView {
         case .transition:
             self.handleTransitionAction(at: index)
         case .path:
+            self.handlePathAction(at: index)
             break
         case .enemy:
+            break
+        }
+    }
+    
+    private func handlePathAction(at index: Int) {
+        switch index {
+        case 0:
+            self.gameState?.presentPathManager()
+        case 1:
+            self.gameState?.dismissPathManager()
+        default:
             break
         }
     }
