@@ -24,7 +24,6 @@ class AstralStageEditorPathInputHandler {
 
     func touchesBegan(_ touches: Set<UITouch>, in scene: SKScene) {
         guard let touch = touches.first else { return }
-        let location = touch.location(in: scene)
     
         switch editorState {
             case .idle:
@@ -49,7 +48,6 @@ class AstralStageEditorPathInputHandler {
 
     func touchesMoved(_ touches: Set<UITouch>, in scene: SKScene) {
         guard let touch = touches.first, editorState == .drawingNewPath || editorState == .appendingToPath else { return }
-        let location = touch.location(in: scene)
         
         switch editorState {
         case .drawingNewPath, .appendingToPath:
@@ -69,7 +67,6 @@ class AstralStageEditorPathInputHandler {
 
     func touchesEnded(_ touches: Set<UITouch>, in scene: SKScene) {
         guard let touch = touches.first, editorState == .drawingNewPath || editorState == .appendingToPath else { return }
-        let location = touch.location(in: scene)
         
         let closePathDistanceThreshold     = 40.0
         let createSegmentDistanceThreshold = 20.0
@@ -77,7 +74,7 @@ class AstralStageEditorPathInputHandler {
         switch editorState {
         case .drawingNewPath, .appendingToPath:
             let endPoint = touch.location(in: scene)
-            var pathStart = start ?? manager.lastSegmentEndPoint() ?? endPoint
+            let pathStart = start ?? manager.lastSegmentEndPoint() ?? endPoint
             if let path = path {
                 let distance = pathStart.distanceTo(endPoint)
                 renderer.removeTemporaryLine()
