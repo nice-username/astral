@@ -40,6 +40,7 @@ enum AstralStageEditorToolbarSubViewType {
         case .path:
             return [
                 AstralStageEditorToolbarAction(title: "Create", imageName: "path_add"),
+                AstralStageEditorToolbarAction(title: "Select", imageName: "path_select"),
                 AstralStageEditorToolbarAction(title: "Add node", imageName: "node_add")
             ]
         case .enemy:
@@ -239,11 +240,13 @@ class AstralStageEditorToolbarSubView: UIView {
     private func handlePathAction(at index: Int) {
         switch index {
         case 0:
-            self.gameState?.presentPathManager()
+            self.gameState?.editorTransitionTo(.drawingNewPath)
+            NotificationCenter.default.post(name: .hideToolbar, object: nil)
+            print(self.gameState?.editorState)
         case 1:
-            self.gameState?.dismissPathManager()
+            self.gameState?.presentPathManager()
         default:
-            break
+            self.gameState?.dismissPathManager()
         }
     }
     

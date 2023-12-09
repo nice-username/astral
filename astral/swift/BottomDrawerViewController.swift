@@ -130,6 +130,64 @@ class BottomDrawerViewController: UIViewController {
         self.bottomBlurView.frame.origin.y = targetY
     }
     
+    // Function to dismiss the keyboard
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    public func setupSliderWithLabelAndTextField(sliderTitle: String, tag: Int) {
+        // Label
+        let label = UILabel()
+        label.text = sliderTitle
+        label.textColor = .white
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        controlScrollView.addSubview(label)
+
+        // Slider
+        let slider = UISlider()
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        slider.tag = tag
+        controlScrollView.addSubview(slider)
+
+        // Numeric TextField
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.backgroundColor = .clear
+        textField.textAlignment = .right
+        textField.tag = tag
+        textField.textColor = .white
+        textField.keyboardType = .decimalPad
+        controlScrollView.addSubview(textField)
+        
+        // Add a toolbar with a 'Done' button to dismiss the keyboard
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(dismissKeyboard))
+        toolbar.setItems([doneButton], animated: false)
+        textField.inputAccessoryView = toolbar
+        
+
+        // Constraints
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor, constant: 8),
+            label.widthAnchor.constraint(equalToConstant: 96),
+            label.topAnchor.constraint(equalTo: lastControlBottomAnchor ?? bottomBlurView.topAnchor, constant: 8),
+            label.heightAnchor.constraint(equalToConstant: 48),
+
+            slider.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
+            slider.trailingAnchor.constraint(equalTo: textField.leadingAnchor, constant: -8),
+            slider.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+
+            textField.widthAnchor.constraint(equalToConstant: 60),
+            textField.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor, constant: -8),
+            textField.centerYAnchor.constraint(equalTo: label.centerYAnchor)
+        ])
+
+        // Update lastControlBottomAnchor for the next control
+        lastControlBottomAnchor = label.bottomAnchor
+    }
+
     
     // Function to attach controls to labels and position them in the controlScrollView
     public func attachControlsToScrollView(label: UILabel, control: UIControl, valueLabel: UILabel? = nil) {

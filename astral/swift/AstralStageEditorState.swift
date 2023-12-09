@@ -9,6 +9,7 @@ import Foundation
 
 enum AstralStageEditorState {
     case idle
+    case selectingPath
     case drawingNewPath
     case appendingToPath
     case editingNode

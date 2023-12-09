@@ -10,7 +10,6 @@ import SpriteKit
 
 class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var gameState : AstralGameStateManager!
-    private var editorState : AstralStageEditorState = .idle
     private var toolbar : AstralStageEditorToolbar?
     private var player : AstralPlayer?
     private var joystick : AstralJoystick!
@@ -73,9 +72,12 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     }
     
     override func sceneDidLoad() {
+        self.gameState = AstralGameStateManager.shared
+        
         self.stageHeight = 5000.0
         self.size = CGSize(width: 750.0, height: 1334.0)
         self.backgroundColor = .black
+        
         
         self.toolbar = AstralStageEditorToolbar(frame: .zero, scene: self)
         setupToolbar()
@@ -85,7 +87,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(stop(_:)), name: .stopMap, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveStage(_:)), name: .saveFile, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadStage(_:)), name: .loadFile, object: nil)
-        self.gameState = AstralGameStateManager.shared
+        NotificationCenter.default.addObserver(self, selector: #selector(hideToolbar(_:)), name: .hideToolbar, object: nil)
         
         self.collision = AstralCollisionHandler()
         self.physicsWorld.gravity = .zero
@@ -124,7 +126,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         
         self.pathRenderer = AstralStageEditorPathRenderer(scene: self)
         self.pathManagerView = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 384)
-        self.pathInput = AstralStageEditorPathInputHandler(pathManager: pathManager, pathRenderer: pathRenderer, editorState: editorState)
+        self.pathInput = AstralStageEditorPathInputHandler(pathManager: pathManager, pathRenderer: pathRenderer)
     }
     
     
@@ -332,7 +334,10 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         } )
     }
 
-    
+    @objc private func hideToolbar(_ notification: NSNotification) {
+        self.hideToolbar()
+    }
+        
     func hideToolbar() {
         UIView.animate(withDuration: 0.25, animations: {
             self.setContentAlpha(1)
@@ -514,19 +519,14 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     }
     
     
-    //
-    // Pass all of the gameplay input to a separate file to be dealt with over there...
-    //
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isPlaying {
             input!.touchesBegan(touches, with: event)
         }
         
         // Handle user using path drawing tool
-        if let touch = touches.first {
-            if toolbar?.selectedSubmenuType == .path {
-                pathInput.touchesBegan(touches, in: self)
-            }
+        if toolbar?.selectedSubmenuType == .path {
+            pathInput.touchesBegan(touches, in: self)
         }
     }
     
@@ -536,7 +536,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             input!.touchesMoved(touches, with: event)
         }
                 
-        if let touch = touches.first, toolbar?.selectedSubmenuType == .path {
+        if toolbar?.selectedSubmenuType == .path {
             pathInput.touchesMoved(touches, in: self)
         }
     }

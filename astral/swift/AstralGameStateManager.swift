@@ -13,6 +13,7 @@ class AstralGameStateManager {
     public init() {}
     
     var gameView: SKView?
+    var editorState: AstralStageEditorState?
     var viewController: UIViewController?
     var pathManager: AstralStageEditorPathManagerViewController = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 288)
     
@@ -67,6 +68,10 @@ class AstralGameStateManager {
     
     func transitionTo(_ state: AstralGameState) {
         self.currentState = state
+    }
+    
+    func editorTransitionTo(_ state: AstralStageEditorState) {
+        self.editorState = state
     }
     
     func throwEventMessage(name: NSNotification.Name, userInfo: [AnyHashable : Any]? = nil) {

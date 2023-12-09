@@ -48,6 +48,9 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
             label.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor),
             label.heightAnchor.constraint(equalToConstant: 48)
         ])
+        
+        setupSliderWithLabelAndTextField(sliderTitle: "Enter", tag: 1)
+        setupSliderWithLabelAndTextField(sliderTitle: "Exit", tag: 2)
     }
 
     // MARK: - Load Data
