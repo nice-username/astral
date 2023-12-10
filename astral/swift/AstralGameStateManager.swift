@@ -15,7 +15,7 @@ class AstralGameStateManager {
     var gameView: SKView?
     var editorState: AstralStageEditorState?
     var viewController: UIViewController?
-    var pathManager: AstralStageEditorPathManagerViewController = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 288)
+    var pathManager: AstralStageEditorPathManagerViewController = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 288, titleText: "Path Manager")
     
     private(set) var currentState: AstralGameState? {
         didSet {

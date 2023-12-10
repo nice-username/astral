@@ -10,7 +10,6 @@ import UIKit
 import SpriteKit
 
 class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
-    
     // MARK: - UI Components
     private var nameTextField: UITextField!
     private var directionSwitch: UISegmentedControl!
@@ -21,8 +20,10 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
     private var nodeCountLabel: UILabel!
     private var updateButton: UIButton!
 
+
+    
     // MARK: - Properties
-    var astralPath: AstralStageEditorPath? // This would be your path model
+    var path: AstralStageEditorPath?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -33,24 +34,12 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
 
     // MARK: - Setup UI
     private func setupUI() {
-        // Initialize and configure UI components here
-        // Add them as subviews and set constraints
-        let label = UILabel()
-        label.text = "Path name"
-        label.textAlignment = .center
-        label.textColor = .white
-        controlScrollView.addSubview(label)
-        
-        label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: bottomBlurView.topAnchor),
-            label.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor),
-            label.heightAnchor.constraint(equalToConstant: 48)
-        ])
-        
-        setupSliderWithLabelAndTextField(sliderTitle: "Enter", tag: 1)
-        setupSliderWithLabelAndTextField(sliderTitle: "Exit", tag: 2)
+        createdSegmentedControl(labelText: "Direction", options:["Forwards","Backwards"], height: 34.0, isFirstControl: true)
+        setupSliderWithLabelAndTextField(sliderTitle: "Enter", tag: 1, height: 34.0)
+        setupSliderWithLabelAndTextField(sliderTitle: "Exit", tag: 2, height: 34.0)
+        createdSegmentedControl(labelText: "Ending", options:["Loop","Reverse","Stop"], height: 34.0)
+        let _ = createCounterLabel("Segments", height: 34.0)
+        let _ = createCounterLabel("Nodes", height: 34.0)
     }
 
     // MARK: - Load Data
@@ -63,11 +52,4 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         // Handle the update logic here
         // Validate inputs and update `astralPath` properties
     }
-    
-    // Additional methods for handling UI actions like slider changes, switch toggle, etc.
-}
-
-// MARK: - Extension for UI setup helpers
-extension AstralStageEditorPathManagerViewController {
-    // Helper methods for UI setup
 }

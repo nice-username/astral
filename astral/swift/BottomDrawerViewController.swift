@@ -14,11 +14,14 @@ class BottomDrawerViewController: UIViewController {
     var bottomBlurView: UIVisualEffectView!
     var minimizedHeight: CGFloat
     var maximizedHeight: CGFloat
+    var titleLabel: UILabel?
+    private var titleText: String = ""
     private var lastControlBottomAnchor: NSLayoutYAxisAnchor?
     private var lastSliderTag = 0
     
     
-    init(minHeight: CGFloat, maxHeight: CGFloat) {
+    init(minHeight: CGFloat, maxHeight: CGFloat, titleText: String = "") {
+        self.titleText = titleText
         self.minimizedHeight = minHeight
         self.maximizedHeight = maxHeight
         super.init(nibName: nil, bundle: nil)
@@ -28,9 +31,11 @@ class BottomDrawerViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Initialize the View
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBlurEffect()
+        createTitleLabel(titleText, height: 44.0)
         setupControlScrollView()
         setupPanGesture()
     }
@@ -47,12 +52,16 @@ class BottomDrawerViewController: UIViewController {
         bottomBlurView.contentView.addSubview(controlScrollView)
         controlScrollView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            controlScrollView.topAnchor.constraint(equalTo: bottomBlurView.topAnchor),
+            controlScrollView.topAnchor.constraint(equalTo: titleLabel!.bottomAnchor),
             controlScrollView.bottomAnchor.constraint(equalTo: bottomBlurView.bottomAnchor),
             controlScrollView.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor),
             controlScrollView.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor)
         ])
         controlScrollView.alpha = 0.0
+        controlScrollView.isUserInteractionEnabled = true
+        controlScrollView.isScrollEnabled = true
+        controlScrollView.showsVerticalScrollIndicator = true
+
     }
 
     
@@ -134,8 +143,72 @@ class BottomDrawerViewController: UIViewController {
     @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
+        
+    public func createTitleLabel(_ labelText: String, height: CGFloat) {
+        let label = UILabel()
+        label.text = labelText
+        label.textAlignment = .center
+        label.textColor = .white
+        bottomBlurView.contentView.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: bottomBlurView.topAnchor),
+            label.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor),
+            label.heightAnchor.constraint(equalToConstant: height)
+        ])
+        lastControlBottomAnchor = label.bottomAnchor
+        titleLabel = label
+    }
     
-    public func setupSliderWithLabelAndTextField(sliderTitle: String, tag: Int) {
+        
+    public func createCounterLabel(_ labelText: String, height: CGFloat) -> UILabel {
+        let label = UILabel()
+        label.text = labelText
+        label.textAlignment = .left
+        label.textColor = .white
+        controlScrollView.addSubview(label)
+        
+        let label2 = UILabel()
+        label2.text = "0"
+        label2.textAlignment = .left
+        label2.textColor = .white
+        controlScrollView.addSubview(label2)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label2.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: lastControlBottomAnchor ?? bottomBlurView.topAnchor, constant: 8),
+            label.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor, constant: 8),
+            label.widthAnchor.constraint(equalToConstant: 96),
+            label.heightAnchor.constraint(equalToConstant: height),
+            
+            label2.topAnchor.constraint(equalTo: lastControlBottomAnchor ?? bottomBlurView.topAnchor, constant: 8),
+            label2.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
+            label2.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor),
+            label2.heightAnchor.constraint(equalToConstant: height)
+        ])
+        
+        lastControlBottomAnchor = label.bottomAnchor
+        updateScrollViewContentSize()
+        return label2
+    }
+    
+    private func configureSegmentedControlAppearance(segmentedControl: UISegmentedControl) {
+        let unselectedAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.white,
+            .font: UIFont.systemFont(ofSize: 14)
+        ]
+        let selectedAttributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor: UIColor.black,
+            .font: UIFont.systemFont(ofSize: 14)
+        ]
+        segmentedControl.setTitleTextAttributes(unselectedAttributes, for: .normal)
+        segmentedControl.setTitleTextAttributes(selectedAttributes, for: .selected)
+    }
+
+    
+    public func setupSliderWithLabelAndTextField(sliderTitle: String, tag: Int, height: CGFloat) {
         // Label
         let label = UILabel()
         label.text = sliderTitle
@@ -158,6 +231,10 @@ class BottomDrawerViewController: UIViewController {
         textField.tag = tag
         textField.textColor = .white
         textField.keyboardType = .decimalPad
+        let borderColor = UIColor.white
+        textField.layer.borderWidth = 1.0
+        textField.layer.cornerRadius = 4.0
+        textField.layer.borderColor = borderColor.cgColor
         controlScrollView.addSubview(textField)
         
         // Add a toolbar with a 'Done' button to dismiss the keyboard
@@ -173,7 +250,7 @@ class BottomDrawerViewController: UIViewController {
             label.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor, constant: 8),
             label.widthAnchor.constraint(equalToConstant: 96),
             label.topAnchor.constraint(equalTo: lastControlBottomAnchor ?? bottomBlurView.topAnchor, constant: 8),
-            label.heightAnchor.constraint(equalToConstant: 48),
+            label.heightAnchor.constraint(equalToConstant: height),
 
             slider.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
             slider.trailingAnchor.constraint(equalTo: textField.leadingAnchor, constant: -8),
@@ -186,6 +263,7 @@ class BottomDrawerViewController: UIViewController {
 
         // Update lastControlBottomAnchor for the next control
         lastControlBottomAnchor = label.bottomAnchor
+        updateScrollViewContentSize()
     }
 
     
@@ -229,9 +307,45 @@ class BottomDrawerViewController: UIViewController {
             // Update the last bottom anchor to the bottom of the control
             lastControlBottomAnchor = control.bottomAnchor
         }
+        updateScrollViewContentSize()
     }
 
-    
+    public func createdSegmentedControl(labelText: String = "", options: [String], height: CGFloat, defaultIndex: Int = 0, isFirstControl: Bool = false) {
+        let label = UILabel()
+        label.text = labelText
+        label.textColor = .white
+        label.textAlignment = .left
+        label.translatesAutoresizingMaskIntoConstraints = false
+        controlScrollView.addSubview(label)
+
+        let segmentedControl = UISegmentedControl(items: options)
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
+        segmentedControl.selectedSegmentIndex = defaultIndex
+        configureSegmentedControlAppearance(segmentedControl: segmentedControl)
+        controlScrollView.addSubview(segmentedControl)
+        
+        var topAnchor = label.topAnchor.constraint(equalTo: lastControlBottomAnchor ?? bottomBlurView.topAnchor, constant: 8)
+        if isFirstControl {
+            topAnchor = label.topAnchor.constraint(equalTo: controlScrollView.topAnchor, constant: 8)
+        }
+        
+        // Constraints
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor, constant: 8),
+            label.widthAnchor.constraint(equalToConstant: 96),
+            topAnchor,
+            label.heightAnchor.constraint(equalToConstant: height),
+            segmentedControl.leadingAnchor.constraint(equalTo: label.trailingAnchor, constant: 8),
+            segmentedControl.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor, constant: -8),
+            segmentedControl.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+            segmentedControl.heightAnchor.constraint(equalToConstant: height)
+        ])
+
+        // Update lastControlBottomAnchor for the next control
+        updateScrollViewContentSize()
+        lastControlBottomAnchor = segmentedControl.bottomAnchor
+    }
+
 
     
     
@@ -255,6 +369,7 @@ class BottomDrawerViewController: UIViewController {
         valueLabel.textAlignment = .right
         
         attachControlsToScrollView(label: label, control: slider, valueLabel: valueLabel)
+        updateScrollViewContentSize()
         return (label, slider, valueLabel)
     }
     
@@ -262,5 +377,15 @@ class BottomDrawerViewController: UIViewController {
         if let valueLabel = self.view.viewWithTag(sender.tag + 1000) as? UILabel {
             valueLabel.text = String(format: "%.2f", sender.value)
         }
+    }
+    
+    
+    private func updateScrollViewContentSize() {
+        controlScrollView.layoutIfNeeded()
+        var contentRect = CGRect.zero
+        for view in controlScrollView.subviews {
+            contentRect = contentRect.union(view.frame)
+        }
+        controlScrollView.contentSize = contentRect.size
     }
 }
