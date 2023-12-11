@@ -31,6 +31,12 @@ class AstralStageEditorPathRenderer {
         scene?.addChild(temporaryLineShape!)
     }
     
+    func updatePathColor(for path: AstralStageEditorPath, color: UIColor) {
+        path.segments.forEach { segment in
+            segment.shape?.strokeColor = color
+        }
+    }
+    
     // Creates the arrow shape for the direction indicator
     func createArrowShape(withAngle angle: CGFloat) -> SKShapeNode {
         let arrowPath = UIBezierPath()

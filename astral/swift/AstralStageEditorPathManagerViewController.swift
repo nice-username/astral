@@ -19,6 +19,7 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
     private var segmentCountLabel: UILabel!
     private var nodeCountLabel: UILabel!
     private var updateButton: UIButton!
+    private var gameState: AstralGameStateManager!
 
 
     
@@ -28,6 +29,7 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.gameState = AstralGameStateManager.shared
         setupUI()
         loadPathData()
     }
@@ -40,6 +42,12 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         createdSegmentedControl(labelText: "Ending", options:["Loop","Reverse","Stop"], height: 34.0)
         let _ = createCounterLabel("Segments", height: 34.0)
         let _ = createCounterLabel("Nodes", height: 34.0)
+        let _ = createFullWidthButton(labelText: "Delete", backgroundColor: .clear, borderColor: .systemRed, textColor: .white, height: 34.0)
+        let cancelBtn = createFullWidthButton(labelText: "Cancel", backgroundColor: .clear, borderColor: .white, textColor: .white, height: 34.0)
+        
+        cancelBtn.addAction({
+            self.gameState.dismissPathManager()
+        })
     }
 
     // MARK: - Load Data

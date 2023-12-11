@@ -7,6 +7,9 @@
 import Foundation
 import UIKit
 
+
+
+
 class BottomDrawerViewController: UIViewController {
     var isMenuRevealed = false
     var controlScrollView: UIScrollView!
@@ -310,6 +313,7 @@ class BottomDrawerViewController: UIViewController {
         updateScrollViewContentSize()
     }
 
+    
     public func createdSegmentedControl(labelText: String = "", options: [String], height: CGFloat, defaultIndex: Int = 0, isFirstControl: Bool = false) {
         let label = UILabel()
         label.text = labelText
@@ -345,9 +349,38 @@ class BottomDrawerViewController: UIViewController {
         updateScrollViewContentSize()
         lastControlBottomAnchor = segmentedControl.bottomAnchor
     }
-
-
     
+    public func createFullWidthButton(labelText: String, backgroundColor: UIColor, borderColor: UIColor, textColor: UIColor, height: CGFloat, borderWidth: CGFloat = 1.0, cornerRadius: CGFloat = 5.0, isFirstButton: Bool = false) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setTitle(labelText, for: .normal)
+        button.backgroundColor = backgroundColor
+        button.setTitleColor(textColor, for: .normal)
+        button.layer.borderColor = borderColor.cgColor
+        button.layer.borderWidth = borderWidth
+        button.layer.cornerRadius = cornerRadius
+        button.translatesAutoresizingMaskIntoConstraints = false
+        controlScrollView.addSubview(button)
+        
+        var topAnchor = button.topAnchor.constraint(equalTo: lastControlBottomAnchor ?? bottomBlurView.topAnchor, constant: 8)
+        if isFirstButton {
+            topAnchor = button.topAnchor.constraint(equalTo: controlScrollView.topAnchor, constant: 8)
+        }
+
+        // Constraints
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: bottomBlurView.trailingAnchor),
+            topAnchor,
+            button.heightAnchor.constraint(equalToConstant: height)
+        ])
+
+        // Update lastControlBottomAnchor for the next control
+        updateScrollViewContentSize()
+        lastControlBottomAnchor = button.bottomAnchor
+        return button
+    }
+
+
     
     func createSliderControls(labelText: String, minValue: Float, maxValue: Float, initialValue: Float) -> (label: UILabel, slider: UISlider, valueLabel: UILabel) {
         let label = UILabel()
@@ -378,7 +411,6 @@ class BottomDrawerViewController: UIViewController {
             valueLabel.text = String(format: "%.2f", sender.value)
         }
     }
-    
     
     private func updateScrollViewContentSize() {
         controlScrollView.layoutIfNeeded()

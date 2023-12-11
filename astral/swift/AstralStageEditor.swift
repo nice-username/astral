@@ -74,7 +74,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     override func sceneDidLoad() {
         self.gameState = AstralGameStateManager.shared
         
-        self.stageHeight = 5000.0
+        self.stageHeight = 1000.0
         self.size = CGSize(width: 750.0, height: 1334.0)
         self.backgroundColor = .black
         

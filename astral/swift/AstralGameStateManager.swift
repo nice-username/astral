@@ -72,6 +72,10 @@ class AstralGameStateManager {
     
     func editorTransitionTo(_ state: AstralStageEditorState) {
         self.editorState = state
+        if state != .selectingPath {
+            print("hi")
+            dismissPathManager()
+        }
     }
     
     func throwEventMessage(name: NSNotification.Name, userInfo: [AnyHashable : Any]? = nil) {
@@ -111,17 +115,29 @@ class AstralGameStateManager {
             print("No presenting view controller set")
             return
         }
+
+        // Prepare the child view controller
         presentingViewController.addChild(pathManager)
+        pathManager.view.frame = CGRect(x: 0,
+                                        y: presentingViewController.view.bounds.height,
+                                        width: presentingViewController.view.bounds.width,
+                                        height: presentingViewController.view.bounds.height)
         presentingViewController.view.addSubview(pathManager.view)
-        presentingViewController.didMove(toParent: presentingViewController)
-        presentingViewController.view.frame = presentingViewController.view.frame
-        print("presented...?")
+
+        // Animate the presentation
+        UIView.animate(withDuration: 0.35, animations: {
+            self.pathManager.view.frame = presentingViewController.view.bounds
+        }, completion: { _ in
+            self.pathManager.didMove(toParent: presentingViewController)
+        })
     }
 
     func dismissPathManager() {
-        // Animate and remove the bottom drawer
         UIView.animate(withDuration: 0.35, animations: { [self] in
-            pathManager.view.frame = CGRect(x: 0, y: self.viewController!.view.bounds.height, width: pathManager.view.frame.width, height: pathManager.view.frame.height)
+            pathManager.view.frame = CGRect(x: 0,
+                                            y: self.viewController!.view.bounds.height,
+                                            width: pathManager.view.frame.width,
+                                            height: pathManager.view.frame.height)
         }, completion: { _ in
             self.pathManager.willMove(toParent: nil)
             self.pathManager.view.removeFromSuperview()

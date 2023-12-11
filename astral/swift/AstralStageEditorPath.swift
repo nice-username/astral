@@ -11,6 +11,17 @@ import SpriteKit
 
 
 
+enum AstralPathDirection {
+    case forwards
+    case backwards
+}
+
+enum AstralPathEndBehavior {
+    case loop
+    case reverse
+    case stop
+}
+
 class AstralPathNode {
     var point: CGPoint
     var order: AstralEnemyOrder
@@ -92,6 +103,10 @@ class AstralPathSegment {
 
 class AstralStageEditorPath {
     var segments: [AstralPathSegment] = []
+    var direction: AstralPathDirection = .forwards
+    var activationProgress: Double = 0.0
+    var deactivationProgress: Double = 0.0
+    var endBehavior: AstralPathEndBehavior = .loop
     
     // Adds a segment and returns its index
     func addSegment(type: AstralPathSegmentType) -> Int {
@@ -124,5 +139,23 @@ class AstralStageEditorPath {
             }
         }
         return path
+    }
+    
+    func distanceToClosestPoint(from point: CGPoint) -> CGFloat {
+        var closestDistance: CGFloat = .greatestFiniteMagnitude
+        for segment in segments {
+            switch segment.type {
+            case .line(let start, let end):
+                let distance = point.distanceToLineSegment(start: start, end: end)
+                closestDistance = min(closestDistance, distance)
+            case .bezier(let start, let control1, let control2, let end):
+                // For bezier, you might need a more complex calculation
+                // As a placeholder, we use the start and end points
+                let distanceToStart = point.distanceTo(start)
+                let distanceToEnd = point.distanceTo(end)
+                closestDistance = min(closestDistance, distanceToStart, distanceToEnd)
+            }
+        }
+        return closestDistance
     }
 }

@@ -64,6 +64,7 @@ class AstralStageEditorToolbarSubView: UIView {
     var titleIcon: UIImageView?
     var leftConstraint: NSLayoutConstraint!
 
+
     
     init(type: AstralStageEditorToolbarSubViewType, scene: SKScene) {
         self.scene = scene
@@ -242,9 +243,10 @@ class AstralStageEditorToolbarSubView: UIView {
         case 0:
             self.gameState?.editorTransitionTo(.drawingNewPath)
             NotificationCenter.default.post(name: .hideToolbar, object: nil)
-            print(self.gameState?.editorState)
         case 1:
+            self.gameState?.editorTransitionTo(.selectingPath)
             self.gameState?.presentPathManager()
+            NotificationCenter.default.post(name: .hideToolbar, object: nil)
         default:
             self.gameState?.dismissPathManager()
         }

@@ -15,6 +15,7 @@ class AstralStageEditorPathInputHandler {
     private var manager: AstralStageEditorPathManager
     private var renderer: AstralStageEditorPathRenderer
     private var gameState: AstralGameStateManager
+    private let pathSelectTouchThreshold: CGFloat = 25.0
 
     init(pathManager: AstralStageEditorPathManager, pathRenderer: AstralStageEditorPathRenderer) {
         self.manager = pathManager
@@ -25,7 +26,8 @@ class AstralStageEditorPathInputHandler {
 
     func touchesBegan(_ touches: Set<UITouch>, in scene: SKScene) {
         guard let touch = touches.first else { return }
-        print(gameState.editorState)
+        let touchLocation = touch.location(in: scene)
+
         switch gameState.editorState {
             case .drawingNewPath:
                 // Start a new path
@@ -46,7 +48,20 @@ class AstralStageEditorPathInputHandler {
             case .idle:
                 break
             case .selectingPath:
-                break
+                var closestPath: AstralStageEditorPath?
+                var minDistance = pathSelectTouchThreshold
+                for path in manager.paths {
+                    let distance = path.distanceToClosestPoint(from: touchLocation)
+                    if distance < minDistance {
+                        minDistance = distance
+                        closestPath = path
+                    }
+                }
+                if let closestPath = closestPath {
+                    // User has touched near a path
+                    self.path = closestPath
+                    renderer.updatePathColor(for: closestPath, color: .systemBlue)
+                }
             default:
                 break
         }
@@ -70,13 +85,13 @@ class AstralStageEditorPathInputHandler {
         }
         
     }
-
+    
     func touchesEnded(_ touches: Set<UITouch>, in scene: SKScene) {
-        guard let touch = touches.first, gameState.editorState == .drawingNewPath || gameState.editorState == .appendingToPath else { return }
+        guard let touch = touches.first, isValidEditorState() else { return }
         
         let closePathDistanceThreshold     = 40.0
         let createSegmentDistanceThreshold = 20.0
-    
+        
         switch gameState.editorState {
         case .drawingNewPath, .appendingToPath:
             let endPoint = touch.location(in: scene)
@@ -109,6 +124,10 @@ class AstralStageEditorPathInputHandler {
             if gameState.editorState == .drawingNewPath {
                 gameState.editorState = .appendingToPath
             }
+        case .selectingPath:
+            if let path = self.path {
+                renderer.updatePathColor(for: path, color: .white)
+            }
         case .idle:
             break
         case .editingNode:
@@ -118,5 +137,11 @@ class AstralStageEditorPathInputHandler {
         default:
             break
         }
+    }
+    
+    func isValidEditorState() -> Bool {
+        return gameState.editorState == .drawingNewPath ||
+               gameState.editorState == .appendingToPath ||
+               gameState.editorState == .selectingPath
     }
 }
