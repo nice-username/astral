@@ -33,6 +33,8 @@ class AstralStageEditorPathRenderer {
     
     func updatePathColor(for path: AstralStageEditorPath, color: UIColor) {
         path.segments.forEach { segment in
+            segment.directionArrow?.fillColor = color
+            segment.directionArrow?.strokeColor = color
             segment.shape?.strokeColor = color
         }
     }
@@ -90,7 +92,7 @@ class AstralStageEditorPathRenderer {
     }
 
     // The refactored drawDirectionIndicator function
-    func drawDirectionIndicator(for segment: AstralPathSegment) {
+    func drawDirectionIndicator(for segment: AstralPathSegment, direction: AstralPathDirection = .forwards) {
         guard let scene = scene else { return }
         
         let (_, angle) = segment.midPointAndAngle()
@@ -100,7 +102,13 @@ class AstralStageEditorPathRenderer {
 
         let (animationStartPoint, animationEndPoint) = calculateArrowAnimationPoints(for: segment, withOffset: 40.0)
         arrowShape.position = animationStartPoint
-        let arrowAnimation = createArrowAnimation(startPoint: animationStartPoint, endPoint: animationEndPoint)
+        
+        var arrowAnimation: SKAction
+        if direction == .forwards {
+            arrowAnimation = createArrowAnimation(startPoint: animationStartPoint, endPoint: animationEndPoint)
+        } else {
+            arrowAnimation = createArrowAnimation(startPoint: animationEndPoint, endPoint: animationStartPoint)
+        }
         arrowShape.run(arrowAnimation)
     }
 

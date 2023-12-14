@@ -120,6 +120,7 @@ class BottomDrawerViewController: UIViewController {
         isMenuRevealed = false
         UIView.animate(withDuration: 0.166667) {
             self.bottomBlurView.frame.origin.y = self.view.frame.height - self.minimizedHeight
+            self.controlScrollView.contentOffset = .zero
             self.controlScrollView.alpha = 0.0
         }
     }
@@ -211,7 +212,7 @@ class BottomDrawerViewController: UIViewController {
     }
 
     
-    public func setupSliderWithLabelAndTextField(sliderTitle: String, tag: Int, height: CGFloat) {
+    public func setupSliderWithLabelAndTextField(sliderTitle: String, maxValue: Float = 1.0, height: CGFloat, initialValue: Float? = nil) -> UISlider {
         // Label
         let label = UILabel()
         label.text = sliderTitle
@@ -222,8 +223,12 @@ class BottomDrawerViewController: UIViewController {
 
         // Slider
         let slider = UISlider()
+        slider.maximumValue = maxValue
+        slider.value = initialValue ?? 0.0
+        self.lastSliderTag += 1
+        slider.tag = self.lastSliderTag
+        slider.addTarget(self, action: #selector(sliderUpdateTextTag(_:)), for: .valueChanged)
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider.tag = tag
         controlScrollView.addSubview(slider)
 
         // Numeric TextField
@@ -231,13 +236,18 @@ class BottomDrawerViewController: UIViewController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.backgroundColor = .clear
         textField.textAlignment = .right
-        textField.tag = tag
+        textField.tag = slider.tag + 1000
         textField.textColor = .white
         textField.keyboardType = .decimalPad
+        
+        /*
         let borderColor = UIColor.white
         textField.layer.borderWidth = 1.0
         textField.layer.cornerRadius = 4.0
         textField.layer.borderColor = borderColor.cgColor
+         */
+        textField.text = "\(initialValue ?? 0)"
+        textField.font = UIFont.systemFont(ofSize: 20, weight: .thin)
         controlScrollView.addSubview(textField)
         
         // Add a toolbar with a 'Done' button to dismiss the keyboard
@@ -247,7 +257,6 @@ class BottomDrawerViewController: UIViewController {
         toolbar.setItems([doneButton], animated: false)
         textField.inputAccessoryView = toolbar
         
-
         // Constraints
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: bottomBlurView.leadingAnchor, constant: 8),
@@ -267,6 +276,7 @@ class BottomDrawerViewController: UIViewController {
         // Update lastControlBottomAnchor for the next control
         lastControlBottomAnchor = label.bottomAnchor
         updateScrollViewContentSize()
+        return slider
     }
 
     
@@ -314,7 +324,7 @@ class BottomDrawerViewController: UIViewController {
     }
 
     
-    public func createdSegmentedControl(labelText: String = "", options: [String], height: CGFloat, defaultIndex: Int = 0, isFirstControl: Bool = false) {
+    public func createdSegmentedControl(labelText: String = "", options: [String], height: CGFloat, defaultIndex: Int = 0, isFirstControl: Bool = false) -> UISegmentedControl {
         let label = UILabel()
         label.text = labelText
         label.textColor = .white
@@ -348,6 +358,8 @@ class BottomDrawerViewController: UIViewController {
         // Update lastControlBottomAnchor for the next control
         updateScrollViewContentSize()
         lastControlBottomAnchor = segmentedControl.bottomAnchor
+        
+        return segmentedControl
     }
     
     public func createFullWidthButton(labelText: String, backgroundColor: UIColor, borderColor: UIColor, textColor: UIColor, height: CGFloat, borderWidth: CGFloat = 1.0, cornerRadius: CGFloat = 5.0, isFirstButton: Bool = false) -> UIButton {
@@ -409,6 +421,12 @@ class BottomDrawerViewController: UIViewController {
     @objc func sliderUpdateValue(_ sender: UISlider) {
         if let valueLabel = self.view.viewWithTag(sender.tag + 1000) as? UILabel {
             valueLabel.text = String(format: "%.2f", sender.value)
+        }
+    }
+    
+    @objc func sliderUpdateTextTag(_ sender: UISlider) {
+        if let valueLabel = self.view.viewWithTag(sender.tag + 1000) as? UITextField {
+            valueLabel.text = String(format: "%.0f", sender.value)
         }
     }
     

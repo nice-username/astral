@@ -102,10 +102,11 @@ class AstralPathSegment {
 
 
 class AstralStageEditorPath {
+    var name: String = ""
     var segments: [AstralPathSegment] = []
     var direction: AstralPathDirection = .forwards
-    var activationProgress: Double = 0.0
-    var deactivationProgress: Double = 0.0
+    var activationProgress: Float = 0.0
+    var deactivationProgress: Float = 0.0
     var endBehavior: AstralPathEndBehavior = .loop
     
     // Adds a segment and returns its index

@@ -22,7 +22,6 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var stageScrollRecognizer: UIPanGestureRecognizer!
     private var toolbarBgColor : UIColor?
     private var backgrounds : [AstralParallaxBackgroundLayer2] = []
-    private var stageHeight : Double = 0.0
     
     
     // Stage playback
@@ -74,7 +73,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     override func sceneDidLoad() {
         self.gameState = AstralGameStateManager.shared
         
-        self.stageHeight = 1000.0
+        self.gameState.stageHeight = 1000.0
         self.size = CGSize(width: 750.0, height: 1334.0)
         self.backgroundColor = .black
         
@@ -86,6 +85,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(play(_:)), name: .playMap, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(stop(_:)), name: .stopMap, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveStage(_:)), name: .saveFile, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pathApplyChanges(_:)), name: .pathApplyChanges, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadStage(_:)), name: .loadFile, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(hideToolbar(_:)), name: .hideToolbar, object: nil)
         
@@ -365,6 +365,18 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    
+    
+    //
+    // Handle ".pathApplyChanges" messages sent by the toolbar
+    //
+    @objc private func pathApplyChanges(_ notification: NSNotification) {
+        if let data = notification.userInfo, let path = data["path"] as? AstralStageEditorPath {
+            pathManager.savePathData(path: path)
+        }
+    }
+    
+    
     //
     // Handle ".saveFile" messages sent by the toolbar
     //
@@ -490,7 +502,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         let deltaTime = currentTime - lastUpdateTime
         lastUpdateTime = currentTime
         if isPlaying {
-            self.progress = min(self.progress + deltaTime * timeScale, stageHeight)
+            self.progress = min(self.progress + deltaTime * timeScale, gameState.stageHeight)
             input?.update(currentTime, deltaTime: deltaTime)
             for bg in backgrounds {
                 bg.update(deltaTime: deltaTime, gestureYChange: 0)

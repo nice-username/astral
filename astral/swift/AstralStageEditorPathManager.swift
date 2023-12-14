@@ -21,6 +21,15 @@ class AstralStageEditorPathManager {
         activePathIndex = paths.count - 1
         return activePathIndex!
     }
+    
+    func savePathData(path: AstralStageEditorPath) {
+        if let idx = activePathIndex {
+            paths[idx].direction = path.direction
+            paths[idx].activationProgress = path.activationProgress
+            paths[idx].deactivationProgress = path.deactivationProgress
+            paths[idx].endBehavior = path.endBehavior
+        }
+    }
 
     // Set active path by index
     func setActivePath(index: Int) {

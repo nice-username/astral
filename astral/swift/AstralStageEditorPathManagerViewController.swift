@@ -13,9 +13,9 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
     // MARK: - UI Components
     private var nameTextField: UITextField!
     private var directionSwitch: UISegmentedControl!
-    private var activationProgressSlider: UISlider!
-    private var deactivationProgressSlider: UISlider!
-    private var endBehaviorSegmentedControl: UISegmentedControl!
+    private var activationSlider: UISlider!
+    private var deactivationSlider: UISlider!
+    private var endBehaviorControl: UISegmentedControl!
     private var segmentCountLabel: UILabel!
     private var nodeCountLabel: UILabel!
     private var updateButton: UIButton!
@@ -31,28 +31,83 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         super.viewDidLoad()
         self.gameState = AstralGameStateManager.shared
         setupUI()
-        loadPathData()
     }
 
     // MARK: - Setup UI
     private func setupUI() {
-        createdSegmentedControl(labelText: "Direction", options:["Forwards","Backwards"], height: 34.0, isFirstControl: true)
-        setupSliderWithLabelAndTextField(sliderTitle: "Enter", tag: 1, height: 34.0)
-        setupSliderWithLabelAndTextField(sliderTitle: "Exit", tag: 2, height: 34.0)
-        createdSegmentedControl(labelText: "Ending", options:["Loop","Reverse","Stop"], height: 34.0)
+        let floatHeight = Float(gameState.stageHeight)
+        directionSwitch = createdSegmentedControl(labelText: "Direction", options:["Forwards","Backwards"], height: 34.0, isFirstControl: true)
+        activationSlider = setupSliderWithLabelAndTextField(sliderTitle: "Enter", maxValue: floatHeight, height: 34.0)
+        deactivationSlider = setupSliderWithLabelAndTextField(sliderTitle: "Exit", maxValue: floatHeight, height: 34.0, initialValue: floatHeight)
+        endBehaviorControl = createdSegmentedControl(labelText: "Ending", options:["Loop","Reverse","Stop"], height: 34.0)
         let _ = createCounterLabel("Segments", height: 34.0)
         let _ = createCounterLabel("Nodes", height: 34.0)
-        let _ = createFullWidthButton(labelText: "Delete", backgroundColor: .clear, borderColor: .systemRed, textColor: .white, height: 34.0)
+        let applyBtn = createFullWidthButton(labelText: "Apply", backgroundColor: .clear, borderColor: .systemGreen, textColor: .white, height: 34.0)
         let cancelBtn = createFullWidthButton(labelText: "Cancel", backgroundColor: .clear, borderColor: .white, textColor: .white, height: 34.0)
+        let _ = createFullWidthButton(labelText: "Delete", backgroundColor: .clear, borderColor: .systemRed, textColor: .white, height: 34.0)
         
         cancelBtn.addAction({
             self.gameState.dismissPathManager()
         })
+        
+        applyBtn.addAction {
+            self.savePathData()
+            self.hideMenu()
+        }
     }
 
     // MARK: - Load Data
-    private func loadPathData() {
-        // Load data from `astralPath` into UI components
+    public func loadPathData(_ path: AstralStageEditorPath) {
+        self.path = path
+        
+        gameState.pathManager.titleLabel?.text = path.name
+        activationSlider.value = path.activationProgress
+        deactivationSlider.value = path.deactivationProgress
+        sliderUpdateTextTag(activationSlider)
+        sliderUpdateTextTag(deactivationSlider)
+        
+        switch path.direction {
+        case .forwards:
+            directionSwitch.selectedSegmentIndex = 0
+        case .backwards:
+            directionSwitch.selectedSegmentIndex = 1
+        }
+        
+        switch path.endBehavior {
+        case .loop:
+            endBehaviorControl.selectedSegmentIndex = 0
+        case .reverse:
+            endBehaviorControl.selectedSegmentIndex = 1
+        case .stop:
+            endBehaviorControl.selectedSegmentIndex = 2
+        }
+    }
+    
+    public func savePathData() {
+        path?.activationProgress = activationSlider.value
+        path?.deactivationProgress = deactivationSlider.value
+        
+        switch directionSwitch.selectedSegmentIndex {
+        case 0:
+            path?.direction = .forwards
+        case 1:
+            path?.direction = .backwards
+        default:
+            break
+        }
+        
+        switch endBehaviorControl.selectedSegmentIndex {
+        case 0:
+            path?.endBehavior = .loop
+        case 1:
+            path?.endBehavior = .reverse
+        case 2:
+            path?.endBehavior = .stop
+        default:
+            break
+        }
+        
+        NotificationCenter.default.post(name: .pathApplyChanges, object: nil, userInfo: ["path": path!])
     }
 
     // MARK: - Actions

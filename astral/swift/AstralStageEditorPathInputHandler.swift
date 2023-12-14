@@ -36,6 +36,7 @@ class AstralStageEditorPathInputHandler {
                 manager.setActivePath(index: newPathIndex)
                 start = touch.location(in: scene)
                 origin = start
+                path?.name = "Path \(newPathIndex + 1)"
 
             case .appendingToPath:
                 // Continue drawing the current path
@@ -60,6 +61,7 @@ class AstralStageEditorPathInputHandler {
                 if let closestPath = closestPath {
                     // User has touched near a path
                     self.path = closestPath
+                    self.gameState.pathManager.loadPathData(path!)
                     renderer.updatePathColor(for: closestPath, color: .systemBlue)
                 }
             default:

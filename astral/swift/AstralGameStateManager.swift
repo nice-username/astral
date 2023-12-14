@@ -16,6 +16,7 @@ class AstralGameStateManager {
     var editorState: AstralStageEditorState?
     var viewController: UIViewController?
     var pathManager: AstralStageEditorPathManagerViewController = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 288, titleText: "Path Manager")
+    var stageHeight: Double = 0.0
     
     private(set) var currentState: AstralGameState? {
         didSet {
@@ -73,7 +74,6 @@ class AstralGameStateManager {
     func editorTransitionTo(_ state: AstralStageEditorState) {
         self.editorState = state
         if state != .selectingPath {
-            print("hi")
             dismissPathManager()
         }
     }
