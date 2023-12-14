@@ -115,7 +115,21 @@ class AstralPathSegment {
             }
         }
     }
+    
+    func fadeIn(duration: TimeInterval) {
+        if let shapeNode = self.shape {
+            let fade = SKAction.fadeIn(withDuration: duration)
+            shapeNode.run( fade , withKey: "show/hide")
+        }
+    }
 
+    func fadeOut(duration: TimeInterval) {
+        if let shapeNode = self.shape {
+            let fade = SKAction.fadeOut(withDuration: duration)
+            let remove = SKAction.removeFromParent()
+            shapeNode.run( SKAction.sequence([fade, remove]), withKey: "show/hide" )
+        }
+    }
 }
 
 
@@ -126,6 +140,7 @@ class AstralStageEditorPath {
     var activationProgress: Float = 0.0
     var deactivationProgress: Float = 0.0
     var endBehavior: AstralPathEndBehavior = .loop
+    var isActivated: Bool = true
     
     // Adds a segment and returns its index
     func addSegment(type: AstralPathSegmentType) -> Int {
@@ -176,5 +191,16 @@ class AstralStageEditorPath {
             }
         }
         return closestDistance
+    }
+    
+    func toggleVisibility(shouldShow: Bool) {
+        isActivated = shouldShow
+        for segment in segments {
+            if shouldShow {
+                segment.fadeIn(duration: 0.25)
+            } else {
+                segment.fadeOut(duration: 0.25)
+            }
+        }
     }
 }

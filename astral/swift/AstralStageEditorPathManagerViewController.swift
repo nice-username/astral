@@ -44,9 +44,9 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         let cancelBtn = createFullWidthButton(labelText: "Cancel", backgroundColor: .clear, borderColor: .white, textColor: .white, height: 34.0)
         let deleteBtn = createFullWidthButton(labelText: "Delete", backgroundColor: .clear, borderColor: .systemRed, textColor: .white, height: 34.0)
         
-        cancelBtn.addAction({
+        cancelBtn.addAction {
             self.gameState.dismissPathManager()
-        })
+        }
         
         applyBtn.addAction {
             self.savePathData()
@@ -55,7 +55,7 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         
         deleteBtn.addAction {
             NotificationCenter.default.post(name: .pathDelete, object: nil)
-            self.hideMenu()
+            self.gameState.dismissPathManager()
         }
     }
 

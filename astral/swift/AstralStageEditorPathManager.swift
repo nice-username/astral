@@ -21,7 +21,6 @@ class AstralStageEditorPathManager {
     // Delete active path
     @objc private func deleteActivePath(_ notification: NSNotification) {
         guard let activePathIndex = activePathIndex, let activePath = activePath() else { return }
-
         var segmentsToDelete = activePath.segments
         func deleteNextSegment() {
             if let segment = segmentsToDelete.first {
@@ -30,13 +29,25 @@ class AstralStageEditorPathManager {
                     deleteNextSegment()
                 }
             } else {
-                // Once all segments are deleted, remove the path from paths
                 self.paths.remove(at: activePathIndex)
                 self.activePathIndex = nil
             }
         }
         deleteNextSegment()
     }
+    
+    func updatePathActivation(progress: CGFloat) {
+        for path in self.paths {
+            if path.isActivated && (progress > CGFloat(path.deactivationProgress) || progress < CGFloat(path.activationProgress)) {
+                print("\(progress)" + " > " + "\(path.deactivationProgress)" + ", hiding")
+                path.toggleVisibility(shouldShow: false)
+            } else if !path.isActivated && (progress >= CGFloat(path.activationProgress) && progress <= CGFloat(path.deactivationProgress)) {
+                print("\(progress)" + " <= " + "\(path.deactivationProgress)" + ", showing")
+                path.toggleVisibility(shouldShow: true)
+            }
+        }
+    }
+
     
     // Add a new path and set it as the active path
     func addNewPath() -> Int {

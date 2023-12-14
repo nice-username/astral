@@ -487,6 +487,8 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         // Adjust based on game speed and FPS (60 FPS assumed)
         let progressPerFrame = timeScale / 60 // Assuming deltaTime is 1/60 for 60 FPS
         progress += gestureDistance * progressPerFrame
+        self.pathManager.updatePathActivation(progress: self.progress)
+        print(self.progress)
     }
 
 
@@ -507,6 +509,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             for bg in backgrounds {
                 bg.update(deltaTime: deltaTime, gestureYChange: 0)
             }
+            self.pathManager.updatePathActivation(progress: self.progress)
         }
     }
     
