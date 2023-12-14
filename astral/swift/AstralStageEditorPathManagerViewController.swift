@@ -21,8 +21,6 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
     private var updateButton: UIButton!
     private var gameState: AstralGameStateManager!
 
-
-    
     // MARK: - Properties
     var path: AstralStageEditorPath?
     
@@ -44,7 +42,7 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         let _ = createCounterLabel("Nodes", height: 34.0)
         let applyBtn = createFullWidthButton(labelText: "Apply", backgroundColor: .clear, borderColor: .systemGreen, textColor: .white, height: 34.0)
         let cancelBtn = createFullWidthButton(labelText: "Cancel", backgroundColor: .clear, borderColor: .white, textColor: .white, height: 34.0)
-        let _ = createFullWidthButton(labelText: "Delete", backgroundColor: .clear, borderColor: .systemRed, textColor: .white, height: 34.0)
+        let deleteBtn = createFullWidthButton(labelText: "Delete", backgroundColor: .clear, borderColor: .systemRed, textColor: .white, height: 34.0)
         
         cancelBtn.addAction({
             self.gameState.dismissPathManager()
@@ -54,13 +52,18 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
             self.savePathData()
             self.hideMenu()
         }
+        
+        deleteBtn.addAction {
+            NotificationCenter.default.post(name: .pathDelete, object: nil)
+            self.hideMenu()
+        }
     }
 
     // MARK: - Load Data
     public func loadPathData(_ path: AstralStageEditorPath) {
         self.path = path
-        
-        gameState.pathManager.titleLabel?.text = path.name
+
+        self.titleLabel?.text = path.name
         activationSlider.value = path.activationProgress
         deactivationSlider.value = path.deactivationProgress
         sliderUpdateTextTag(activationSlider)

@@ -133,7 +133,8 @@ class AstralGameStateManager {
     }
 
     func dismissPathManager() {
-        UIView.animate(withDuration: 0.35, animations: { [self] in
+        UIView.animate(withDuration: 0.70, animations: { [self] in
+            pathManager.hideMenu()
             pathManager.view.frame = CGRect(x: 0,
                                             y: self.viewController!.view.bounds.height,
                                             width: pathManager.view.frame.width,

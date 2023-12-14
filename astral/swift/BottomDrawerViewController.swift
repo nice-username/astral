@@ -119,9 +119,11 @@ class BottomDrawerViewController: UIViewController {
     func hideMenu() {
         isMenuRevealed = false
         UIView.animate(withDuration: 0.166667) {
-            self.bottomBlurView.frame.origin.y = self.view.frame.height - self.minimizedHeight
-            self.controlScrollView.contentOffset = .zero
-            self.controlScrollView.alpha = 0.0
+            if let blurView = self.bottomBlurView {
+                blurView.frame.origin.y = self.view.frame.height - self.minimizedHeight
+                self.controlScrollView.contentOffset = .zero
+                self.controlScrollView.alpha = 0.0
+            }
         }
     }
     

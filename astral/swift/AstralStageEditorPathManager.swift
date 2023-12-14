@@ -14,6 +14,30 @@ class AstralStageEditorPathManager {
     var activePathIndex: Int?
     var selectedPaths: Set<Int> = [] // Indices of selected paths
 
+    init() {
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteActivePath(_:)), name: .pathDelete, object: nil)
+    }
+    
+    // Delete active path
+    @objc private func deleteActivePath(_ notification: NSNotification) {
+        guard let activePathIndex = activePathIndex, let activePath = activePath() else { return }
+
+        var segmentsToDelete = activePath.segments
+        func deleteNextSegment() {
+            if let segment = segmentsToDelete.first {
+                segmentsToDelete.removeFirst()
+                segment.animateDeletion {
+                    deleteNextSegment()
+                }
+            } else {
+                // Once all segments are deleted, remove the path from paths
+                self.paths.remove(at: activePathIndex)
+                self.activePathIndex = nil
+            }
+        }
+        deleteNextSegment()
+    }
+    
     // Add a new path and set it as the active path
     func addNewPath() -> Int {
         let newPath = AstralStageEditorPath()
@@ -34,14 +58,6 @@ class AstralStageEditorPathManager {
     // Set active path by index
     func setActivePath(index: Int) {
         activePathIndex = index
-    }
-
-    // Delete active path
-    func deleteActivePath() {
-        if let index = activePathIndex {
-            paths.remove(at: index)
-            activePathIndex = nil
-        }
     }
 
     // Delete path by index
@@ -69,6 +85,10 @@ class AstralStageEditorPathManager {
     func activePath() -> AstralStageEditorPath? {
         return activePathIndex != nil ? paths[activePathIndex!] : nil
     }
+    
+    func getPathIndex(path: AstralStageEditorPath) -> Int? {
+         return paths.firstIndex { $0 === path }
+     }
     
     /// Retrieves the end point of the last segment of the currently active path.
     /// - Returns: The `CGPoint` representing the end of the last segment if it exists; otherwise, `nil`.

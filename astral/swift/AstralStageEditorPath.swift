@@ -98,6 +98,24 @@ class AstralPathSegment {
             return end
         }
     }
+    func animateDeletion(completion: @escaping () -> Void) {
+        let fadeOutAction = SKAction.fadeOut(withDuration: 1 / 8.0)
+        let waitAction = SKAction.wait(forDuration: 1 / 30.0) // This is the delay before starting the next deletion
+        let removeAction = SKAction.removeFromParent()
+
+        if let shapeNode = self.shape {
+            self.directionArrow!.removeFromParent()
+            shapeNode.strokeColor = .red
+            let sequence = SKAction.sequence([fadeOutAction, removeAction])
+
+            // Start the sequence, but call completion after the shorter wait period
+            shapeNode.run(sequence)
+            shapeNode.run(waitAction) {
+                completion()
+            }
+        }
+    }
+
 }
 
 
