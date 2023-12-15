@@ -86,6 +86,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(stop(_:)), name: .stopMap, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(saveStage(_:)), name: .saveFile, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pathApplyChanges(_:)), name: .pathApplyChanges, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pathAddToScene(_:)), name: .pathAddToScene, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(loadStage(_:)), name: .loadFile, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(hideToolbar(_:)), name: .hideToolbar, object: nil)
         
@@ -365,6 +366,16 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    
+    //
+    // Handle ".pathAddToScene" messages sent by any given path
+    //
+    @objc private func pathAddToScene(_ notification: NSNotification) {
+        if let data = notification.userInfo, let segment = data["segment"] as? AstralPathSegment {
+            scene?.addChild(segment.shape!)
+            scene?.addChild(segment.directionArrow!)
+        }
+    }
     
     
     //

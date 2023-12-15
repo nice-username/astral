@@ -22,16 +22,6 @@ enum AstralPathEndBehavior {
     case stop
 }
 
-class AstralPathNode {
-    var point: CGPoint
-    var order: AstralEnemyOrder
-    
-    init(point: CGPoint, order: AstralEnemyOrder) {
-        self.point = point
-        self.order = order
-    }
-}
-
 enum AstralPathSegmentType {
     case line(start: CGPoint, end: CGPoint)
     case bezier(start: CGPoint, control1: CGPoint, control2: CGPoint, end: CGPoint)
@@ -118,8 +108,10 @@ class AstralPathSegment {
     
     func fadeIn(duration: TimeInterval) {
         if let shapeNode = self.shape {
+            NotificationCenter.default.post(name: .pathAddToScene, object: nil, userInfo: ["segment": self])
             let fade = SKAction.fadeIn(withDuration: duration)
             shapeNode.run( fade , withKey: "show/hide")
+            directionArrow!.run( fade, withKey: "show/hide")
         }
     }
 
@@ -128,6 +120,7 @@ class AstralPathSegment {
             let fade = SKAction.fadeOut(withDuration: duration)
             let remove = SKAction.removeFromParent()
             shapeNode.run( SKAction.sequence([fade, remove]), withKey: "show/hide" )
+            directionArrow!.run( SKAction.sequence([fade, remove]), withKey: "show/hide")
         }
     }
 }

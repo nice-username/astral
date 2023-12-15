@@ -39,10 +39,10 @@ class AstralStageEditorPathManager {
     func updatePathActivation(progress: CGFloat) {
         for path in self.paths {
             if path.isActivated && (progress > CGFloat(path.deactivationProgress) || progress < CGFloat(path.activationProgress)) {
-                print("\(progress)" + " > " + "\(path.deactivationProgress)" + ", hiding")
+                // print("\(progress)" + " > " + "\(path.deactivationProgress)" + ", hiding")
                 path.toggleVisibility(shouldShow: false)
             } else if !path.isActivated && (progress >= CGFloat(path.activationProgress) && progress <= CGFloat(path.deactivationProgress)) {
-                print("\(progress)" + " <= " + "\(path.deactivationProgress)" + ", showing")
+                // print("\(progress)" + " <= " + "\(path.deactivationProgress)" + ", showing")
                 path.toggleVisibility(shouldShow: true)
             }
         }

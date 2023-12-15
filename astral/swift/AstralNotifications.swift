@@ -14,6 +14,7 @@ extension NSNotification.Name {
     static let stopMap          = NSNotification.Name("stopMap")
     static let layerAdded       = NSNotification.Name("layerAdded")
     static let pathApplyChanges = NSNotification.Name("pathApplyChanges")
+    static let pathAddToScene   = NSNotification.Name("pathAddToScene")
     static let pathDelete       = NSNotification.Name("pathDelete")
     static let hideToolbar      = NSNotification.Name("hideToolbar")
 }
