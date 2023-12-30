@@ -36,8 +36,9 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var pathManager = AstralStageEditorPathManager()
     private var pathRenderer: AstralStageEditorPathRenderer!
     
-    // test
-    private var pathManagerView : AstralStageEditorPathManagerViewController?
+    // node
+    private var testNode : AstralPathNodeCreation?
+    
     override init(size: CGSize) {
         super.init(size: size)
     }
@@ -126,8 +127,9 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                                        dateModified: Date() )
         
         self.pathRenderer = AstralStageEditorPathRenderer(scene: self)
-        self.pathManagerView = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 384)
         self.pathInput = AstralStageEditorPathInputHandler(pathManager: pathManager, pathRenderer: pathRenderer)
+        self.testNode = AstralPathNodeCreation(point: CGPoint(x: 240, y: 360))
+        self.addChild(testNode!)
     }
     
     
@@ -471,12 +473,21 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         isPlaying = true
         self.addChild(player!)
         self.addChild(fireButton!)
-        self.togglePaths(show: false)
+        // self.togglePaths(show: false)
         
-        let enemy = AstralEnemy(scene: self, maxHP: 20)
-        if !self.pathManager.paths.isEmpty {
-            enemy.position = pathManager.paths[0].segments[0].startPoint()
-            enemy.followPath(pathManager.paths[0])
+        let enemy = AstralEnemy(scene: self, config: AstralGlobalEnemyConfiguration["enemy1"]!)
+        if let firstPath = pathManager.paths.first {
+            firstPath.segments[0].nodes.removeAll()
+            firstPath.segments[0].nodes.append(testNode!)
+            if let node = firstPath.segments[0].nodes[0] as? AstralPathNodeCreation {
+                node.repeatCount = 4
+                node.repeatInterval = 3.3333
+                node.initialTimeOffset = 1.0
+                node.repeatEnabled = true
+                node.isEndless = false
+                firstPath.activate(currentTime: CACurrentMediaTime())
+            }
+            print("activated first path")
         }
     }
 
@@ -499,7 +510,6 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         let progressPerFrame = timeScale / 60 // Assuming deltaTime is 1/60 for 60 FPS
         progress += gestureDistance * progressPerFrame
         self.pathManager.updatePathActivation(progress: self.progress)
-        print(self.progress)
     }
 
 
@@ -520,7 +530,15 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             for bg in backgrounds {
                 bg.update(deltaTime: deltaTime, gestureYChange: 0)
             }
-            self.pathManager.updatePathActivation(progress: self.progress)
+            for path in self.pathManager.paths where path.isActivated {
+                for segment in path.segments {
+                    for node in segment.nodes where node.isActive {
+                        if let creationNode = node as? AstralPathNodeCreation {
+                            creationNode.repeatAction(deltaTime: deltaTime)
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -564,6 +582,14 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                 
         if toolbar?.selectedSubmenuType == .path {
             pathInput.touchesMoved(touches, in: self)
+        }
+        if let pathIdx = self.pathManager.activePathIndex {
+            guard let touch = touches.first else { return }
+            let pt = touch.location(in: self)
+            let path = self.pathManager.paths[pathIdx]
+            let pathPt = path.closestPointOnPath(to: pt)
+            self.testNode?.point = pathPt
+            self.testNode?.attachedToPath = path
         }
     }
     

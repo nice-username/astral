@@ -39,8 +39,8 @@ class AstralPathSegment {
     }
     
     // Adds a node and returns its index
-    func addNode(at point: CGPoint, order: AstralEnemyOrder) -> Int {
-        let node = AstralPathNode(point: point, order: order)
+    func addNode(at point: CGPoint) -> Int {
+        let node = AstralPathNode(point: point)
         nodes.append(node)
         return nodes.count - 1
     }
@@ -53,7 +53,6 @@ class AstralPathSegment {
     // Update existing node
     func updateNode(at index: Int, with point: CGPoint, order: AstralEnemyOrder) {
         nodes[index].point = point
-        nodes[index].order = order
     }
     
     // get the center and facing angle of the segment for drawing arrows
@@ -88,6 +87,7 @@ class AstralPathSegment {
             return end
         }
     }
+    
     func animateDeletion(completion: @escaping () -> Void) {
         let fadeOutAction = SKAction.fadeOut(withDuration: 1 / 8.0)
         let waitAction = SKAction.wait(forDuration: 1 / 30.0) // This is the delay before starting the next deletion
@@ -123,6 +123,17 @@ class AstralPathSegment {
             directionArrow!.run( SKAction.sequence([fade, remove]), withKey: "show/hide")
         }
     }
+    
+    func closestPointOnLineSegment(point: CGPoint) -> CGPoint {
+        let start = self.startPoint()
+        let end = self.endPoint()
+        let dx = end.x - start.x
+        let dy = end.y - start.y
+        let lengthSquared = dx*dx + dy*dy
+        var t = ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared
+        t = max(0, min(1, t)) // Clamp t to the range [0, 1]
+        return CGPoint(x: start.x + t * dx, y: start.y + t * dy)
+    }
 }
 
 
@@ -152,6 +163,21 @@ class AstralStageEditorPath {
         self.segments[index].type = type
     }
     
+    func findClosestNode(to point: CGPoint, in path: AstralStageEditorPath) -> AstralPathNode? {
+        var closestNode: AstralPathNode?
+        var minimumDistance = CGFloat.greatestFiniteMagnitude
+        for segment in path.segments {
+            for node in segment.nodes {
+                let distance = node.point.distanceTo(point)
+                if distance < minimumDistance {
+                    minimumDistance = distance
+                    closestNode = node
+                }
+            }
+        }
+        return closestNode
+    }
+
     // Convert all segments to a UIKit path for drawing
     func toUIBezierPath() -> UIBezierPath {
         let path = UIBezierPath()
@@ -187,12 +213,40 @@ class AstralStageEditorPath {
     }
     
     func toggleVisibility(shouldShow: Bool) {
-        isActivated = shouldShow
         for segment in segments {
             if shouldShow {
                 segment.fadeIn(duration: 0.25)
             } else {
                 segment.fadeOut(duration: 0.25)
+            }
+        }
+    }
+    
+    func closestPointOnPath(to point: CGPoint) -> CGPoint {
+        var closestPoint = CGPoint.zero
+        var minDistance = CGFloat.greatestFiniteMagnitude
+        var segmentClosestPoint: CGPoint
+
+        for segment in segments {
+            segmentClosestPoint = segment.closestPointOnLineSegment(point: point)
+            // For now we are ignore bezier curved line segments.
+            let distance = segmentClosestPoint.distanceTo(point)
+            if distance < minDistance {
+                minDistance = distance
+                closestPoint = segmentClosestPoint
+            }
+        }
+        return closestPoint
+    }
+    
+    func activate(currentTime: TimeInterval) {
+        self.isActivated = true
+        for segment in self.segments {
+            for node in segment.nodes {
+                if let creationNode = node as? AstralPathNodeCreation {
+                    print(". . .and it had nodes to activate")
+                    creationNode.startCreationLoop(currentTime: currentTime)
+                }
             }
         }
     }

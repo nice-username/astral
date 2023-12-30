@@ -36,13 +36,26 @@ class AstralStageEditorPathManager {
         deleteNextSegment()
     }
     
+    func resetPathNodes(_ path: AstralStageEditorPath) {
+        for segment in path.segments {
+            for node in segment.nodes {
+                node.isActive = false
+                node.timeSinceActivation = 0.0
+                if let creationNode = node as? AstralPathNodeCreation {
+                    creationNode.timeSinceLastCreation = 0.0
+                }
+            }
+        }
+    }
+    
     func updatePathActivation(progress: CGFloat) {
         for path in self.paths {
             if path.isActivated && (progress > CGFloat(path.deactivationProgress) || progress < CGFloat(path.activationProgress)) {
-                // print("\(progress)" + " > " + "\(path.deactivationProgress)" + ", hiding")
+                path.isActivated = false
                 path.toggleVisibility(shouldShow: false)
+                resetPathNodes(path)
             } else if !path.isActivated && (progress >= CGFloat(path.activationProgress) && progress <= CGFloat(path.deactivationProgress)) {
-                // print("\(progress)" + " <= " + "\(path.deactivationProgress)" + ", showing")
+                path.isActivated = true
                 path.toggleVisibility(shouldShow: true)
             }
         }

@@ -65,14 +65,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         self.createBoundaries()
         
-        self.enemies.append(AstralEnemy(scene: self, maxHP: 20))
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let newEnemy = AstralEnemy(scene: self, maxHP: 20)
-            newEnemy.position.y = 1000
-            self.enemies.append(newEnemy)
-        }
-        
         // test dialog
         /*
             let speaker = AstralDialogSpeaker(at: CGPoint(x: -150.0, y: -472.0))

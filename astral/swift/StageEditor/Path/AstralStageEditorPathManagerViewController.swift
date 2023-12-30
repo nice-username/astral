@@ -112,10 +112,4 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         
         NotificationCenter.default.post(name: .pathApplyChanges, object: nil, userInfo: ["path": path!])
     }
-
-    // MARK: - Actions
-    @objc private func updateButtonTapped() {
-        // Handle the update logic here
-        // Validate inputs and update `astralPath` properties
-    }
 }

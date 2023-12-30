@@ -10,6 +10,7 @@ import SpriteKit
 import GameplayKit
 
 class AstralPlayer: SKSpriteNode, AstralUnit {
+    var atlasName: String
     var health: Int
     var maxHealth: Int
     var movementSpeed: CGFloat = 8.0
@@ -30,6 +31,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         self.maxHealth = 1
         self.health = 1
         self.initialScene = scene
+        self.atlasName = "AstralPlayer"
         let initialTexture = SKTexture(imageNamed: "frame06.png")
         super.init(texture: initialTexture, color: .clear, size: initialTexture.size())
         

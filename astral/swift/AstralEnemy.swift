@@ -8,8 +8,15 @@
 import Foundation
 import SpriteKit
 
+enum TextureNamingStyle {
+    case numberedSequence(frameCount: Int, prefix: String, indexLength: Int)
+    case angleSequence
+}
+
 
 class AstralEnemy: SKSpriteNode, AstralUnit {
+    var atlasName: String
+    
     // Properties
     var health: Int = 100
     var maxHealth: Int = 100
@@ -35,18 +42,22 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     //
     // Initializes the enemy sprite and sets its properties
     //
-    init(scene: SKScene, maxHP: Int = 0) {
-        self.health    = maxHP
-        self.maxHealth = maxHP
-        let initialTexture = SKTexture(imageNamed: "enemyFrame06.png")
+    init(scene: SKScene, config: AstralEnemyConfiguration) {
+        self.health    = config.health
+        self.maxHealth = config.maxHealth
+        self.atlasName = config.atlasName
+        
+        let initialTexture = config.textures[0]
         super.init(texture: initialTexture, color: .clear, size: initialTexture.size())
         
         self.name = "enemy"
-        self.zPosition = 2
         self.physicsBody = SKPhysicsBody(circleOfRadius: size.width / 2)
-        physicsBody?.categoryBitMask = AstralPhysicsCategory.enemy
-        physicsBody?.collisionBitMask = AstralPhysicsCategory.none
-        physicsBody?.contactTestBitMask = AstralPhysicsCategory.player | AstralPhysicsCategory.bulletPlayer | AstralPhysicsCategory.laser
+        
+        physicsBody?.categoryBitMask    = AstralPhysicsCategory.enemy
+        physicsBody?.collisionBitMask   = AstralPhysicsCategory.none
+        physicsBody?.contactTestBitMask = AstralPhysicsCategory.player |
+                                          AstralPhysicsCategory.bulletPlayer |
+                                          AstralPhysicsCategory.laser
         physicsBody?.linearDamping = 0.5
         physicsBody?.angularDamping = 1.0
         physicsBody?.allowsRotation = false
@@ -57,15 +68,9 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         // self.addChild(self.hitbox!)
         
         // Set initial position, size, and other properties
-        self.textures = self.loadTextures(atlas: "AstralEnemyType00", frameCount: 13, filename: "enemyFrame")
-        self.texturesWhite = self.loadTextures(atlas: "AstralEnemyType00Hit", frameCount: 13, filename: "enemyFrameWhite")
+        self.textures = AstralEnemy.loadTextures(fromAtlasNamed: config.atlasName, namingStyle: .numberedSequence(frameCount: 13, prefix: "enemyFrame", indexLength: 2))
         
-        // Initialize particle system
-        // self.particleSystem = AstralParticleSystem(player: self)
-        // self.particleSystem?.zPosition = 1
-        // self.addChild(particleSystem!)
-        
-        // Weapon 01
+        // Weapon
         let defaultAmmo   = AstralWeaponAmmoType.singleShot
         let defaultWeapon = AstralWeapon(gameScene: scene,
                                          name: "Double shot",
@@ -117,15 +122,29 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     }
     
     
-    private func loadTextures(atlas: String, frameCount: Int, filename: String, indexLength: Int = 2) -> [SKTexture] {
+
+    static func loadTextures(fromAtlasNamed atlasName: String, namingStyle: TextureNamingStyle) -> [SKTexture] {
+        let atlas = SKTextureAtlas(named: atlasName)
         var textures: [SKTexture] = []
-        let atlas = SKTextureAtlas(named: atlas)
-        for i in 0...frameCount - 1 {
-            let indexString = String(repeating: "0", count: indexLength - String(i).count) + "\(i)"
-            let textureName = "\(filename)\(indexString).png"
-            let texture = atlas.textureNamed(textureName)
-            textures.append(texture)
+        
+        switch namingStyle {
+        case .numberedSequence(let frameCount, let prefix, let indexLength):
+            for i in 0..<frameCount {
+                let indexString = String(format: "%0\(indexLength)d", i)
+                let textureName = "\(prefix)\(indexString)"
+                let texture = atlas.textureNamed(textureName)
+                textures.append(texture)
+            }
+            
+        case .angleSequence:
+            let angles = stride(from: 0, through: 345, by: 15)
+            for angle in angles {
+                let textureName = "render_\(angle)"
+                let texture = atlas.textureNamed(textureName)
+                textures.append(texture)
+            }
         }
+        
         return textures
     }
     

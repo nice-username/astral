@@ -7,14 +7,14 @@
 
 import Foundation
 
-protocol NodeCondition {
+protocol AstralPathNodeCondition {
     func shouldTrigger(gameState: AstralGameState) -> Bool
 }
 
 //
 // Default is always true
 //
-class DefaultCondition: NodeCondition {
+class DefaultCondition: AstralPathNodeCondition {
     func shouldTrigger(gameState: AstralGameState) -> Bool {
         return true
     }

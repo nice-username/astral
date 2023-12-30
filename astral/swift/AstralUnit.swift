@@ -13,6 +13,7 @@ protocol AstralUnit {
     var health: Int { get set }
     var maxHealth: Int { get }
     var movementSpeed: CGFloat { get set }
+    var atlasName: String { get set }
     var textures: [SKTexture] { get }
     var polarity: AstralPolarity { get set }
     var particleSystem: AstralParticleSystem? { get set }
