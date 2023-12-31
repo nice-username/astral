@@ -8,6 +8,16 @@
 import Foundation
 import SpriteKit
 
+
+
+enum AstralGameObjectType {
+    case enemy
+    case powerup
+    case object
+}
+
+
+
 class AstralPathNode: SKShapeNode, AstralPathNodeProtocol {
     var point: CGPoint {
         didSet {
@@ -38,8 +48,7 @@ class AstralPathNode: SKShapeNode, AstralPathNodeProtocol {
     }
 }
 
-class AstralPathNodeAction: AstralPathNode {
-}
+class AstralPathNodeAction: AstralPathNode {}
 
 class AstralPathNodeCreation: AstralPathNode {
     var timeSinceLastCreation: TimeInterval         = 0.0
@@ -69,24 +78,29 @@ class AstralPathNodeCreation: AstralPathNode {
     
     func startCreationLoop(currentTime: TimeInterval) {
         self.isActive = true
-        self.timeSinceActivation = -initialTimeOffset // Start with negative offset
-        self.timeSinceLastCreation = -initialTimeOffset // First creation after the offset
+        self.timeSinceActivation = 0.0
+        self.timeSinceLastCreation = 0.0
+        self.didFirstCreation = false
     }
 
     func repeatAction(deltaTime: TimeInterval) {
         guard isActive && repeatEnabled else { return }
         
         timeSinceActivation += deltaTime
-        if timeSinceActivation < 0 { return } // Still in the initial offset period
-
         timeSinceLastCreation += deltaTime
-        if timeSinceLastCreation >= (didFirstCreation ? repeatInterval : initialTimeOffset) {
+        
+        let shouldCreateNow = didFirstCreation ?
+                              (timeSinceLastCreation >= repeatInterval) :
+                              (timeSinceLastCreation >= initialTimeOffset)
+
+        if shouldCreateNow {
             let unit = createEntity()
             if let enemy = unit as? AstralEnemy {
                 enemy.position = self.position
                 enemy.followPath(self.attachedToPath!)
             }
-            timeSinceLastCreation = 0.0 // Reset for next creation
+            timeSinceLastCreation = 0.0
+            didFirstCreation = true
 
             // Handle repeat count and endless flag
             if !isEndless {
@@ -95,10 +109,8 @@ class AstralPathNodeCreation: AstralPathNode {
                     isActive = false
                 }
             }
-            didFirstCreation = true // Set to true after first creation
         }
     }
-
     
     private func createEntity() -> AstralUnit {
         // Depending on the objectType and objectIndex, we will fetch the appropriate configuration
@@ -116,10 +128,4 @@ class AstralPathNodeCreation: AstralPathNode {
         }
         fatalError("Configuration for object type '\(objectType)' and index '\(objectIndex)' not found.")
     }
-}
-
-enum AstralGameObjectType {
-    case enemy
-    case powerup
-    case object
 }

@@ -480,11 +480,11 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             firstPath.segments[0].nodes.removeAll()
             firstPath.segments[0].nodes.append(testNode!)
             if let node = firstPath.segments[0].nodes[0] as? AstralPathNodeCreation {
-                node.repeatCount = 4
-                node.repeatInterval = 3.3333
-                node.initialTimeOffset = 1.0
                 node.repeatEnabled = true
                 node.isEndless = false
+                node.repeatCount = 4
+                node.repeatInterval = 3.3333
+                node.initialTimeOffset = 0.0
                 firstPath.activate(currentTime: CACurrentMediaTime())
             }
             print("activated first path")
