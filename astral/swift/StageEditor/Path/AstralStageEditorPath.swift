@@ -28,7 +28,7 @@ enum AstralPathSegmentType {
 }
 
 
-class AstralPathSegment {
+class AstralPathSegment : SKNode {
     var type: AstralPathSegmentType
     var shape: SKShapeNode?
     var nodes: [AstralPathNode] = []
@@ -36,6 +36,11 @@ class AstralPathSegment {
     
     init(type: AstralPathSegmentType) {
         self.type = type
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // Adds a node and returns its index
@@ -48,11 +53,6 @@ class AstralPathSegment {
     // Removes a node by index
     func removeNode(at index: Int) {
         nodes.remove(at: index)
-    }
-    
-    // Update existing node
-    func updateNode(at index: Int, with point: CGPoint, order: AstralEnemyOrder) {
-        nodes[index].point = point
     }
     
     // get the center and facing angle of the segment for drawing arrows
@@ -137,8 +137,7 @@ class AstralPathSegment {
 }
 
 
-class AstralStageEditorPath {
-    var name: String = ""
+class AstralStageEditorPath: SKNode {
     var segments: [AstralPathSegment] = []
     var direction: AstralPathDirection = .forwards
     var activationProgress: Float = 0.0

@@ -10,6 +10,7 @@ import SpriteKit
 
 
 protocol AstralUnit {
+    var id: UUID { get }
     var health: Int { get set }
     var maxHealth: Int { get }
     var movementSpeed: CGFloat { get set }

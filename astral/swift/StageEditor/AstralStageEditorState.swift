@@ -14,4 +14,8 @@ enum AstralStageEditorState {
     case appendingToPath
     case editingNode
     case editingBezier
+    case selectingNodeType
+    case placingCreationNode
+    case placingActionNode
+    case placingPathingNode
 }

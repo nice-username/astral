@@ -15,6 +15,7 @@ enum TextureNamingStyle {
 
 
 class AstralEnemy: SKSpriteNode, AstralUnit {
+    let id: UUID
     var atlasName: String
     
     // Properties
@@ -43,6 +44,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     // Initializes the enemy sprite and sets its properties
     //
     init(scene: SKScene, config: AstralEnemyConfiguration) {
+        self.id = UUID()
         self.health    = config.health
         self.maxHealth = config.maxHealth
         self.atlasName = config.atlasName
@@ -93,6 +95,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     }
     
     required init?(coder aDecoder: NSCoder) {
+        self.id = UUID()
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -246,6 +249,20 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     }
     
     
+    func turn(direction: AstralEnemyOrder.AstralEnemyActionType, duration: TimeInterval) {
+        switch direction {
+        case .turnLeft:
+            turnLeft(over: duration)
+        case .turnRight:
+            turnRight(over: duration)
+        case .turnToBase:
+            animateToRestingPosition(duration: duration)
+        default:
+            break
+        }
+    }
+    
+        
     //
     // Tell the sprite to play its "turn right" animation over time
     //
@@ -402,9 +419,12 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
 
     
     
+    func isCloseEnough(to node: AstralPathNode, triggerDistance: CGFloat = 4.0) -> Bool {
+        return self.position.distanceTo(node.position) <= triggerDistance
+    }
     
     
     func die() {
-        self.removeFromParent()
+        (self.scene as? AstralStageEditor)?.removeEnemy(self)
     }
 }

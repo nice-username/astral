@@ -22,6 +22,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var stageScrollRecognizer: UIPanGestureRecognizer!
     private var toolbarBgColor : UIColor?
     private var backgrounds : [AstralParallaxBackgroundLayer2] = []
+    public  var enemies : [AstralEnemy] = []
     
     
     // Stage playback
@@ -35,9 +36,6 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var pathInput : AstralStageEditorPathInputHandler!
     private var pathManager = AstralStageEditorPathManager()
     private var pathRenderer: AstralStageEditorPathRenderer!
-    
-    // node
-    private var testNode : AstralPathNodeCreation?
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -127,9 +125,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                                        dateModified: Date() )
         
         self.pathRenderer = AstralStageEditorPathRenderer(scene: self)
-        self.pathInput = AstralStageEditorPathInputHandler(pathManager: pathManager, pathRenderer: pathRenderer)
-        self.testNode = AstralPathNodeCreation(point: CGPoint(x: 240, y: 360))
-        self.addChild(testNode!)
+        self.pathInput = AstralStageEditorPathInputHandler(scene: self, pathManager: pathManager, pathRenderer: pathRenderer)
     }
     
     
@@ -391,6 +387,16 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     
     
     //
+    // Remove enemy
+    //
+    func removeEnemy(_ enemy: AstralEnemy) {
+        enemies.removeAll { $0 == enemy }
+        enemy.removeFromParent()
+    }
+    
+    
+    
+    //
     // Handle ".saveFile" messages sent by the toolbar
     //
     @objc private func saveStage(_ notification: NSNotification) {
@@ -476,6 +482,8 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         // self.togglePaths(show: false)
         
         let enemy = AstralEnemy(scene: self, config: AstralGlobalEnemyConfiguration["enemy1"]!)
+        
+        /*
         if let firstPath = pathManager.paths.first {
             firstPath.segments[0].nodes.removeAll()
             firstPath.segments[0].nodes.append(testNode!)
@@ -489,6 +497,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             }
             print("activated first path")
         }
+        */
     }
 
     @objc private func stop(_ notification: NSNotification) {
@@ -536,6 +545,13 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                         if let creationNode = node as? AstralPathNodeCreation {
                             creationNode.repeatAction(deltaTime: deltaTime)
                         }
+                        if let actionNode = node as? AstralPathNodeAction {
+                            for enemy in enemies {
+                                if enemy.isCloseEnough(to: actionNode) && !actionNode.isTriggered(by: enemy) {
+                                    actionNode.performAction(for: enemy)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -570,7 +586,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         
         // Handle user using path drawing tool
         if toolbar?.selectedSubmenuType == .path {
-            pathInput.touchesBegan(touches, in: self)
+            pathInput.touchesBegan(touches)
         }
     }
     
@@ -581,15 +597,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         }
                 
         if toolbar?.selectedSubmenuType == .path {
-            pathInput.touchesMoved(touches, in: self)
-        }
-        if let pathIdx = self.pathManager.activePathIndex {
-            guard let touch = touches.first else { return }
-            let pt = touch.location(in: self)
-            let path = self.pathManager.paths[pathIdx]
-            let pathPt = path.closestPointOnPath(to: pt)
-            self.testNode?.point = pathPt
-            self.testNode?.attachedToPath = path
+            pathInput.touchesMoved(touches)
         }
     }
     
@@ -599,7 +607,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         }
         
         if toolbar?.selectedSubmenuType == .path {
-            pathInput.touchesEnded(touches, in: self)
+            pathInput.touchesEnded(touches)
         }
     }
 }

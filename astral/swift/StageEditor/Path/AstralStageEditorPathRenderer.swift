@@ -145,4 +145,5 @@ class AstralStageEditorPathRenderer {
         // Add the new permanent line
         scene?.addChild(shape)
     }
+    
 }

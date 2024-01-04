@@ -10,6 +10,7 @@ import SpriteKit
 import GameplayKit
 
 class AstralPlayer: SKSpriteNode, AstralUnit {
+    let id: UUID
     var atlasName: String
     var health: Int
     var maxHealth: Int
@@ -28,6 +29,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     // Initializes the player sprite and sets its properties
     //
     init(scene: SKScene) {
+        self.id = UUID()
         self.maxHealth = 1
         self.health = 1
         self.initialScene = scene
@@ -73,6 +75,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     }
     
     required init?(coder aDecoder: NSCoder) {
+        self.id = UUID()
         fatalError("init(coder:) has not been implemented")
     }
     

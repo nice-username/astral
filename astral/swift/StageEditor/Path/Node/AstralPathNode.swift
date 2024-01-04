@@ -42,13 +42,94 @@ class AstralPathNode: SKShapeNode, AstralPathNodeProtocol {
         self.strokeColor = .white
         self.position = point
     }
+    
+    
+    func blink() {
+        let originalColor = self.fillColor
+        let whiteBlink = SKAction.customAction(withDuration: 0.0125) { node, _ in
+            if let shapeNode = node as? SKShapeNode {
+                shapeNode.fillColor = .white
+            }
+        }
+        let originalColorBlink = SKAction.customAction(withDuration: 0.0125) { node, _ in
+            if let shapeNode = node as? SKShapeNode {
+                shapeNode.fillColor = originalColor
+            }
+        }
+        let waitAction = SKAction.wait(forDuration: 0.05)
+        let blinkSequence = SKAction.sequence([whiteBlink, waitAction, originalColorBlink, waitAction])
+        let blinkTwiceAction = SKAction.repeat(blinkSequence, count: 3)
 
+        self.run(blinkTwiceAction)
+    }
+
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-class AstralPathNodeAction: AstralPathNode {}
+
+
+class AstralPathNodeAction: AstralPathNode {
+    var action: AstralEnemyOrder?
+    var triggeredByEnemies = Set<UUID>()
+    
+    override init(point: CGPoint) {
+        super.init(point: point)
+        self.fillColor = UIColor(red:   224 / 255.0,
+                                 green: 16  / 255.0,
+                                 blue:  24  / 255.0,
+                                 alpha: 255 / 255.0)
+    }
+    
+    func performAction(for enemy: AstralEnemy) {
+        guard let action = action else {
+            print("No action defined for this node.")
+            return
+        }
+        
+        // Check if this enemy has already triggered the action
+        if triggeredByEnemies.contains(enemy.id) {
+            return // The action has already been performed for this enemy
+        }
+        
+        // Perform the action here
+        switch action.type {
+        case .turnRight(let duration), .turnLeft(let duration), .turnToBase(let duration):
+            enemy.turn(direction: action.type, duration: duration)
+            
+        case .fire:
+            enemy.fireWeapon()
+            
+        case .fireStop:
+            // enemy.ceaseFire()
+            break
+            
+        default:
+            break
+        }
+
+        // Mark this node as triggered by the current enemy
+        triggeredByEnemies.insert(enemy.id)
+    }
+
+    // Call this method when you want to reset the node, for example, when a new level starts
+    func reset() {
+        triggeredByEnemies.removeAll()
+    }
+    
+    func isTriggered(by enemy: AstralEnemy) -> Bool {
+        return triggeredByEnemies.contains(enemy.id)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+
 
 class AstralPathNodeCreation: AstralPathNode {
     var timeSinceLastCreation: TimeInterval         = 0.0
@@ -98,6 +179,7 @@ class AstralPathNodeCreation: AstralPathNode {
             if let enemy = unit as? AstralEnemy {
                 enemy.position = self.position
                 enemy.followPath(self.attachedToPath!)
+                (self.scene as? AstralStageEditor)?.enemies.append(enemy)
             }
             timeSinceLastCreation = 0.0
             didFirstCreation = true
