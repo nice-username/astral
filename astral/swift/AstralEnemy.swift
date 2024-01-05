@@ -419,7 +419,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
 
     
     
-    func isCloseEnough(to node: AstralPathNode, triggerDistance: CGFloat = 4.0) -> Bool {
+    func isCloseEnough(to node: AstralPathNode, triggerDistance: CGFloat = 10.0) -> Bool {
         return self.position.distanceTo(node.position) <= triggerDistance
     }
     

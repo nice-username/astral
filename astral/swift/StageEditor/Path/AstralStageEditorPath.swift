@@ -141,7 +141,7 @@ class AstralStageEditorPath: SKNode {
     var segments: [AstralPathSegment] = []
     var direction: AstralPathDirection = .forwards
     var activationProgress: Float = 0.0
-    var deactivationProgress: Float = 0.0
+    var deactivationProgress: Float = 100.0
     var endBehavior: AstralPathEndBehavior = .loop
     var isActivated: Bool = true
     
@@ -243,10 +243,40 @@ class AstralStageEditorPath: SKNode {
         for segment in self.segments {
             for node in segment.nodes {
                 if let creationNode = node as? AstralPathNodeCreation {
-                    print(". . .and it had nodes to activate")
                     creationNode.startCreationLoop(currentTime: currentTime)
+                }
+                if let actionNode = node as? AstralPathNodeAction {
+                    node.isActive = true
                 }
             }
         }
     }
+    
+    func closestSegmentToPoint(_ point: CGPoint) -> AstralPathSegment? {
+        var closestSegment: AstralPathSegment?
+        var minDistance = CGFloat.greatestFiniteMagnitude
+
+        for segment in self.segments {
+            var distance: CGFloat
+
+            switch segment.type {
+            case .line(let start, let end):
+                distance = point.distanceToLineSegment(start: start, end: end)
+            case .bezier(let start, let control1, let control2, let end):
+                // For bezier segments, you need a more complex calculation
+                // Placeholder: use distance to start and end points of the bezier segment
+                let distanceToStart = point.distanceTo(start)
+                let distanceToEnd = point.distanceTo(end)
+                distance = min(distanceToStart, distanceToEnd)
+            }
+
+            if distance < minDistance {
+                minDistance = distance
+                closestSegment = segment
+            }
+        }
+
+        return closestSegment
+    }
+
 }

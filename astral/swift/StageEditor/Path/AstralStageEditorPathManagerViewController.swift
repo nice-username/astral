@@ -57,6 +57,8 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
             NotificationCenter.default.post(name: .pathDelete, object: nil)
             self.gameState.dismissPathManager()
         }
+        
+        deactivationSlider.value = 100.0
     }
 
     // MARK: - Load Data

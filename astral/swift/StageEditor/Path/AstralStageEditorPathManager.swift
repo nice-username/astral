@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import SpriteKit
 
 
 class AstralStageEditorPathManager {
@@ -55,7 +55,7 @@ class AstralStageEditorPathManager {
                 path.toggleVisibility(shouldShow: false)
                 resetPathNodes(path)
             } else if !path.isActivated && (progress >= CGFloat(path.activationProgress) && progress <= CGFloat(path.deactivationProgress)) {
-                path.isActivated = true
+                path.activate(currentTime: CACurrentMediaTime())
                 path.toggleVisibility(shouldShow: true)
             }
         }

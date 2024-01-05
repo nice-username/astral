@@ -47,7 +47,7 @@ class AstralStageEditorPathInputHandler {
         let doubleTapThreshold = 0.3
 
         
-        
+        // Begin placing node -- show type selection menu
         if self.gameState.editorState != .selectingNodeType &&
             self.gameState.editorState != .placingActionNode &&
             self.gameState.editorState != .placingCreationNode &&
@@ -59,6 +59,7 @@ class AstralStageEditorPathInputHandler {
             nodeTypeMenu.show(in: scene!, position: lastTapLocation)
         }
         
+        // Finish placing node
         if gameState.editorState == .placingActionNode ||
             gameState.editorState == .placingCreationNode ||
             gameState.editorState == .placingPathingNode && 
@@ -67,9 +68,19 @@ class AstralStageEditorPathInputHandler {
             let lastTapLocation = lastTapLocation,
             lastTapLocation.distanceTo(touchLocation) < 25  {
             gameState.editorState = .idle
+            
             if let node = currentNode {
                 node.blink()
+                self.setTestNodeData()
+                let closestPoint = path!.closestPointOnPath(to: node.position)
+                let closestSegment = path!.closestSegmentToPoint(closestPoint)
+                closestSegment?.nodes.append(node)
+                node.attachedToPath = path!
+                if node is AstralPathNodeAction {
+                    node.isActive = true
+                }
             }
+    
         }
         
         
@@ -122,9 +133,23 @@ class AstralStageEditorPathInputHandler {
             default:
                 break
         }
-        print(gameState.editorState)
     }
 
+    
+    private func setTestNodeData() {
+        if let node = currentNode as? AstralPathNodeCreation {
+            node.initialTimeOffset = 0.0
+            node.isEndless = false
+            node.repeatEnabled = true
+            node.repeatCount = 2
+            node.repeatInterval = 0.5
+        }
+        if let node = currentNode as? AstralPathNodeAction {
+            node.action = AstralEnemyOrder(type: .fire, duration: 1.0)
+            node.name = "come on plz"
+        }
+    }
+    
     func touchesMoved(_ touches: Set<UITouch>) {
         guard let touch = touches.first else { return }
         let currentPoint = touch.location(in: scene!)
@@ -144,6 +169,7 @@ class AstralStageEditorPathInputHandler {
         }
         
     }
+    
     
     func attachNodeToClosestPath(to point: CGPoint) {
         if let node = currentNode, let pathIdx = manager.activePathIndex {

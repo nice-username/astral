@@ -533,12 +533,15 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         }
         let deltaTime = currentTime - lastUpdateTime
         lastUpdateTime = currentTime
+        
         if isPlaying {
             self.progress = min(self.progress + deltaTime * timeScale, gameState.stageHeight)
             input?.update(currentTime, deltaTime: deltaTime)
             for bg in backgrounds {
                 bg.update(deltaTime: deltaTime, gestureYChange: 0)
             }
+            
+            self.pathManager.updatePathActivation(progress: self.progress)
             for path in self.pathManager.paths where path.isActivated {
                 for segment in path.segments {
                     for node in segment.nodes where node.isActive {
@@ -555,6 +558,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                     }
                 }
             }
+            
         }
     }
     
