@@ -89,7 +89,7 @@ class AstralWeapon: SKNode {
                 self.isCoolingDown = true
             }
         } else {
-            // print("fucken, cd: \(self.isCoolingDown), reload: \(self.isReloading)")
+            print("fucken, cd: \(self.isCoolingDown), reload: \(self.isReloading)")
         }
     }
     

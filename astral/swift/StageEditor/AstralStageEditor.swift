@@ -553,6 +553,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                                 if enemy.isCloseEnough(to: actionNode) && !actionNode.isTriggered(by: enemy) {
                                     actionNode.performAction(for: enemy)
                                 }
+                                enemy.update(currentTime: currentTime, deltaTime: deltaTime)
                             }
                         }
                     }

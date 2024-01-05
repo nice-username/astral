@@ -141,12 +141,11 @@ class AstralStageEditorPathInputHandler {
             node.initialTimeOffset = 0.0
             node.isEndless = false
             node.repeatEnabled = true
-            node.repeatCount = 2
+            node.repeatCount = 1
             node.repeatInterval = 0.5
         }
         if let node = currentNode as? AstralPathNodeAction {
             node.action = AstralEnemyOrder(type: .fire, duration: 1.0)
-            node.name = "come on plz"
         }
     }
     

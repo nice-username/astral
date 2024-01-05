@@ -88,7 +88,7 @@ class AstralPathNodeAction: AstralPathNode {
             print("No action defined for this node.")
             return
         }
-        
+
         // Check if this enemy has already triggered the action
         if triggeredByEnemies.contains(enemy.id) {
             return // The action has already been performed for this enemy
@@ -100,7 +100,7 @@ class AstralPathNodeAction: AstralPathNode {
             enemy.turn(direction: action.type, duration: duration)
             
         case .fire:
-            enemy.fireWeapon()
+            enemy.isShooting = true
             
         case .fireStop:
             // enemy.ceaseFire()
