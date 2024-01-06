@@ -103,7 +103,7 @@ class AstralPathNodeAction: AstralPathNode {
             enemy.isShooting = true
             
         case .fireStop:
-            // enemy.ceaseFire()
+            enemy.isShooting = false
             break
             
         default:
@@ -178,6 +178,7 @@ class AstralPathNodeCreation: AstralPathNode {
             let unit = createEntity()
             if let enemy = unit as? AstralEnemy {
                 enemy.position = self.position
+                enemy.movementSpeed = initialSpeed
                 enemy.followPath(self.attachedToPath!)
                 (self.scene as? AstralStageEditor)?.enemies.append(enemy)
             }

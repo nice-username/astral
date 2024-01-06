@@ -58,6 +58,7 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
             self.gameState.dismissPathManager()
         }
         
+        activationSlider.value = 1.0
         deactivationSlider.value = 100.0
     }
 

@@ -140,7 +140,7 @@ class AstralPathSegment : SKNode {
 class AstralStageEditorPath: SKNode {
     var segments: [AstralPathSegment] = []
     var direction: AstralPathDirection = .forwards
-    var activationProgress: Float = 0.0
+    var activationProgress: Float = 1.0
     var deactivationProgress: Float = 100.0
     var endBehavior: AstralPathEndBehavior = .loop
     var isActivated: Bool = true

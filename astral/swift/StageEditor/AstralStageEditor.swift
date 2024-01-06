@@ -559,7 +559,6 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                     }
                 }
             }
-            
         }
     }
     

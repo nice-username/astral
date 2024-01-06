@@ -53,6 +53,7 @@
 		7C6B66C12A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6B66C02A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift */; };
 		7C6B66C62A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6B66C52A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift */; };
 		7C6B66C82A98864300BC1BD0 /* RoughOceanSeas.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C6B66C72A98864300BC1BD0 /* RoughOceanSeas.atlas */; };
+		7C7070382B48E87A00DD6C29 /* AstralStageEditorPopupMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7070372B48E87A00DD6C29 /* AstralStageEditorPopupMenu.swift */; };
 		7C81E0CF29FF9D12005FB6EC /* BackgroundStars.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C81E0CE29FF9D12005FB6EC /* BackgroundStars.atlas */; };
 		7C81E0D129FF9D92005FB6EC /* AstralParallaxBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C81E0D029FF9D92005FB6EC /* AstralParallaxBackground.swift */; };
 		7C81E0D329FF9E7E005FB6EC /* AstralParallaxBackgroundLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C81E0D229FF9E7E005FB6EC /* AstralParallaxBackgroundLayer.swift */; };
@@ -172,6 +173,7 @@
 		7C6B66C02A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralParallaxBackgroundLayer2.swift; sourceTree = "<group>"; };
 		7C6B66C52A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralParallaxBackgroundLayerPickerScene.swift; sourceTree = "<group>"; };
 		7C6B66C72A98864300BC1BD0 /* RoughOceanSeas.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = RoughOceanSeas.atlas; sourceTree = "<group>"; };
+		7C7070372B48E87A00DD6C29 /* AstralStageEditorPopupMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AstralStageEditorPopupMenu.swift; path = astral/swift/StageEditor/AstralStageEditorPopupMenu.swift; sourceTree = SOURCE_ROOT; };
 		7C81E0CE29FF9D12005FB6EC /* BackgroundStars.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BackgroundStars.atlas; sourceTree = "<group>"; };
 		7C81E0D029FF9D92005FB6EC /* AstralParallaxBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralParallaxBackground.swift; sourceTree = "<group>"; };
 		7C81E0D229FF9E7E005FB6EC /* AstralParallaxBackgroundLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralParallaxBackgroundLayer.swift; sourceTree = "<group>"; };
@@ -453,6 +455,7 @@
 				7C86902A2A7763A700AD307F /* AstralStageEditorToolbar.swift */,
 				7C8690262A77635700AD307F /* AstralStageEditorToolbarButton.swift */,
 				7C8690282A77638900AD307F /* AstralStageEditorToolbarSubView.swift */,
+				7C7070372B48E87A00DD6C29 /* AstralStageEditorPopupMenu.swift */,
 				7C2583FA2ABB699C0029BDDD /* AstralStageFileManager.swift */,
 				7CC254C62B2C8D37003381AC /* Path */,
 			);
@@ -669,6 +672,7 @@
 				7C8690292A77638900AD307F /* AstralStageEditorToolbarSubView.swift in Sources */,
 				7C6B66C62A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift in Sources */,
 				7C1F5C0429FD316300DB6438 /* AppDelegate.swift in Sources */,
+				7C7070382B48E87A00DD6C29 /* AstralStageEditorPopupMenu.swift in Sources */,
 				7CAA6B1D2A03643700EBEA1E /* AstralEnemyOrder.swift in Sources */,
 				7C26511F29FF49ED0013B36E /* Direction.swift in Sources */,
 				7CC254C42B2C898E003381AC /* AstralPathNode.swift in Sources */,

@@ -21,6 +21,8 @@ class AstralStageEditorPathInputHandler {
     private var lastTapLocation: CGPoint?
     private weak var scene: AstralStageEditor?
     private var nodeTypeMenu = AstralStageEditorPathNodeTypeMenu(size: CGSize(width: 180.0, height: 100.0))
+    private let doubleTapThreshold = 0.3
+    private let doubleTapDistanceThreshold = 25.0
     
 
 
@@ -38,35 +40,36 @@ class AstralStageEditorPathInputHandler {
     }
     
     
+    func isDoubleTap(_ tapTime: TimeInterval, _ tapLocation: CGPoint) -> Bool {
+        if lastTapLocation == nil {
+            return false
+        }
+        let difference = tapTime - lastTapTime
+        return lastTapTime != 0 &&
+               difference < doubleTapThreshold &&
+               lastTapLocation!.distanceTo(tapLocation) < doubleTapDistanceThreshold
+    }
+    
     
     func touchesBegan(_ touches: Set<UITouch>) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: scene!)
-
         let currentTapTime = touch.timestamp
-        let doubleTapThreshold = 0.3
-
+        let isDoubleTap = isDoubleTap(currentTapTime, touchLocation)
+        
         
         // Begin placing node -- show type selection menu
-        if self.gameState.editorState != .selectingNodeType &&
+        if isDoubleTap && (self.gameState.editorState != .selectingNodeType &&
             self.gameState.editorState != .placingActionNode &&
-            self.gameState.editorState != .placingCreationNode &&
-            lastTapTime != 0 &&
-            currentTapTime - lastTapTime < doubleTapThreshold,
-           let lastTapLocation = lastTapLocation,
-           lastTapLocation.distanceTo(touchLocation) < 25 {
+            self.gameState.editorState != .placingCreationNode)  {
             self.gameState.editorTransitionTo(.selectingNodeType)
-            nodeTypeMenu.show(in: scene!, position: lastTapLocation)
+            nodeTypeMenu.show(in: scene!, position: lastTapLocation!)
         }
         
         // Finish placing node
-        if gameState.editorState == .placingActionNode ||
+        if isDoubleTap && (gameState.editorState == .placingActionNode ||
             gameState.editorState == .placingCreationNode ||
-            gameState.editorState == .placingPathingNode && 
-            lastTapTime != 0 &&
-            currentTapTime - lastTapTime < doubleTapThreshold,
-            let lastTapLocation = lastTapLocation,
-            lastTapLocation.distanceTo(touchLocation) < 25  {
+            gameState.editorState == .placingPathingNode)   {
             gameState.editorState = .idle
             
             if let node = currentNode {
@@ -80,10 +83,7 @@ class AstralStageEditorPathInputHandler {
                     node.isActive = true
                 }
             }
-    
         }
-        
-        
         
         lastTapTime = currentTapTime
         lastTapLocation = touchLocation
@@ -127,6 +127,19 @@ class AstralStageEditorPathInputHandler {
                     renderer.updatePathColor(for: closestPath, color: .systemBlue)
                 }
             
+            case .selectingNodeType:
+                let touchPoint = touch.location(in: scene!)
+                let touchedNodes = scene?.nodes(at: touchPoint)
+                for node in touchedNodes! {
+                    if let nodeName = node.name, !nodeTypeMenu.hasActions() {
+                        if nodeName == "creationButton" ||
+                            nodeName == "actionButton" ||
+                            nodeName == "pathingButton", let bg = node as? SKShapeNode {
+                            bg.fillColor = .white.withAlphaComponent(0.25)
+                        }
+                    }
+                }
+            
             case .placingCreationNode:
                 self.attachNodeToClosestPath(to: touchLocation)
             
@@ -143,11 +156,14 @@ class AstralStageEditorPathInputHandler {
             node.repeatEnabled = true
             node.repeatCount = 1
             node.repeatInterval = 0.5
+            node.initialSpeed = 200.0
         }
         if let node = currentNode as? AstralPathNodeAction {
             node.action = AstralEnemyOrder(type: .fire, duration: 1.0)
         }
     }
+    
+    
     
     func touchesMoved(_ touches: Set<UITouch>) {
         guard let touch = touches.first else { return }
@@ -231,9 +247,9 @@ class AstralStageEditorPathInputHandler {
             let touchPoint = touch.location(in: scene!)
             let touchedNodes = scene?.nodes(at: touchPoint)
             for node in touchedNodes! {
-                if let nodeName = node.name {
+                if let nodeName = node.name, !nodeTypeMenu.hasActions() {
                     switch nodeName {
-                    case "nodeTypeCreationOption":
+                    case "creationButton":
                         self.gameState.editorTransitionTo(.placingCreationNode)
                         let node = AstralPathNodeCreation(point: touchPoint)
                         currentNode = node
@@ -241,7 +257,7 @@ class AstralStageEditorPathInputHandler {
                         scene!.addChild(node)
                         nodeTypeMenu.hide()
                         
-                    case "nodeTypeActionOption":
+                    case "actionButton":
                         self.gameState.editorTransitionTo(.placingActionNode)
                         let node = AstralPathNodeAction(point: touchPoint)
                         currentNode = node
@@ -249,9 +265,10 @@ class AstralStageEditorPathInputHandler {
                         scene!.addChild(node)
                         nodeTypeMenu.hide()
                         
-                    case "nodeTypePathingOption":
+                    case "pathingButton":
                         self.gameState.editorTransitionTo(.placingPathingNode)
                         nodeTypeMenu.hide()
+                        
                     default:
                         break
                     }
