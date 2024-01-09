@@ -67,6 +67,11 @@ class AstralPathNode: SKShapeNode, AstralPathNodeProtocol {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func isPoint(_ point: CGPoint, withinDistance distance: CGFloat) -> Bool {
+        let nodePosition = self.position
+        return point.distanceTo(nodePosition) <= distance
+    }
 }
 
 

@@ -27,7 +27,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     var polarity: AstralPolarity = .white
     var particleSystem: AstralParticleSystem?
     var hitbox: SKShapeNode?
-    var currentSpriteID: Int = 6
+    var currentSpriteID: Int = 0
     var weapons: [AstralWeapon] = []
     var orders: [AstralEnemyOrder] = []
     var isShooting: Bool = false
@@ -48,6 +48,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         self.health    = config.health
         self.maxHealth = config.maxHealth
         self.atlasName = config.atlasName
+        self.textures  = config.textures
         
         let initialTexture = config.textures[0]
         super.init(texture: initialTexture, color: .clear, size: initialTexture.size())
@@ -69,9 +70,6 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         self.hitbox = SKShapeNode(circleOfRadius: self.size.width / 2)
         // self.addChild(self.hitbox!)
         
-        // Set initial position, size, and other properties
-        self.textures = AstralEnemy.loadTextures(fromAtlasNamed: config.atlasName, namingStyle: .numberedSequence(frameCount: 13, prefix: "enemyFrame", indexLength: 2))
-        
         // Weapon
         let defaultAmmo   = AstralWeaponAmmoType.singleShot
         let defaultWeapon = AstralWeapon(gameScene: scene,
@@ -86,8 +84,8 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         self.weapons.append(defaultWeapon)
         
         // Scaling
-        self.xScale = 1
-        self.yScale = 1
+        self.xScale = 1.0
+        self.yScale = 1.0
         self.texture?.filteringMode = .nearest
         
         // Add to scene
@@ -202,46 +200,49 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     //
     // Tell the sprite to play its "turn right" animation over time
     //
-    func turnRight(over time: TimeInterval) {
-        var ids : [Int] = []
-        
-        // Stop turning if I was already
+    func turnRight(over time: TimeInterval, turnAngle: Int) {
+        // Stop any existing turn animation
         self.removeAction(forKey: "turn")
-        
-        // Define the textures for the turning animation
-        let baseTextureName = "enemyFrame"
-        let numFrames = 6
-        var turnTextures = [SKTexture]()
-        for i in stride(from: numFrames, through: 0, by: -1) {
-            let textureName = "\(baseTextureName)\(String(format: "%02d", i)).png"
-            let texture = SKTexture(imageNamed: textureName)
-            turnTextures.append(texture)
-            ids.append(i)
+
+        let startSpriteID = self.currentSpriteID
+        let spriteCount = self.textures.count
+        // Calculate turnSteps as before
+        let turnSteps = (turnAngle + 14) / 15
+
+        // Generate the sequence of sprite IDs for the turn
+        var ids: [Int] = []
+        for i in 0..<turnSteps {
+            let newSpriteID = (startSpriteID + i + 1) % spriteCount // Adjusted to include the final sprite
+            ids.append(newSpriteID)
         }
-        
+
+        print("Sprite IDs for turnRight: \(ids)")
+        for id in ids {
+            print("Texture name for ID \(id): \(self.textures[id].description)")
+        }
+
+        // Retrieve corresponding textures for the turn
+        let turnTextures = ids.map { self.textures[$0] }
+
         // Calculate the duration for each frame of the animation
         let frameDuration = time / Double(turnTextures.count)
-        
+
         // Create an array of actions to set each texture in turn
         var actions: [SKAction] = []
         for (index, texture) in turnTextures.enumerated() {
             let textureAction = SKAction.setTexture(texture)
             let waitAction = SKAction.wait(forDuration: frameDuration)
             let setSpriteAction = SKAction.run { [weak self] in
-                self!.currentSpriteID = ids[index]
+                self?.currentSpriteID = ids[index]
             }
-            let frameAction = SKAction.sequence([
-                textureAction,
-                setSpriteAction,
-                waitAction
-            ])
+            let frameAction = SKAction.sequence([textureAction, setSpriteAction, waitAction])
             actions.append(frameAction)
         }
-        
+
         // Run the action sequence on the enemy node
         let sequence = SKAction.sequence(actions)
-        self.run(sequence, withKey: "turn")
-    }
+        self.run(sequence, withKey: "turn")    }
+
     
     
     // Needed to comply to protocol
@@ -252,9 +253,9 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     func turn(direction: AstralEnemyOrder.AstralEnemyActionType, duration: TimeInterval) {
         switch direction {
         case .turnLeft:
-            turnLeft(over: duration)
+            turnLeft(over: duration, turnAngle: 90)
         case .turnRight:
-            turnRight(over: duration)
+            turnRight(over: duration, turnAngle: 270)
         case .turnToBase:
             animateToRestingPosition(duration: duration)
         default:
@@ -266,47 +267,55 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     //
     // Tell the sprite to play its "turn right" animation over time
     //
-    func turnLeft(over time: TimeInterval) {
-        var ids : [Int] = []
-        
-        // Stop turning if I was already
+    func turnLeft(over time: TimeInterval, turnAngle: Int) {
+        // Stop any existing turn animation
         self.removeAction(forKey: "turn")
-        
-        // Define the textures for the turning animation
-        let baseTextureName = "enemyFrame"
-        let numFrames = 6
-        var turnTextures = [SKTexture]()
-        for i in stride(from: numFrames, through: 12, by: 1) {
-            let spriteID    = String(format: "%02d", i)
-            let textureName = "\(baseTextureName)\(spriteID).png"
-            let texture = SKTexture(imageNamed: textureName)
-            turnTextures.append(texture)
-            ids.append(i)
+
+        let startSpriteID = self.currentSpriteID
+        let spriteCount = self.textures.count
+        let turnSteps = turnAngle / 15  // Assuming each step represents 15 degrees
+
+        // Calculate the new sprite index after the turn, considering wrap-around
+        var newSpriteID = (startSpriteID - turnSteps + spriteCount) % spriteCount
+
+        // Generate the sequence of sprite IDs for the turn
+        var ids: [Int] = []
+        for _ in 0..<abs(turnSteps) {
+            ids.append(newSpriteID)
+            newSpriteID = (newSpriteID - 1 + spriteCount) % spriteCount
         }
-        
+
+        // Debugging: Print sprite IDs and texture names
+        print("Sprite IDs for turnLeft: \(ids)")
+        for id in ids {
+            print("Texture name for ID \(id): \(self.textures[id].description)")
+        }
+
+        // Retrieve corresponding textures for the turn
+        let turnTextures = ids.map { self.textures[$0] }
+
         // Calculate the duration for each frame of the animation
         let frameDuration = time / Double(turnTextures.count)
-        
+
         // Create an array of actions to set each texture in turn
         var actions: [SKAction] = []
         for (index, texture) in turnTextures.enumerated() {
             let textureAction = SKAction.setTexture(texture)
             let waitAction = SKAction.wait(forDuration: frameDuration)
             let setSpriteAction = SKAction.run { [weak self] in
-                self!.currentSpriteID = ids[index]
+                self?.currentSpriteID = ids[index]
             }
-            let frameAction = SKAction.sequence([
-                textureAction,
-                setSpriteAction,
-                waitAction
-            ])
+            let frameAction = SKAction.sequence([textureAction, setSpriteAction, waitAction])
             actions.append(frameAction)
         }
-        
+
         // Run the action sequence on the enemy node
         let sequence = SKAction.sequence(actions)
         self.run(sequence, withKey: "turn")
     }
+
+
+
     
     
     
@@ -384,10 +393,10 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
                     self!.joystick.direction = direction
                     
                 case .turnRight(let duration):
-                    self!.turnRight(over: duration)
+                    self!.turnRight(over: duration, turnAngle: 90)
                     
                 case .turnLeft(let duration):
-                    self!.turnLeft(over: duration)
+                    self!.turnLeft(over: duration, turnAngle: 90)
                     
                 case .fire:
                     self!.isShooting = true

@@ -479,25 +479,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         isPlaying = true
         self.addChild(player!)
         self.addChild(fireButton!)
-        // self.togglePaths(show: false)
-        
-        let enemy = AstralEnemy(scene: self, config: AstralGlobalEnemyConfiguration["enemy1"]!)
-        
-        /*
-        if let firstPath = pathManager.paths.first {
-            firstPath.segments[0].nodes.removeAll()
-            firstPath.segments[0].nodes.append(testNode!)
-            if let node = firstPath.segments[0].nodes[0] as? AstralPathNodeCreation {
-                node.repeatEnabled = true
-                node.isEndless = false
-                node.repeatCount = 4
-                node.repeatInterval = 3.3333
-                node.initialTimeOffset = 0.0
-                firstPath.activate(currentTime: CACurrentMediaTime())
-            }
-            print("activated first path")
-        }
-        */
+        self.togglePaths(show: false)
     }
 
     @objc private func stop(_ notification: NSNotification) {
@@ -509,6 +491,10 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             bg.reset()
         }
         progress = 0.0
+        for enemy in enemies {
+            enemy.removeFromParent()
+        }
+        enemies.removeAll()
     }
     
     //
@@ -578,6 +564,9 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             for segment in path.segments {
                 segment.shape?.isHidden = !show
                 segment.directionArrow?.isHidden = !show
+                for node in segment.nodes {
+                    node.isHidden = !show
+                }
             }
         }
     }

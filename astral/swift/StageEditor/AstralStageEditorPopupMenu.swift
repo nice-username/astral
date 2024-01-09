@@ -10,21 +10,21 @@ import SpriteKit
 
 class AstralStageEditorPopupMenu: SKNode {
     public var menuOptions: [SKLabelNode] = []
-    private let background: SKShapeNode
+    public let background: SKShapeNode
     private let titleLabel: SKLabelNode
     private let titleLine: SKShapeNode
 
     
-    init(size: CGSize) {
+    init(size: CGSize, title: String = "") {
+        
         // Create the rounded rectangle background
         background = SKShapeNode(rectOf: size, cornerRadius: 10)
         background.fillColor = SKColor.black.withAlphaComponent(0.925)
         background.lineWidth = 0.0
         background.zPosition = 7
-        background.name = "nodeTypeMenuBackground"
         
         // Title label setup
-        titleLabel = SKLabelNode(text: "Add node")
+        titleLabel = SKLabelNode(text: title)
         titleLabel.fontName = "AvenirNext-Regular"
         titleLabel.fontSize = 24
         titleLabel.fontColor = SKColor.white
@@ -39,6 +39,8 @@ class AstralStageEditorPopupMenu: SKNode {
         titleLine.zPosition = 8
         titleLine.alpha = 0.75
         super.init()
+        
+        self.zPosition = 6
         
         // Add nodes to the menu
         self.addChild(background)

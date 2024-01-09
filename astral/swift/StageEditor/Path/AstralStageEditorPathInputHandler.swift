@@ -20,7 +20,8 @@ class AstralStageEditorPathInputHandler {
     private var lastTapTime: TimeInterval = 0
     private var lastTapLocation: CGPoint?
     private weak var scene: AstralStageEditor?
-    private var nodeTypeMenu = AstralStageEditorPathNodeTypeMenu(size: CGSize(width: 180.0, height: 100.0))
+    private var nodeTypeMenu = AstralStageEditorPathNodeTypeMenu(size: CGSize(width: 180.0, height: 100.0), title: "Add node")
+    private var actionNodeMenu = AstralPathNodeActionMenu(size: CGSize(width: 250.0, height: 100.0), title: "Action node")
     private let doubleTapThreshold = 0.3
     private let doubleTapDistanceThreshold = 25.0
     
@@ -51,46 +52,21 @@ class AstralStageEditorPathInputHandler {
     }
     
     
+    
+    
     func touchesBegan(_ touches: Set<UITouch>) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: scene!)
         let currentTapTime = touch.timestamp
-        let isDoubleTap = isDoubleTap(currentTapTime, touchLocation)
         
-        
-        // Begin placing node -- show type selection menu
-        if isDoubleTap && (self.gameState.editorState != .selectingNodeType &&
-            self.gameState.editorState != .placingActionNode &&
-            self.gameState.editorState != .placingCreationNode)  {
-            self.gameState.editorTransitionTo(.selectingNodeType)
-            nodeTypeMenu.show(in: scene!, position: lastTapLocation!)
+        if isDoubleTap(currentTapTime, touchLocation) {
+            handleDoubleTap()
         }
-        
-        // Finish placing node
-        if isDoubleTap && (gameState.editorState == .placingActionNode ||
-            gameState.editorState == .placingCreationNode ||
-            gameState.editorState == .placingPathingNode)   {
-            gameState.editorState = .idle
-            
-            if let node = currentNode {
-                node.blink()
-                self.setTestNodeData()
-                let closestPoint = path!.closestPointOnPath(to: node.position)
-                let closestSegment = path!.closestSegmentToPoint(closestPoint)
-                closestSegment?.nodes.append(node)
-                node.attachedToPath = path!
-                if node is AstralPathNodeAction {
-                    node.isActive = true
-                }
-            }
-        }
-        
         lastTapTime = currentTapTime
         lastTapLocation = touchLocation
         
         switch gameState.editorState {
             case .drawingNewPath:
-                // Start a new path
                 let newPathIndex = manager.addNewPath()
                 path = manager.paths[newPathIndex]
                 manager.setActivePath(index: newPathIndex)
@@ -99,12 +75,9 @@ class AstralStageEditorPathInputHandler {
                 path?.name = "Path \(newPathIndex + 1)"
 
             case .appendingToPath:
-                // Continue drawing the current path
-                // ...
                 break
 
             case .editingNode, .editingBezier:
-                // These states will have their own logic, which we'll define later
                 break
             case .idle:
                 break
@@ -120,7 +93,6 @@ class AstralStageEditorPathInputHandler {
                     }
                 }
                 if let closestPath = closestPath {
-                    // User has touched near a path
                     self.path = closestPath
                     self.manager.setActivePath(index: self.manager.getPathIndex(path: closestPath)!)
                     self.gameState.pathManager.loadPathData(path!)
@@ -164,6 +136,60 @@ class AstralStageEditorPathInputHandler {
     }
     
     
+    //
+    // Double tap is used for various functionality
+    //
+    func handleDoubleTap() {
+        // Open menu for editing action node properties
+        if (self.gameState.editorState != .selectingNodeType &&
+            self.gameState.editorState != .placingActionNode &&
+            self.gameState.editorState != .placingCreationNode) && getActionNodeNextTo(lastTapLocation!) != nil {
+            actionNodeMenu.show(in: scene!, position: lastTapLocation!)
+            self.gameState.editorTransitionTo(.selectingNodeActionType)
+            return
+        }
+        
+        // Begin placing node -- show type selection menu
+        if (self.gameState.editorState != .selectingNodeType &&
+            self.gameState.editorState != .placingActionNode &&
+            self.gameState.editorState != .placingCreationNode) {
+            self.gameState.editorTransitionTo(.selectingNodeType)
+            nodeTypeMenu.show(in: scene!, position: lastTapLocation!)
+        }
+        
+        if (gameState.editorState == .placingActionNode ||
+            gameState.editorState == .placingCreationNode ||
+            gameState.editorState == .placingPathingNode) {
+            gameState.editorState = .idle
+            if let node = currentNode {
+                node.blink()
+                self.setTestNodeData()
+                let closestPoint = path!.closestPointOnPath(to: node.position)
+                let closestSegment = path!.closestSegmentToPoint(closestPoint)
+                closestSegment?.nodes.append(node)
+                node.attachedToPath = path!
+                if node is AstralPathNodeAction {
+                    node.isActive = true
+                }
+            }
+        }
+    }
+    
+    
+    func getActionNodeNextTo(_ point: CGPoint, distanceThreshold: CGFloat = 36.0) -> AstralPathNodeAction? {
+        for path in manager.paths {
+            for segment in path.segments {
+                for node in segment.nodes {
+                    if node.isPoint(point, withinDistance: distanceThreshold), let actionNode = node as? AstralPathNodeAction {
+                        return actionNode
+                    }
+                }
+            }
+        }
+        return nil
+    }
+    
+    
     
     func touchesMoved(_ touches: Set<UITouch>) {
         guard let touch = touches.first else { return }
@@ -196,6 +222,8 @@ class AstralStageEditorPathInputHandler {
     
     func touchesEnded(_ touches: Set<UITouch>) {
         guard let touch = touches.first else { return }
+        let touchPoint = touch.location(in: scene!)
+        let touchedNodes = scene?.nodes(at: touchPoint)
         
         let closePathDistanceThreshold     = 40.0
         let createSegmentDistanceThreshold = 20.0
@@ -244,8 +272,6 @@ class AstralStageEditorPathInputHandler {
             break
             
         case .selectingNodeType:
-            let touchPoint = touch.location(in: scene!)
-            let touchedNodes = scene?.nodes(at: touchPoint)
             for node in touchedNodes! {
                 if let nodeName = node.name, !nodeTypeMenu.hasActions() {
                     switch nodeName {
@@ -281,6 +307,39 @@ class AstralStageEditorPathInputHandler {
                 self.gameState.editorState = .idle
             }
             
+        case .selectingNodeActionType:
+            for node in touchedNodes! {
+                if let nodeName = node.name, !actionNodeMenu.hasActions() {
+                    switch nodeName {
+                    case "turn leftButton":
+                        if let actionNode = currentNode as? AstralPathNodeAction {
+                            actionNode.action = AstralEnemyOrder(type: .turnLeft(1.0), duration: 0.0)
+                            actionNodeMenu.hide()
+                        }
+                    case "turn rightButton":
+                        if let actionNode = currentNode as? AstralPathNodeAction {
+                            actionNode.action = AstralEnemyOrder(type: .turnRight(1.0), duration: 0.0)
+                            actionNodeMenu.hide()
+                        }
+                    case "use weaponButton":
+                        if let actionNode = currentNode as? AstralPathNodeAction {
+                            actionNode.action = AstralEnemyOrder(type: .fire, duration: 0.0)
+                            actionNodeMenu.hide()
+                        }
+                    case "stop attackingButton":
+                        if let actionNode = currentNode as? AstralPathNodeAction {
+                            actionNode.action = AstralEnemyOrder(type: .fireStop, duration: 0.0)
+                            actionNodeMenu.hide()
+                        }
+                    default:
+                        break
+                    }
+                }
+                if !touchedNodes!.contains(where: { $0.name == "nodeActionMenuBackground" }) {
+                    actionNodeMenu.hide()
+                    self.gameState.editorState = .idle
+                }
+            }
         default:
             break
         }

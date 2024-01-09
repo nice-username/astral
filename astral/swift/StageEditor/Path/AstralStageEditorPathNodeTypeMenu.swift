@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import SpriteKit
 
 class AstralStageEditorPathNodeTypeMenu: AstralStageEditorPopupMenu {
-    override init(size: CGSize) {
-        super.init(size: size)
+    override init(size: CGSize, title: String) {
+        super.init(size: size, title: title)
+        background.name = "nodeTypeMenuBackground"
         
         // Add options to the menu
         addMenuOption(text: "Creation", fontSize: 32)
