@@ -101,8 +101,8 @@ class AstralPathNodeAction: AstralPathNode {
         
         // Perform the action here
         switch action.type {
-        case .turnRight(let duration), .turnLeft(let duration), .turnToBase(let duration):
-            enemy.turn(direction: action.type, duration: duration)
+        case .turnRight(let duration, let angle), .turnLeft(let duration, let angle):
+            enemy.turn(direction: action.type, duration: duration, angle: angle)
             
         case .fire:
             enemy.isShooting = true
@@ -207,6 +207,7 @@ class AstralPathNodeCreation: AstralPathNode {
         case .enemy:
             if let config = AstralGlobalEnemyConfiguration["enemy\(objectIndex)"] {
                 let enemy = AstralEnemy(scene: self.scene!, config: config)
+                enemy.zPosition = 4
                 return enemy
             }
         case .powerup:

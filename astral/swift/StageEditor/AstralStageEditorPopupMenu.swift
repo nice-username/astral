@@ -11,8 +11,10 @@ import SpriteKit
 class AstralStageEditorPopupMenu: SKNode {
     public var menuOptions: [SKLabelNode] = []
     public let background: SKShapeNode
-    private let titleLabel: SKLabelNode
+    public let titleLabel: SKLabelNode
     private let titleLine: SKShapeNode
+    public var subMenu: AstralStageEditorPopupMenu?
+    public var isOpen: Bool = false
 
     
     init(size: CGSize, title: String = "") {
@@ -80,8 +82,9 @@ class AstralStageEditorPopupMenu: SKNode {
     }
     
     func show(in scene: SKScene, position: CGPoint) {
+        isOpen = true
         self.position = position
-        self.setScale(0.125) // Start scaled down to animate in
+        self.setScale(0.125)
         self.removeFromParent()
         scene.addChild(self)
         let scaleIn = SKAction.scale(to: 1.1, duration: 0.125)
@@ -90,9 +93,13 @@ class AstralStageEditorPopupMenu: SKNode {
     }
     
     func hide() {
+        isOpen = false
         let scaleOut = SKAction.scale(to: 0, duration: 0.125)
         let remove = SKAction.removeFromParent()
         self.run(SKAction.sequence([scaleOut, remove]), withKey: "visibility")
+        if let menu = subMenu {
+            menu.hide()
+        }
     }
     
     public func layoutMenuOptions() {
@@ -141,5 +148,16 @@ class AstralStageEditorPopupMenu: SKNode {
 
         // Add the shape as a child of the label to move with it
         label.addChild(shape)
+    }
+    
+    func openSubMenu(_ subMenu: AstralStageEditorPopupMenu) {
+        // Hide the current menu or move it to the side
+        self.hide()
+        self.subMenu = subMenu
+
+        // Add the sub-menu to the same scene
+        if let scene = self.scene {
+            subMenu.show(in: scene, position: self.position)
+        }
     }
 }

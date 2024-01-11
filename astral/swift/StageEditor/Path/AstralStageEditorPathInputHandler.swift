@@ -22,6 +22,7 @@ class AstralStageEditorPathInputHandler {
     private weak var scene: AstralStageEditor?
     private var nodeTypeMenu = AstralStageEditorPathNodeTypeMenu(size: CGSize(width: 180.0, height: 100.0), title: "Add node")
     private var actionNodeMenu = AstralPathNodeActionMenu(size: CGSize(width: 250.0, height: 100.0), title: "Action node")
+    private let turnRightMenu = AstralPathNodeActionTurnRightMenu(size: CGSize(width: 460, height: 100.0))
     private let doubleTapThreshold = 0.3
     private let doubleTapDistanceThreshold = 25.0
     
@@ -313,14 +314,12 @@ class AstralStageEditorPathInputHandler {
                     switch nodeName {
                     case "turn leftButton":
                         if let actionNode = currentNode as? AstralPathNodeAction {
-                            actionNode.action = AstralEnemyOrder(type: .turnLeft(1.0), duration: 0.0)
+                            actionNode.action = AstralEnemyOrder(type: .turnLeft(duration: 1.0, angle: 90), duration: 0.0)
                             actionNodeMenu.hide()
                         }
                     case "turn rightButton":
-                        if let actionNode = currentNode as? AstralPathNodeAction {
-                            actionNode.action = AstralEnemyOrder(type: .turnRight(1.0), duration: 0.0)
-                            actionNodeMenu.hide()
-                        }
+                        actionNodeMenu.openSubMenu(turnRightMenu)
+                        self.gameState.editorState = .selectingNodeActionType
                     case "use weaponButton":
                         if let actionNode = currentNode as? AstralPathNodeAction {
                             actionNode.action = AstralEnemyOrder(type: .fire, duration: 0.0)
@@ -337,6 +336,16 @@ class AstralStageEditorPathInputHandler {
                 }
                 if !touchedNodes!.contains(where: { $0.name == "nodeActionMenuBackground" }) {
                     actionNodeMenu.hide()
+                    if let menu = actionNodeMenu.subMenu {
+                        menu.hide()
+                        if menu.name == "NodeActionTurnRightMenu" {
+                            if let actionNode = currentNode as? AstralPathNodeAction {
+                                let angle    = turnRightMenu.getAngle()
+                                let duration = turnRightMenu.getDuration()
+                                actionNode.action = AstralEnemyOrder(type: .turnRight(duration: duration, angle: angle), duration: 0.0)
+                            }
+                        }
+                    }
                     self.gameState.editorState = .idle
                 }
             }

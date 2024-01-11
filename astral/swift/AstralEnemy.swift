@@ -203,30 +203,30 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     func turnRight(over time: TimeInterval, turnAngle: Int) {
         // Stop any existing turn animation
         self.removeAction(forKey: "turn")
-
+        
         let startSpriteID = self.currentSpriteID
         let spriteCount = self.textures.count
         // Calculate turnSteps as before
         let turnSteps = (turnAngle + 14) / 15
-
+        
         // Generate the sequence of sprite IDs for the turn
         var ids: [Int] = []
         for i in 0..<turnSteps {
             let newSpriteID = (startSpriteID + i + 1) % spriteCount // Adjusted to include the final sprite
             ids.append(newSpriteID)
         }
-
+        
         print("Sprite IDs for turnRight: \(ids)")
         for id in ids {
             print("Texture name for ID \(id): \(self.textures[id].description)")
         }
-
+        
         // Retrieve corresponding textures for the turn
         let turnTextures = ids.map { self.textures[$0] }
-
+        
         // Calculate the duration for each frame of the animation
         let frameDuration = time / Double(turnTextures.count)
-
+        
         // Create an array of actions to set each texture in turn
         var actions: [SKAction] = []
         for (index, texture) in turnTextures.enumerated() {
@@ -238,10 +238,11 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
             let frameAction = SKAction.sequence([textureAction, setSpriteAction, waitAction])
             actions.append(frameAction)
         }
-
+        
         // Run the action sequence on the enemy node
         let sequence = SKAction.sequence(actions)
-        self.run(sequence, withKey: "turn")    }
+        self.run(sequence, withKey: "turn")
+    }
 
     
     
@@ -250,12 +251,12 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     }
     
     
-    func turn(direction: AstralEnemyOrder.AstralEnemyActionType, duration: TimeInterval) {
+    func turn(direction: AstralEnemyOrder.AstralEnemyActionType, duration: TimeInterval, angle: CGFloat) {
         switch direction {
         case .turnLeft:
-            turnLeft(over: duration, turnAngle: 90)
+            turnLeft(over: duration, turnAngle: Int(angle))
         case .turnRight:
-            turnRight(over: duration, turnAngle: 270)
+            turnRight(over: duration, turnAngle: Int(angle))
         case .turnToBase:
             animateToRestingPosition(duration: duration)
         default:
@@ -392,11 +393,11 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
                 case .move(let direction):
                     self!.joystick.direction = direction
                     
-                case .turnRight(let duration):
-                    self!.turnRight(over: duration, turnAngle: 90)
+                case .turnRight(let duration, let angle):
+                    self!.turnRight(over: duration, turnAngle: Int(angle))
                     
-                case .turnLeft(let duration):
-                    self!.turnLeft(over: duration, turnAngle: 90)
+                case .turnLeft(let duration, let angle):
+                    self!.turnLeft(over: duration, turnAngle: Int(angle))
                     
                 case .fire:
                     self!.isShooting = true

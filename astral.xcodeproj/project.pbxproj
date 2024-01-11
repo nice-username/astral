@@ -37,6 +37,8 @@
 		7C280F5C2A1ABB0C002385D7 /* munro_bitmap.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 7C280F5A2A1ABB0C002385D7 /* munro_bitmap.fnt */; };
 		7C2AB7E32A0659C30026328A /* BeamWhite00WarmUp.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C2AB7E22A0659C30026328A /* BeamWhite00WarmUp.atlas */; };
 		7C2AB7E92A06830E0026328A /* BeamWhite01WarmUp.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C2AB7E82A06830E0026328A /* BeamWhite01WarmUp.atlas */; };
+		7C2D38D52B4E787700366D0D /* AstralStageEditorMenuStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D38D42B4E787700366D0D /* AstralStageEditorMenuStepper.swift */; };
+		7C2D38D72B4FC3BC00366D0D /* AstralPathNodeActionTurnRightMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2D38D62B4FC3BC00366D0D /* AstralPathNodeActionTurnRightMenu.swift */; };
 		7C2E14942AF1824E00787152 /* AstralStageEditorPathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2E14932AF1824E00787152 /* AstralStageEditorPathManager.swift */; };
 		7C2E14962AF4254100787152 /* AstralStageEditorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C2E14952AF4254100787152 /* AstralStageEditorState.swift */; };
 		7C338B822A6D9AAB00EC4844 /* AstralStageEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C338B812A6D9AAB00EC4844 /* AstralStageEditor.swift */; };
@@ -157,6 +159,8 @@
 		7C280F5A2A1ABB0C002385D7 /* munro_bitmap.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = munro_bitmap.fnt; sourceTree = "<group>"; };
 		7C2AB7E22A0659C30026328A /* BeamWhite00WarmUp.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite00WarmUp.atlas; sourceTree = "<group>"; };
 		7C2AB7E82A06830E0026328A /* BeamWhite01WarmUp.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = BeamWhite01WarmUp.atlas; sourceTree = "<group>"; };
+		7C2D38D42B4E787700366D0D /* AstralStageEditorMenuStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AstralStageEditorMenuStepper.swift; path = StageEditor/AstralStageEditorMenuStepper.swift; sourceTree = "<group>"; };
+		7C2D38D62B4FC3BC00366D0D /* AstralPathNodeActionTurnRightMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralPathNodeActionTurnRightMenu.swift; sourceTree = "<group>"; };
 		7C2E14932AF1824E00787152 /* AstralStageEditorPathManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralStageEditorPathManager.swift; sourceTree = "<group>"; };
 		7C2E14952AF4254100787152 /* AstralStageEditorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralStageEditorState.swift; sourceTree = "<group>"; };
 		7C338B812A6D9AAB00EC4844 /* AstralStageEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralStageEditor.swift; sourceTree = "<group>"; };
@@ -319,6 +323,7 @@
 				7CD7B0102A1106FD0097B142 /* AstralDialogTextBox.swift */,
 				7CB67F922A4C47F600ED3333 /* AstralEffectsManager.swift */,
 				7CAA6B0D2A026EEA00EBEA1E /* AstralEnemy.swift */,
+				7C2D38D42B4E787700366D0D /* AstralStageEditorMenuStepper.swift */,
 				7C0711F22B3B78B8009B6F48 /* AstralEnemyConfiguration.swift */,
 				7C0711F42B3B79FC009B6F48 /* AstralGlobalEnemyConfiguration.swift */,
 				7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */,
@@ -398,6 +403,7 @@
 			isa = PBXGroup;
 			children = (
 				7C7070392B48FB4400DD6C29 /* AstralPathNodeActionMenu.swift */,
+				7C2D38D62B4FC3BC00366D0D /* AstralPathNodeActionTurnRightMenu.swift */,
 				7CC254C32B2C898E003381AC /* AstralPathNode.swift */,
 				7CC254C72B2C8DC5003381AC /* AstralPathNodeCondition.swift */,
 				7C04C9FA2B2CBF0D00E91357 /* AstralPathNodeProtocol.swift */,
@@ -662,6 +668,7 @@
 				7CC794DB2AAF3C3C00B29230 /* GameScene.swift in Sources */,
 				7CAA6B032A02599000EBEA1E /* AstralUnit.swift in Sources */,
 				7C1F5C0C29FD316300DB6438 /* GameViewController.swift in Sources */,
+				7C2D38D52B4E787700366D0D /* AstralStageEditorMenuStepper.swift in Sources */,
 				7C2E14962AF4254100787152 /* AstralStageEditorState.swift in Sources */,
 				7C8D13612A0E323100C81D85 /* AstralEnemyWave.swift in Sources */,
 				7C2583F92AB7421A0029BDDD /* AstralStageData.swift in Sources */,
@@ -697,6 +704,7 @@
 				7C0711F32B3B78B8009B6F48 /* AstralEnemyConfiguration.swift in Sources */,
 				7C04C9FB2B2CBF0D00E91357 /* AstralPathNodeProtocol.swift in Sources */,
 				7C280F582A1ABA4E002385D7 /* AstralBitmapFont.swift in Sources */,
+				7C2D38D72B4FC3BC00366D0D /* AstralPathNodeActionTurnRightMenu.swift in Sources */,
 				7CAA6AF62A00E0A100EBEA1E /* AstralParticleSystem.swift in Sources */,
 				7C338B822A6D9AAB00EC4844 /* AstralStageEditor.swift in Sources */,
 				7CC254C82B2C8DC5003381AC /* AstralPathNodeCondition.swift in Sources */,

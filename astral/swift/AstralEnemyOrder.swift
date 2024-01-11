@@ -10,8 +10,8 @@ import Foundation
 struct AstralEnemyOrder {
     enum AstralEnemyActionType {
         case move(Direction)
-        case turnRight(TimeInterval)
-        case turnLeft(TimeInterval)
+        case turnRight(duration: TimeInterval, angle: CGFloat)
+        case turnLeft(duration: TimeInterval, angle: CGFloat)
         case turnToBase(TimeInterval)
         case rest(TimeInterval)
         case stop
