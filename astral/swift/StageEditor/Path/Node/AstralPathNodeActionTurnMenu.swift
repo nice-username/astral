@@ -7,17 +7,17 @@
 
 import Foundation
 
-class AstralPathNodeActionTurnRightMenu: AstralStageEditorPopupMenu {
+class AstralPathNodeActionTurnMenu: AstralStageEditorPopupMenu {
     private var angleStepper: AstralStageEditorMenuStepper
     private var durationStepper: AstralStageEditorMenuStepper
 
-    init(size: CGSize) {
+    override init(size: CGSize, title: String = "") {
         angleStepper = AstralStageEditorMenuStepper(minValue: 0, maxValue: 360, stepValue: 15, unitSuffix: "°")
         durationStepper = AstralStageEditorMenuStepper(minValue: 0, maxValue: 8, stepValue: 0.1)
         angleStepper.zPosition = 9
         durationStepper.zPosition = 9
 
-        super.init(size: size, title: "Turn Right")
+        super.init(size: size, title: title)
         
         name = "NodeActionTurnRightMenu"
         background.name = "nodeActionMenuBackground"
