@@ -1,5 +1,5 @@
 //
-//  AstralPathNodeActionTurnRightMenu.swift
+//  AstralPathNodeActionTurnMenu.swift
 //  astral
 //
 //  Created by Joseph Haygood on 1/10/24.
@@ -19,7 +19,7 @@ class AstralPathNodeActionTurnMenu: AstralStageEditorPopupMenu {
 
         super.init(size: size, title: title)
         
-        name = "NodeActionTurnRightMenu"
+        name = title + "Menu"
         background.name = "nodeActionMenuBackground"
 
         addChild(angleStepper)

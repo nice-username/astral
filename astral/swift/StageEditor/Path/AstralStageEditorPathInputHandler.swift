@@ -22,7 +22,7 @@ class AstralStageEditorPathInputHandler {
     private weak var scene: AstralStageEditor?
     private var nodeTypeMenu = AstralStageEditorPathNodeTypeMenu(size: CGSize(width: 180.0, height: 100.0), title: "Add node")
     private var actionNodeMenu = AstralPathNodeActionMenu(size: CGSize(width: 250.0, height: 100.0), title: "Action node")
-    private let turnRightMenu = AstralPathNodeActionTurnRightMenu(size: CGSize(width: 460, height: 100.0))
+    private let turnRightMenu = AstralPathNodeActionTurnMenu(size: CGSize(width: 460, height: 100.0), title: "Turn right")
     private let doubleTapThreshold = 0.3
     private let doubleTapDistanceThreshold = 25.0
     
@@ -145,6 +145,7 @@ class AstralStageEditorPathInputHandler {
         if (self.gameState.editorState != .selectingNodeType &&
             self.gameState.editorState != .placingActionNode &&
             self.gameState.editorState != .placingCreationNode) && getActionNodeNextTo(lastTapLocation!) != nil {
+            currentNode = getActionNodeNextTo(lastTapLocation!)
             actionNodeMenu.show(in: scene!, position: lastTapLocation!)
             self.gameState.editorTransitionTo(.selectingNodeActionType)
             return
@@ -156,8 +157,10 @@ class AstralStageEditorPathInputHandler {
             self.gameState.editorState != .placingCreationNode) {
             self.gameState.editorTransitionTo(.selectingNodeType)
             nodeTypeMenu.show(in: scene!, position: lastTapLocation!)
+            return
         }
         
+        // From placing node --> Node placed
         if (gameState.editorState == .placingActionNode ||
             gameState.editorState == .placingCreationNode ||
             gameState.editorState == .placingPathingNode) {
@@ -172,6 +175,7 @@ class AstralStageEditorPathInputHandler {
                 if node is AstralPathNodeAction {
                     node.isActive = true
                 }
+                return
             }
         }
     }
@@ -314,22 +318,32 @@ class AstralStageEditorPathInputHandler {
                     switch nodeName {
                     case "turn leftButton":
                         if let actionNode = currentNode as? AstralPathNodeAction {
-                            actionNode.action = AstralEnemyOrder(type: .turnLeft(duration: 1.0, angle: 90), duration: 0.0)
+                            actionNode.action = AstralEnemyOrder(type: .turnLeft(duration: 1.0, angle: 270), duration: 0.0)
                             actionNodeMenu.hide()
                         }
+                        
                     case "turn rightButton":
                         actionNodeMenu.openSubMenu(turnRightMenu)
+                        if let actionNode = currentNode as? AstralPathNodeAction {
+                            if case let .turnRight(duration, angle) = actionNode.action?.type {
+                                turnRightMenu.setDuration(duration)
+                                turnRightMenu.setAngle(angle)
+                            }
+                        }
                         self.gameState.editorState = .selectingNodeActionType
+                        
                     case "use weaponButton":
                         if let actionNode = currentNode as? AstralPathNodeAction {
                             actionNode.action = AstralEnemyOrder(type: .fire, duration: 0.0)
                             actionNodeMenu.hide()
                         }
+                        
                     case "stop attackingButton":
                         if let actionNode = currentNode as? AstralPathNodeAction {
                             actionNode.action = AstralEnemyOrder(type: .fireStop, duration: 0.0)
                             actionNodeMenu.hide()
                         }
+                        
                     default:
                         break
                     }
@@ -338,7 +352,7 @@ class AstralStageEditorPathInputHandler {
                     actionNodeMenu.hide()
                     if let menu = actionNodeMenu.subMenu {
                         menu.hide()
-                        if menu.name == "NodeActionTurnRightMenu" {
+                        if menu.name == "Turn rightMenu" {
                             if let actionNode = currentNode as? AstralPathNodeAction {
                                 let angle    = turnRightMenu.getAngle()
                                 let duration = turnRightMenu.getDuration()

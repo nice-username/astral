@@ -41,6 +41,7 @@ class AstralStageEditorMenuStepper: SKNode {
         valueLabel.fontSize = 32
         valueLabel.fontColor = SKColor.white
         valueLabel.position = CGPoint(x: 0, y: -8)
+        valueLabel.isUserInteractionEnabled = false
 
         upArrowButton = SKSpriteNode(imageNamed: "left_arrow")
         upArrowButton.zRotation = -.pi / 2.0
@@ -59,7 +60,14 @@ class AstralStageEditorMenuStepper: SKNode {
         downArrowButton.yScale = 0.5
         
         super.init()
-
+        
+        /*
+        let bg = SKShapeNode(rect: calculateFrame())
+        bg.fillColor = .red.withAlphaComponent(0.5)
+        bg.isUserInteractionEnabled = false
+        addChild(bg)
+        */
+        
         addChild(valueLabel)
         addChild(upArrowButton)
         addChild(downArrowButton)
@@ -88,6 +96,7 @@ class AstralStageEditorMenuStepper: SKNode {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("began")
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         if upArrowButton.contains(location) {
@@ -142,5 +151,10 @@ class AstralStageEditorMenuStepper: SKNode {
     private func roundToPlaces(value: CGFloat, places: Int) -> CGFloat {
         let divisor = pow(10.0, CGFloat(places))
         return (value * divisor).rounded() / divisor
+    }
+    
+    private func calculateFrame() -> CGRect {
+        let frames = [valueLabel.frame, upArrowButton.frame, downArrowButton.frame]
+        return frames.reduce(CGRect.null) { $0.union($1) }
     }
 }

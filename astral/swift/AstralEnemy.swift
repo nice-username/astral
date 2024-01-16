@@ -271,33 +271,30 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     func turnLeft(over time: TimeInterval, turnAngle: Int) {
         // Stop any existing turn animation
         self.removeAction(forKey: "turn")
-
+        
         let startSpriteID = self.currentSpriteID
         let spriteCount = self.textures.count
-        let turnSteps = turnAngle / 15  // Assuming each step represents 15 degrees
-
-        // Calculate the new sprite index after the turn, considering wrap-around
-        var newSpriteID = (startSpriteID - turnSteps + spriteCount) % spriteCount
-
+        // Calculate turnSteps as before
+        let turnSteps = (turnAngle + 14) / 15
+        
         // Generate the sequence of sprite IDs for the turn
         var ids: [Int] = []
-        for _ in 0..<abs(turnSteps) {
+        for i in 0..<turnSteps {
+            let newSpriteID = (startSpriteID - (i + 1) + spriteCount) % spriteCount
             ids.append(newSpriteID)
-            newSpriteID = (newSpriteID - 1 + spriteCount) % spriteCount
         }
-
-        // Debugging: Print sprite IDs and texture names
+        
         print("Sprite IDs for turnLeft: \(ids)")
         for id in ids {
             print("Texture name for ID \(id): \(self.textures[id].description)")
         }
-
+        
         // Retrieve corresponding textures for the turn
         let turnTextures = ids.map { self.textures[$0] }
-
+        
         // Calculate the duration for each frame of the animation
         let frameDuration = time / Double(turnTextures.count)
-
+        
         // Create an array of actions to set each texture in turn
         var actions: [SKAction] = []
         for (index, texture) in turnTextures.enumerated() {
@@ -309,7 +306,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
             let frameAction = SKAction.sequence([textureAction, setSpriteAction, waitAction])
             actions.append(frameAction)
         }
-
+        
         // Run the action sequence on the enemy node
         let sequence = SKAction.sequence(actions)
         self.run(sequence, withKey: "turn")
