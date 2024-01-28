@@ -7,9 +7,10 @@
 
 import Foundation
 
-struct AstralEnemyOrder {
-    enum AstralEnemyActionType {
-        case move(Direction)
+
+struct AstralEnemyOrder: Codable {
+    enum AstralEnemyActionType: Codable {
+        case move(AstralDirection)
         case turnRight(duration: TimeInterval, angle: CGFloat)
         case turnLeft(duration: TimeInterval, angle: CGFloat)
         case turnToBase(TimeInterval)
@@ -23,5 +24,4 @@ struct AstralEnemyOrder {
     
     let type: AstralEnemyActionType
     let duration: TimeInterval
-    var completion: (() -> Void)? = nil
 }

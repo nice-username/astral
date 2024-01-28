@@ -6,7 +6,7 @@
 //
 import Foundation
 
-enum Direction: Int {
+enum AstralDirection: Int, Codable {
     case up
     case upRight
     case right

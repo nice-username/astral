@@ -10,10 +10,69 @@ import SpriteKit
 
 
 
-enum AstralGameObjectType {
+enum AstralGameObjectType: Int, Codable {
     case enemy
     case powerup
     case object
+}
+
+
+struct AstralPathNodeData: Codable {
+    struct ShapePropertiesData: Codable {
+        var name: String?
+        var width: CGFloat
+        var height: CGFloat
+        var position: CGPoint
+        var zPosition: CGFloat
+        var fillColor: UIColorData
+        var strokeColor: UIColorData
+        var lineWidth: CGFloat
+    }
+    
+    var point: CGPoint
+    var isActive: Bool
+    var timeSinceActivation: TimeInterval
+    var shapeProperties: ShapePropertiesData
+    
+    init(from node: AstralPathNode) {
+        self.point = node.position
+        self.isActive = node.isActive
+        self.timeSinceActivation = node.timeSinceActivation
+
+        // Extract and convert shape properties
+        self.shapeProperties = ShapePropertiesData(
+            name: node.name,
+            width: node.frame.width,
+            height: node.frame.height,
+            position: node.position,
+            zPosition: node.zPosition,
+            fillColor: node.fillColor.toData(),
+            strokeColor: node.strokeColor.toData(),
+            lineWidth: node.lineWidth
+        )
+    }
+
+}
+
+
+struct AstralPathNodeActionData: Codable {
+    var baseNodeData: AstralPathNodeData
+    var action: AstralEnemyOrder?
+    var triggeredByEnemies: [UUID] // Sets are not directly Codable, so we use an Array
+
+    init(from node: AstralPathNodeAction) {
+        self.baseNodeData = node.toData()
+        self.action = node.action
+        self.triggeredByEnemies = Array(node.triggeredByEnemies)
+    }
+    
+    // Method to create an AstralPathNodeAction from AstralPathNodeActionData
+    func toNode() -> AstralPathNodeAction {
+        let node = AstralPathNodeAction(from: baseNodeData)
+        node.action = self.action
+        node.triggeredByEnemies = Set(self.triggeredByEnemies)
+        return node
+    }
 }
 
 
@@ -41,6 +100,20 @@ class AstralPathNode: SKShapeNode, AstralPathNodeProtocol {
         self.fillColor = .red
         self.strokeColor = .white
         self.position = point
+    }
+    
+    convenience init(from data: AstralPathNodeData) {
+        self.init(point: data.point)
+        self.isActive = data.isActive
+        self.timeSinceActivation = data.timeSinceActivation
+        
+        // Set up the shape node properties
+        self.position = data.shapeProperties.position
+        self.fillColor = UIColor(from: data.shapeProperties.fillColor)
+        self.strokeColor = UIColor(from: data.shapeProperties.strokeColor)
+        self.lineWidth = data.shapeProperties.lineWidth
+        
+        // TODO: Attach to the path by the pathName
     }
     
     
@@ -72,6 +145,10 @@ class AstralPathNode: SKShapeNode, AstralPathNodeProtocol {
         let nodePosition = self.position
         return point.distanceTo(nodePosition) <= distance
     }
+    
+    func toData() -> AstralPathNodeData {
+        return AstralPathNodeData(from: self)
+    }
 }
 
 
@@ -86,6 +163,10 @@ class AstralPathNodeAction: AstralPathNode {
                                  green: 16  / 255.0,
                                  blue:  24  / 255.0,
                                  alpha: 255 / 255.0)
+    }
+    
+    convenience init(from: AstralPathNodeActionData) {
+        self.init(point: from.baseNodeData.point)
     }
     
     func performAction(for enemy: AstralEnemy) {
@@ -135,6 +216,48 @@ class AstralPathNodeAction: AstralPathNode {
 
 
 
+struct AstralPathNodeCreationData: Codable {
+    var baseNodeData: AstralPathNodeData
+    var timeSinceLastCreation: TimeInterval
+    var objectType: AstralGameObjectType
+    var objectIndex: Int
+    var repeatEnabled: Bool
+    var repeatCount: Int
+    var repeatInterval: TimeInterval
+    var isEndless: Bool
+    var initialTimeOffset: TimeInterval
+    var initialSpeed: CGFloat
+
+    init(from node: AstralPathNodeCreation) {
+        self.baseNodeData = node.toData()
+        self.timeSinceLastCreation = node.timeSinceLastCreation
+        self.objectType = node.objectType
+        self.objectIndex = node.objectIndex
+        self.repeatEnabled = node.repeatEnabled
+        self.repeatCount = node.repeatCount
+        self.repeatInterval = node.repeatInterval
+        self.isEndless = node.isEndless
+        self.initialTimeOffset = node.initialTimeOffset
+        self.initialSpeed = node.initialSpeed
+    }
+
+    // Method to create an AstralPathNodeCreation from AstralPathNodeCreationData
+    func toNode() -> AstralPathNodeCreation {
+        let node = AstralPathNodeCreation(from: baseNodeData)
+        node.timeSinceLastCreation = self.timeSinceLastCreation
+        node.objectType = self.objectType
+        node.objectIndex = self.objectIndex
+        node.repeatEnabled = self.repeatEnabled
+        node.repeatCount = self.repeatCount
+        node.repeatInterval = self.repeatInterval
+        node.isEndless = self.isEndless
+        node.initialTimeOffset = self.initialTimeOffset
+        node.initialSpeed = self.initialSpeed
+        return node
+    }
+}
+
+
 
 class AstralPathNodeCreation: AstralPathNode {
     var timeSinceLastCreation: TimeInterval         = 0.0
@@ -161,7 +284,23 @@ class AstralPathNodeCreation: AstralPathNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    convenience init(from data: AstralPathNodeCreationData) {
+        self.init(from: data.baseNodeData)
+        self.timeSinceLastCreation = data.timeSinceLastCreation
+        self.objectType = data.objectType
+        self.objectIndex = data.objectIndex
+        self.repeatEnabled = data.repeatEnabled
+        self.repeatCount = data.repeatCount
+        self.repeatInterval = data.repeatInterval
+        self.isEndless = data.isEndless
+        self.initialTimeOffset = data.initialTimeOffset
+        self.initialSpeed = data.initialSpeed
+    }
     
+    func toData() -> AstralPathNodeCreationData {
+        return AstralPathNodeCreationData(from: self)
+    }
+       
     func startCreationLoop(currentTime: TimeInterval) {
         self.isActive = true
         self.timeSinceActivation = 0.0

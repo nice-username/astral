@@ -142,9 +142,7 @@ class AstralStageEditorPathInputHandler {
     //
     func handleDoubleTap() {
         // Open menu for editing action node properties
-        if (self.gameState.editorState != .selectingNodeType &&
-            self.gameState.editorState != .placingActionNode &&
-            self.gameState.editorState != .placingCreationNode) && getActionNodeNextTo(lastTapLocation!) != nil {
+        if (self.gameState.editorState == .idle) && getActionNodeNextTo(lastTapLocation!) != nil {
             currentNode = getActionNodeNextTo(lastTapLocation!)
             actionNodeMenu.show(in: scene!, position: lastTapLocation!)
             self.gameState.editorTransitionTo(.selectingNodeActionType)
@@ -152,9 +150,7 @@ class AstralStageEditorPathInputHandler {
         }
         
         // Begin placing node -- show type selection menu
-        if (self.gameState.editorState != .selectingNodeType &&
-            self.gameState.editorState != .placingActionNode &&
-            self.gameState.editorState != .placingCreationNode) {
+        if self.gameState.editorState == .idle {
             self.gameState.editorTransitionTo(.selectingNodeType)
             nodeTypeMenu.show(in: scene!, position: lastTapLocation!)
             return

@@ -11,22 +11,21 @@ import SpriteKit
 
 
 
-enum AstralPathDirection {
+enum AstralPathDirection: Int, Codable {
     case forwards
     case backwards
 }
 
-enum AstralPathEndBehavior {
+enum AstralPathEndBehavior: Int, Codable {
     case loop
     case reverse
     case stop
 }
 
-enum AstralPathSegmentType {
+enum AstralPathSegmentType: Codable {
     case line(start: CGPoint, end: CGPoint)
     case bezier(start: CGPoint, control1: CGPoint, control2: CGPoint, end: CGPoint)
 }
-
 
 class AstralPathSegment : SKNode {
     var type: AstralPathSegmentType
@@ -136,6 +135,32 @@ class AstralPathSegment : SKNode {
     }
 }
 
+struct AstralStageEditorPathData: Codable {
+    var segmentsData: [AstralPathSegmentData]
+    var direction: AstralPathDirection
+    var activationProgress: Float
+    var deactivationProgress: Float
+    var endBehavior: AstralPathEndBehavior
+
+    init(from path: AstralStageEditorPath) {
+        self.segmentsData = path.segments.map { AstralPathSegmentData(from: $0) }
+        self.direction = path.direction
+        self.activationProgress = path.activationProgress
+        self.deactivationProgress = path.deactivationProgress
+        self.endBehavior = path.endBehavior
+    }
+
+    func toPath() -> AstralStageEditorPath {
+        let path = AstralStageEditorPath()
+        path.segments = self.segmentsData.map { $0.toSegment() }
+        path.direction = self.direction
+        path.activationProgress = self.activationProgress
+        path.deactivationProgress = self.deactivationProgress
+        path.endBehavior = self.endBehavior
+        // isActivated is not saved, so set it to default value or current state
+        return path
+    }
+}
 
 class AstralStageEditorPath: SKNode {
     var segments: [AstralPathSegment] = []
@@ -144,6 +169,20 @@ class AstralStageEditorPath: SKNode {
     var deactivationProgress: Float = 100.0
     var endBehavior: AstralPathEndBehavior = .loop
     var isActivated: Bool = true
+    
+    convenience init(from data: AstralStageEditorPathData) {
+        self.init()
+        self.segments = data.segmentsData.map { $0.toSegment() }
+        self.direction = data.direction
+        self.activationProgress = data.activationProgress
+        self.deactivationProgress = data.deactivationProgress
+        self.endBehavior = data.endBehavior
+        // isActivated is not saved, so set it to default value or current state
+    }
+    
+    func toData() -> AstralStageEditorPathData {
+        return AstralStageEditorPathData(from: self)
+    }
     
     // Adds a segment and returns its index
     func addSegment(type: AstralPathSegmentType) -> Int {

@@ -527,6 +527,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
                 bg.update(deltaTime: deltaTime, gestureYChange: 0)
             }
             
+            
             self.pathManager.updatePathActivation(progress: self.progress)
             for path in self.pathManager.paths where path.isActivated {
                 for segment in path.segments {

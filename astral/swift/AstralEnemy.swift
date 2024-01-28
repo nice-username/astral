@@ -160,7 +160,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         self.joystick.direction = .none
     }
     
-    func moveBy(direction: Direction) {
+    func moveBy(direction: AstralDirection) {
         let vector      = self.joystick.normalizedVelocity
         let posX        = self.position.x + vector!.dx * movementSpeed
         let posY        = self.position.y + vector!.dy * movementSpeed
@@ -417,8 +417,6 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
                 default:
                     break
                 }
-                
-                order.completion?()
             }
             time += order.duration
         }

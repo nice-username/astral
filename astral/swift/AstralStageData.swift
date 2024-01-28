@@ -27,3 +27,36 @@ struct AstralParallaxBackgroundLayerData: Codable {
     var scrollingDirection: CGVector
     var shouldLoop: Bool
 }
+
+
+
+
+struct AstralPathSegmentTypeData: Codable {
+    enum SegmentType: String, Codable {
+        case line, bezier
+    }
+
+    var type: SegmentType
+    var start: CGPoint
+    var end: CGPoint
+    var control1: CGPoint?
+    var control2: CGPoint?
+
+    init(from segmentType: AstralPathSegmentType) {
+        switch segmentType {
+        case .line(let start, let end):
+            self.type = .line
+            self.start = start
+            self.end = end
+        case .bezier(let start, let control1, let control2, let end):
+            self.type = .bezier
+            self.start = start
+            self.control1 = control1
+            self.control2 = control2
+            self.end = end
+        }
+    }
+
+    // Add a method to convert back to AstralPathSegmentType if needed
+}
+

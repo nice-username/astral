@@ -11,13 +11,13 @@ import SpriteKit
 
 class AstralJoystick: SKNode {
     private var joystick: SKSpriteNode!
-    private var joystickTextures: [Direction: SKTexture] = [:]
+    private var joystickTextures: [AstralDirection: SKTexture] = [:]
     private var touchDownPoint : CGPoint?
     private var deadZoneArea : CGFloat = 12.0
     private var fadeTime : TimeInterval = 0.125
     let feedback = UIImpactFeedbackGenerator(style: .soft)
-    var direction: Direction = .none
-    var previousDirection: Direction?
+    var direction: AstralDirection = .none
+    var previousDirection: AstralDirection?
     
     override init() {
         super.init()
@@ -51,7 +51,7 @@ class AstralJoystick: SKNode {
     }
     
     
-    public func calculateVelocity(from direction: Direction) -> CGVector {
+    public func calculateVelocity(from direction: AstralDirection) -> CGVector {
         let velocityFactor: CGFloat = 1.0
         switch direction {
         case .up:
@@ -94,7 +94,7 @@ class AstralJoystick: SKNode {
     //
     func loadTextures() {
         let textureAtlas = SKTextureAtlas(named: "Joystick")
-        let directions: [Direction] = [.up, .upRight, .right, .downRight, .down, .downLeft, .left, .upLeft, .none]
+        let directions: [AstralDirection] = [.up, .upRight, .right, .downRight, .down, .downLeft, .left, .upLeft, .none]
         for (index, direction) in directions.enumerated() {
             let textureName: String
             if direction == .none {
@@ -127,7 +127,7 @@ class AstralJoystick: SKNode {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Reset current direction once the player lets go
         self.touchDownPoint = nil
-        self.direction = Direction.none
+        self.direction = AstralDirection.none
         self.joystick.texture = SKTexture(imageNamed: "base.png")
         self.removeAction(forKey: "fade")
         self.run(SKAction.fadeOut(withDuration: self.fadeTime), withKey: "fade")
@@ -165,7 +165,7 @@ class AstralJoystick: SKNode {
 
     
     
-    private func calculateDirection(from location: CGPoint, relativeTo joystickPosition: CGPoint) -> Direction {
+    private func calculateDirection(from location: CGPoint, relativeTo joystickPosition: CGPoint) -> AstralDirection {
         let deltaX = location.x - joystickPosition.x
         let deltaY = location.y - joystickPosition.y
         
