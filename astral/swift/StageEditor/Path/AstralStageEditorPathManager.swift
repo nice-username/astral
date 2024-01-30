@@ -63,9 +63,16 @@ class AstralStageEditorPathManager {
 
     
     // Add a new path and set it as the active path
-    func addNewPath() -> Int {
+    func newPath() -> Int {
         let newPath = AstralStageEditorPath()
         paths.append(newPath)
+        activePathIndex = paths.count - 1
+        return activePathIndex!
+    }
+    
+    // Used for loading saved paths from saved stage data
+    func addPath(_ path: AstralStageEditorPath) -> Int {
+        paths.append(path)
         activePathIndex = paths.count - 1
         return activePathIndex!
     }
@@ -126,5 +133,9 @@ class AstralStageEditorPathManager {
         case .bezier(_, _, _, let end):
             return end
         }
+    }
+    
+    func clearPaths() {
+        paths.removeAll()
     }
 }

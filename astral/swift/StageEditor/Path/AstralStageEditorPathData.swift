@@ -57,6 +57,7 @@ enum NodeDataWrapper: Codable {
 }
 
 
+
 struct AstralPathSegmentData: Codable {
     var type: AstralPathSegmentType
     var nodesData: [NodeDataWrapper]
@@ -76,8 +77,19 @@ struct AstralPathSegmentData: Codable {
 
     func toSegment() -> AstralPathSegment {
         let segment = AstralPathSegment(type: self.type)
-        // Implement the logic to convert nodesData back to AstralPathNode,
-        // AstralPathNodeAction, and AstralPathNodeCreation
+        
+        // Load nodes from nodesData
+        segment.nodes = self.nodesData.map { nodeDataWrapper in
+            switch nodeDataWrapper {
+            case .action(let actionData):
+                return actionData.toNode()
+            case .creation(let creationData):
+                return creationData.toNode()
+            case .base(let baseData):
+                return baseData.toNode()
+            }
+        }
+
         return segment
     }
 }

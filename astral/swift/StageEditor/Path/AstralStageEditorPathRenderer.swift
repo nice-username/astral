@@ -16,6 +16,13 @@ class AstralStageEditorPathRenderer {
         self.scene = scene
     }
     
+    func renderPath(_ path: AstralStageEditorPath) {
+        for segment in path.segments {
+            drawPermanentLine(for: segment)
+            drawDirectionIndicator(for: segment, direction: path.direction)
+        }
+    }
+    
     func drawTemporaryLine(from startPoint: CGPoint, to endPoint: CGPoint) {
         temporaryLineShape?.removeFromParent() // Remove the previous temporary line
         let path = UIBezierPath()
@@ -146,4 +153,29 @@ class AstralStageEditorPathRenderer {
         scene?.addChild(shape)
     }
     
+    
+    func renderNode(_ node: AstralPathNode) {
+        guard let scene = scene else { return }
+
+        // The node is already an SKShapeNode, so it can be directly added to the scene.
+        // Any additional scene-specific properties can be set here.
+        
+        // Set common properties if needed, otherwise they are already set in the node's initializer.
+        node.zPosition = 10  // Example, adjust as needed.
+        
+        // Additional configuration specific to node types could be added here.
+        if let actionNode = node as? AstralPathNodeAction {
+            // Set specific properties for action nodes, if any.
+            // actionNode.someProperty = ...
+        } else if let creationNode = node as? AstralPathNodeCreation {
+            // Set specific properties for creation nodes, if any.
+            // creationNode.someProperty = ...
+        }
+        
+        // If the node needs to be repositioned or other properties need to be reset, do it here.
+        // node.position = ...
+        
+        // Add the node to the scene.
+        scene.addChild(node)
+    }
 }

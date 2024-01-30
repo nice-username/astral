@@ -417,51 +417,107 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             )
         }
         
+        // Convert each AstralStageEditorPath to AstralStageEditorPathData
+        let pathDataArray = pathManager.paths.map { AstralStageEditorPathData(from: $0) }
+        
         // Create AstralStageData object
-        let stage = AstralStageData(metadata: metadata, backgrounds: backgroundDataArray)
+        let stage = AstralStageData(metadata: metadata, backgrounds: backgroundDataArray, paths: pathDataArray)
         
         // Save the stage
         fileManager.saveStage(stageData: stage, filename: "Stage1.json")
     }
     
+    private func clearPaths() {
+        pathManager.clearPaths()
+    }
+    
+    private func loadPaths(from pathData: [AstralStageEditorPathData]) {
+        for pathDatum in pathData {
+            let newPath = pathDatum.toPath()
+            pathManager.paths.append(newPath)
+
+            // Render the path and its nodes
+            renderPath(newPath)
+            // Now iterate over the segments' data to reconstruct nodes
+            for segmentData in pathDatum.segmentsData { // segmentsData contains the node data
+                let segment = segmentData.toSegment()
+                newPath.segments.append(segment)  // Append the newly created segment with nodes to the path
+                loadAndRenderNodes(from: segmentData, for: segment, in: newPath)
+            }
+        }
+    }
+
+    private func loadAndRenderNodes(from segmentData: AstralPathSegmentData, for segment: AstralPathSegment, in path: AstralStageEditorPath) {
+        for nodeDataWrapper in segmentData.nodesData {
+            let node: AstralPathNode
+            switch nodeDataWrapper {
+            case .action(let actionData):
+                node = actionData.toNode()
+            case .creation(let creationData):
+                node = creationData.toNode()
+            case .base(let baseData):
+                node = baseData.toNode()
+            }
+            segment.nodes.append(node) // Add the node to the actual segment
+            node.attachedToPath = path
+            // Render node if required. You might need a method in pathRenderer to render nodes.
+            pathRenderer.renderNode(node)
+        }
+    }
+    
+    private func renderPath(_ path: AstralStageEditorPath) {
+        pathRenderer.renderPath(path)
+    }
+    
+    
+    // Load Backgrounds
+    private func loadBackgrounds(from backgroundData: [AstralParallaxBackgroundLayerData]) {
+        for background in backgroundData {
+            let newBackgroundLayer = AstralParallaxBackgroundLayer2(
+                atlasNamed: background.atlasName,
+                direction: background.scrollingDirection,
+                speed: background.scrollingSpeed,
+                shouldLoop: background.shouldLoop
+            )
+            newBackgroundLayer.xScale = 1.5
+            newBackgroundLayer.yScale = 1.5
+            newBackgroundLayer.position.x += newBackgroundLayer.getWidth() / 1.5
+            newBackgroundLayer.position.y += newBackgroundLayer.getHeight() / 3
+            self.backgrounds.append(newBackgroundLayer)
+             
+            // Add new background layers to the SKScene
+            self.addChild(newBackgroundLayer)
+        }
+    }
+    
+    // Remove existing backgrounds from SKScene and clear array
+    private func clearBackgrounds() {
+        for background in self.backgrounds {
+            background.removeFromParent()
+        }
+        self.backgrounds.removeAll()
+    }
+    
+    private func loadMetadata(from metadata: AstralStageMetadata) {
+        self.metadata?.name = metadata.name
+        self.metadata?.author = metadata.author
+        self.metadata?.description = metadata.description
+        self.metadata?.dateCreated = metadata.dateCreated
+        self.metadata?.dateModified = metadata.dateModified
+        self.metadata?.dateOpened = Date()
+
+    }
     
     //
     // Handle ".loadFile" messages sent by the toolbar
     //
     @objc private func loadStage(_ notification: NSNotification) {
-        // Load the stage
         if let loadedStage = fileManager.loadStage(filename: "Stage1.json") {
-            // Load Metadata
-            self.metadata?.name = loadedStage.metadata.name
-            self.metadata?.author = loadedStage.metadata.author
-            self.metadata?.description = loadedStage.metadata.description
-            self.metadata?.dateCreated = loadedStage.metadata.dateCreated
-            self.metadata?.dateModified = loadedStage.metadata.dateModified
-            self.metadata?.dateOpened = Date()
-            
-            // Remove existing backgrounds from SKScene and clear array
-            for background in self.backgrounds {
-                background.removeFromParent()
-            }
-            self.backgrounds.removeAll()
-            
-            // Load Backgrounds
-            for backgroundData in loadedStage.backgrounds {
-                let newBackgroundLayer = AstralParallaxBackgroundLayer2(
-                    atlasNamed: backgroundData.atlasName,
-                    direction: backgroundData.scrollingDirection,
-                    speed: backgroundData.scrollingSpeed,
-                    shouldLoop: backgroundData.shouldLoop
-                )
-                newBackgroundLayer.xScale = 1.5
-                newBackgroundLayer.yScale = 1.5
-                newBackgroundLayer.position.x += newBackgroundLayer.getWidth() / 1.5
-                newBackgroundLayer.position.y += newBackgroundLayer.getHeight() / 3
-                self.backgrounds.append(newBackgroundLayer)
-                 
-                // Add new background layers to your SKScene
-                self.addChild(newBackgroundLayer)
-            }
+            loadMetadata(from: loadedStage.metadata)
+            clearBackgrounds()
+            loadBackgrounds(from: loadedStage.backgrounds)
+            clearPaths()
+            loadPaths(from: loadedStage.paths)
         } else {
             print("Failed to load stage.")
         }

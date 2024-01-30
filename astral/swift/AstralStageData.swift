@@ -10,6 +10,7 @@ import Foundation
 struct AstralStageData: Codable {
     var metadata: AstralStageMetadata
     var backgrounds: [AstralParallaxBackgroundLayerData]
+    var paths: [AstralStageEditorPathData]
 }
 
 struct AstralStageMetadata: Codable {

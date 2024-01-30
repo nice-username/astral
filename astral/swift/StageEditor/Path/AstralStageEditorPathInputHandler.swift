@@ -68,7 +68,7 @@ class AstralStageEditorPathInputHandler {
         
         switch gameState.editorState {
             case .drawingNewPath:
-                let newPathIndex = manager.addNewPath()
+                let newPathIndex = manager.newPath()
                 path = manager.paths[newPathIndex]
                 manager.setActivePath(index: newPathIndex)
                 start = touch.location(in: scene!)
