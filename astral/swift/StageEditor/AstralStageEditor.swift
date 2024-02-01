@@ -348,6 +348,8 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         } )
     }
     
+    
+    
     //
     // Handle ".layerAdded" messages sent by AstralParallaxBackgroundLayerPicker
     //
@@ -370,8 +372,10 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     //
     @objc private func pathAddToScene(_ notification: NSNotification) {
         if let data = notification.userInfo, let segment = data["segment"] as? AstralPathSegment {
-            scene?.addChild(segment.shape!)
-            scene?.addChild(segment.directionArrow!)
+//            if segment.scene == nil {
+//                scene?.addChild(segment.shape!)
+//                scene?.addChild(segment.directionArrow!)
+//            }
         }
     }
     

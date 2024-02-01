@@ -88,7 +88,8 @@ class AstralPathNodeCreation: AstralPathNode {
         }
     }
     
-    private func createEntity() -> AstralUnit {
+    private func createEntity() -> AstralUnit? {
+        guard self.scene != nil else { return nil }
         // Depending on the objectType and objectIndex, we will fetch the appropriate configuration
         // For this example, let's assume objectType is .enemy and objectIndex corresponds to a key in the global configuration
         switch objectType {
