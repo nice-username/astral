@@ -23,6 +23,7 @@ class AstralStageEditorPathInputHandler {
     private var nodeTypeMenu = AstralStageEditorPathNodeTypeMenu(size: CGSize(width: 180.0, height: 100.0), title: "Add node")
     private var actionNodeMenu = AstralPathNodeActionMenu(size: CGSize(width: 250.0, height: 100.0), title: "Action node")
     private let turnRightMenu = AstralPathNodeActionTurnMenu(size: CGSize(width: 460, height: 100.0), title: "Turn right")
+    private let turnLeftMenu = AstralPathNodeActionTurnMenu(size: CGSize(width: 460, height: 100.0), title: "Turn left")
     private let doubleTapThreshold = 0.3
     private let doubleTapDistanceThreshold = 25.0
     
@@ -53,72 +54,17 @@ class AstralStageEditorPathInputHandler {
     }
     
     
-    
-    
     func touchesBegan(_ touches: Set<UITouch>) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: scene!)
         let currentTapTime = touch.timestamp
-        
+
         if isDoubleTap(currentTapTime, touchLocation) {
             handleDoubleTap()
         }
-        lastTapTime = currentTapTime
-        lastTapLocation = touchLocation
+        updateLastTap(with: currentTapTime, location: touchLocation)
         
-        switch gameState.editorState {
-            case .drawingNewPath:
-                let newPathIndex = manager.newPath()
-                path = manager.paths[newPathIndex]
-                manager.setActivePath(index: newPathIndex)
-                start = touch.location(in: scene!)
-                origin = start
-                path?.name = "Path \(newPathIndex + 1)"
-
-            case .appendingToPath:
-                break
-
-            case .editingNode, .editingBezier:
-                break
-            case .idle:
-                break
-            
-            case .selectingPath:
-                var closestPath: AstralStageEditorPath?
-                var minDistance = pathSelectTouchThreshold
-                for path in manager.paths {
-                    let distance = path.distanceToClosestPoint(from: touchLocation)
-                    if distance < minDistance {
-                        minDistance = distance
-                        closestPath = path
-                    }
-                }
-                if let closestPath = closestPath {
-                    self.path = closestPath
-                    self.manager.setActivePath(index: self.manager.getPathIndex(path: closestPath)!)
-                    self.gameState.pathManager.loadPathData(path!)
-                    renderer.updatePathColor(for: closestPath, color: .systemBlue)
-                }
-            
-            case .selectingNodeType:
-                let touchPoint = touch.location(in: scene!)
-                let touchedNodes = scene?.nodes(at: touchPoint)
-                for node in touchedNodes! {
-                    if let nodeName = node.name, !nodeTypeMenu.hasActions() {
-                        if nodeName == "creationButton" ||
-                            nodeName == "actionButton" ||
-                            nodeName == "pathingButton", let bg = node as? SKShapeNode {
-                            bg.fillColor = .white.withAlphaComponent(0.25)
-                        }
-                    }
-                }
-            
-            case .placingCreationNode:
-                self.attachNodeToClosestPath(to: touchLocation)
-            
-            default:
-                break
-        }
+        handleTouchBeganState(touchLocation)
     }
 
     
@@ -313,9 +259,11 @@ class AstralStageEditorPathInputHandler {
                 if let nodeName = node.name, !actionNodeMenu.hasActions() {
                     switch nodeName {
                     case "turn leftButton":
+                        actionNodeMenu.openSubMenu(turnLeftMenu)
                         if let actionNode = currentNode as? AstralPathNodeAction {
                             actionNode.action = AstralEnemyOrder(type: .turnLeft(duration: 1.0, angle: 270), duration: 0.0)
                             actionNodeMenu.hide()
+                            gameState.editorTransitionTo(.idle)
                         }
                         
                     case "turn rightButton":
@@ -326,17 +274,24 @@ class AstralStageEditorPathInputHandler {
                                 turnRightMenu.setAngle(angle)
                             }
                         }
-                        self.gameState.editorState = .selectingNodeActionType
                         
                     case "use weaponButton":
                         if let actionNode = currentNode as? AstralPathNodeAction {
                             actionNode.action = AstralEnemyOrder(type: .fire, duration: 0.0)
                             actionNodeMenu.hide()
+                            gameState.editorTransitionTo(.idle)
                         }
                         
                     case "stop attackingButton":
                         if let actionNode = currentNode as? AstralPathNodeAction {
                             actionNode.action = AstralEnemyOrder(type: .fireStop, duration: 0.0)
+                            actionNodeMenu.hide()
+                            gameState.editorTransitionTo(.idle)
+                        }
+                        
+                    case "moveButton":
+                        if let _ = currentNode as? AstralPathNodeAction {
+                            self.gameState.editorTransitionTo(.placingActionNode)
                             actionNodeMenu.hide()
                         }
                         
@@ -344,8 +299,11 @@ class AstralStageEditorPathInputHandler {
                         break
                     }
                 }
+                
                 if !touchedNodes!.contains(where: { $0.name == "nodeActionMenuBackground" }) {
                     actionNodeMenu.hide()
+                    gameState.editorTransitionTo(.idle)
+                    
                     if let menu = actionNodeMenu.subMenu {
                         menu.hide()
                         if menu.name == "Turn rightMenu" {
@@ -356,11 +314,69 @@ class AstralStageEditorPathInputHandler {
                             }
                         }
                     }
-                    self.gameState.editorState = .idle
+                    
                 }
             }
         default:
             break
         }
+    }
+    
+    
+    
+    private func handleTouchBeganState(_ touchLocation: CGPoint) {
+        switch gameState.editorState {
+        case .drawingNewPath:
+            handleDrawingNewPath(touchLocation)
+        case .selectingPath:
+            handleSelectingPath(touchLocation)
+        case .selectingNodeType:
+            handleSelectingNodeType(touchLocation)
+        case .placingCreationNode:
+            attachNodeToClosestPath(to: touchLocation)
+        default:
+            break
+        }
+    }
+    
+    private func handleSelectingNodeType(_ touchLocation: CGPoint) {
+        let touchedNodes = scene?.nodes(at: touchLocation)
+        for node in touchedNodes! {
+            if let nodeName = node.name, !nodeTypeMenu.hasActions() {
+                if nodeName == "creationButton" ||
+                    nodeName == "actionButton" ||
+                    nodeName == "pathingButton", let bg = node as? SKShapeNode {
+                    bg.fillColor = .white.withAlphaComponent(0.25)
+                }
+            }
+        }
+    }
+    
+    private func handleSelectingPath(_ touchLocation: CGPoint) {
+        var closestPath: AstralStageEditorPath?
+        var minDistance = pathSelectTouchThreshold
+        for path in manager.paths {
+            let distance = path.distanceToClosestPoint(from: touchLocation)
+            if distance < minDistance {
+                minDistance = distance
+                closestPath = path
+            }
+        }
+        if let closestPath = closestPath {
+            self.path = closestPath
+            self.manager.setActivePath(index: self.manager.getPathIndex(path: closestPath)!)
+            self.gameState.pathManager.loadPathData(path!)
+            renderer.updatePathColor(for: closestPath, color: .systemBlue)
+        }
+    }
+    
+    private func handleDrawingNewPath(_ touchLocation: CGPoint) {
+        let newPathIndex = manager.newPath()
+        path = manager.paths[newPathIndex]
+        manager.setActivePath(index: newPathIndex)
+        start = touchLocation
+        origin = start
+        path?.name = "Path \(newPathIndex + 1)"
+        // renderer.drawStartPoint(at: touchLocation) // Assumes a method to visually mark the start
     }
 }

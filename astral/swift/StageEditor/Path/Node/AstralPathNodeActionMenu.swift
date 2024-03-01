@@ -13,6 +13,7 @@ class AstralPathNodeActionMenu: AstralStageEditorPopupMenu {
         background.name = "nodeActionMenuBackground"
         
         // Add options to the menu
+        addMenuOption(text: "Move", fontSize: 32)
         addMenuOption(text: "Turn left", fontSize: 32)
         addMenuOption(text: "Center", fontSize: 32)
         addMenuOption(text: "Turn right", fontSize: 32)

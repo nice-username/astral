@@ -371,7 +371,6 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
                 let followCurveAction = SKAction.follow(bezierPath.cgPath, asOffset: false, orientToPath: true, duration: duration)
                 actions.append(followCurveAction)
             }
-            // Add behavior actions here based on nodes or other criteria
         }
 
         let sequence = SKAction.sequence(actions)
