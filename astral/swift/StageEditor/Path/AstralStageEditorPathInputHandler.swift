@@ -106,7 +106,7 @@ class AstralStageEditorPathInputHandler {
         if (gameState.editorState == .placingActionNode ||
             gameState.editorState == .placingCreationNode ||
             gameState.editorState == .placingPathingNode) {
-            gameState.editorState = .idle
+            gameState.editorTransitionTo(.idle)
             if let node = currentNode {
                 node.blink()
                 self.setTestNodeData()
@@ -186,7 +186,7 @@ class AstralStageEditorPathInputHandler {
                     if let origin = origin, endPoint.distanceTo(origin) < closePathDistanceThreshold {
                         // Snap to origin to close path
                         let segmentIndex = path.addSegment(type: .line(start: pathStart, end: origin))
-                        gameState.editorState = .idle
+                        gameState.editorTransitionTo(.idle)
                         // Here you can handle the logic for a completed path
                         let lastSegment = path.segments[segmentIndex]
                         renderer.drawDirectionIndicator(for: lastSegment)
@@ -196,7 +196,7 @@ class AstralStageEditorPathInputHandler {
                         let segmentIndex = path.addSegment(type: .line(start: pathStart, end: endPoint))
                         start = endPoint
                         if gameState.editorState == .drawingNewPath {
-                            gameState.editorState = .appendingToPath
+                            gameState.editorTransitionTo(.appendingToPath)
                         }
                         let lastSegment = path.segments[segmentIndex]
                         renderer.drawDirectionIndicator(for: lastSegment)
@@ -205,7 +205,8 @@ class AstralStageEditorPathInputHandler {
                 }
             }
             if gameState.editorState == .drawingNewPath {
-                gameState.editorState = .appendingToPath
+                print("? hm")
+                gameState.editorTransitionTo(.appendingToPath)
             }
         case .selectingPath:
             if let path = self.path {
@@ -251,7 +252,7 @@ class AstralStageEditorPathInputHandler {
             // Close the menu
             if !touchedNodes!.contains(where: { $0.name == "nodeTypeMenuBackground" }) {
                 nodeTypeMenu.hide()
-                self.gameState.editorState = .idle
+                self.gameState.editorTransitionTo(.idle)
             }
             
         case .selectingNodeActionType:

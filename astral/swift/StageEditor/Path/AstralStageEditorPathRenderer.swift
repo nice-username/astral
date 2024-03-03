@@ -178,4 +178,15 @@ class AstralStageEditorPathRenderer {
         // Add the node to the scene.
         scene.addChild(node)
     }
+    
+    func clearPaths(paths: [AstralStageEditorPath]) {
+        for path in paths {
+            for segment in path.segments {
+                for node in segment.nodes {
+                    node.removeFromParent()
+                }
+                segment.removeFromParent()
+            }
+        }
+    }
 }

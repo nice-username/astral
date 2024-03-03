@@ -8,6 +8,7 @@
 import Foundation
 import SpriteKit
 
+
 class AstralGameStateManager {
     static let shared = AstralGameStateManager()
     var editorStateView: AstralStageEditorStateView?
@@ -161,31 +162,38 @@ class AstralGameStateManager {
         switch state {
         case .idle:
             message = "Idle"
-            icon = nil
         case .selectingPath:
             message = "Selecting Path"
-            // icon = UIImage(named: "selectingPathIcon")
-            icon = nil
+            icon = UIImage(named: "path_tool")
         case .drawingNewPath:
             message = "Drawing new path"
+            icon = UIImage(named: "path_tool")
         case .appendingToPath:
             message = "Appending to path"
+            icon = UIImage(named: "path_tool")
         case .editingNode:
             message = ""
         case .editingBezier:
             message = ""
         case .selectingNodeType:
             message = "Select node type"
+            icon = UIImage(named: "add_to_path")
         case .selectingNodeActionType:
             message = "Select action"
         case .placingCreationNode:
             message = "Placing creation node"
+            icon = UIImage(named: "add_to_path")
         case .placingActionNode:
             message = "Placing action node"
+            icon = UIImage(named: "add_to_path")
         case .placingPathingNode:
             message = "Placing pathing node"
+            icon = UIImage(named: "add_to_path")
         }
         
+        if icon != nil {
+            icon = icon?.invertedImage()
+        }
         DispatchQueue.main.async { [weak self] in
             self?.editorStateView?.configure(with: icon, message: message)
         }

@@ -32,7 +32,7 @@ class AstralStageEditorStateView: UIView {
     private func setupView(height: CGFloat, fontSize: CGFloat) {
         // View styling
         self.backgroundColor = UIColor.black.withAlphaComponent(0.85)
-        self.layer.cornerRadius = 8
+        self.layer.cornerRadius = 5
         self.clipsToBounds = true
         
         // Icon setup
@@ -86,7 +86,7 @@ class AstralStageEditorStateView: UIView {
         NSLayoutConstraint.activate([
             self.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: edgeMargin),
             self.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -edgeMargin),
-            self.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -edgeMargin)
+            self.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         ])
     }
 }

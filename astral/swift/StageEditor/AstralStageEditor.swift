@@ -436,6 +436,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     }
     
     private func clearPaths() {
+        pathRenderer.clearPaths(paths: pathManager.paths)
         pathManager.clearPaths()
     }
     

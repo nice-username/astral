@@ -95,6 +95,7 @@
 		7CAA6B192A035D5A00EBEA1E /* impact00.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6B182A035D5A00EBEA1E /* impact00.wav */; };
 		7CAA6B1D2A03643700EBEA1E /* AstralEnemyOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */; };
 		7CB255392B9480C000F03430 /* AstralStageEditorStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB255382B9480C000F03430 /* AstralStageEditorStateView.swift */; };
+		7CB2553B2B94958300F03430 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2553A2B94958300F03430 /* UIImage.swift */; };
 		7CB67F932A4C47F600ED3333 /* AstralEffectsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB67F922A4C47F600ED3333 /* AstralEffectsManager.swift */; };
 		7CB8B9A42B0ABCAB0055ED04 /* BottomDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB8B9A32B0ABCAB0055ED04 /* BottomDrawerViewController.swift */; };
 		7CB97F7E2B273EE1009B25F1 /* UIControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB97F7D2B273EE1009B25F1 /* UIControl.swift */; };
@@ -227,6 +228,7 @@
 		7CAA6B182A035D5A00EBEA1E /* impact00.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = impact00.wav; sourceTree = "<group>"; };
 		7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralEnemyOrder.swift; sourceTree = "<group>"; };
 		7CB255382B9480C000F03430 /* AstralStageEditorStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralStageEditorStateView.swift; sourceTree = "<group>"; };
+		7CB2553A2B94958300F03430 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		7CB67F922A4C47F600ED3333 /* AstralEffectsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralEffectsManager.swift; sourceTree = "<group>"; };
 		7CB8B9A32B0ABCAB0055ED04 /* BottomDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomDrawerViewController.swift; sourceTree = "<group>"; };
 		7CB97F7D2B273EE1009B25F1 /* UIControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControl.swift; sourceTree = "<group>"; };
@@ -342,7 +344,6 @@
 				7C26511E29FF49ED0013B36E /* AstralDirection.swift */,
 				7CB67F922A4C47F600ED3333 /* AstralEffectsManager.swift */,
 				7CAA6B0D2A026EEA00EBEA1E /* AstralEnemy.swift */,
-				7C2D38D42B4E787700366D0D /* AstralStageEditorMenuStepper.swift */,
 				7C0711F22B3B78B8009B6F48 /* AstralEnemyConfiguration.swift */,
 				7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */,
 				7C8D13602A0E323100C81D85 /* AstralEnemyWave.swift */,
@@ -362,6 +363,7 @@
 				7C1F5C3B29FD35C800DB6438 /* AstralPlayer.swift */,
 				7C1F5C3D29FD36B100DB6438 /* AstralPolarity.swift */,
 				7C2583F82AB7421A0029BDDD /* AstralStageData.swift */,
+				7C2D38D42B4E787700366D0D /* AstralStageEditorMenuStepper.swift */,
 				7CAA6B022A02599000EBEA1E /* AstralUnit.swift */,
 				7CC2F9D929FF68C7003CA700 /* AstralWeapon.swift */,
 				7CC2F9DB29FF6BDC003CA700 /* AstralWeaponAmmoType.swift */,
@@ -372,6 +374,7 @@
 				7CC2F9DD29FF75FC003CA700 /* testScene.swift */,
 				7C0224FD2B63C270006AB680 /* UIColor.swift */,
 				7CB97F7D2B273EE1009B25F1 /* UIControl.swift */,
+				7CB2553A2B94958300F03430 /* UIImage.swift */,
 			);
 			path = swift;
 			sourceTree = "<group>";
@@ -718,6 +721,7 @@
 				7C7070382B48E87A00DD6C29 /* AstralStageEditorPopupMenu.swift in Sources */,
 				7CAA6B1D2A03643700EBEA1E /* AstralEnemyOrder.swift in Sources */,
 				7C8C6BAF2B67754D0049B4B1 /* AstralPathNodeAction.swift in Sources */,
+				7CB2553B2B94958300F03430 /* UIImage.swift in Sources */,
 				7C26511F29FF49ED0013B36E /* AstralDirection.swift in Sources */,
 				7CC254C42B2C898E003381AC /* AstralPathNode.swift in Sources */,
 				7C8690272A77635700AD307F /* AstralStageEditorToolbarButton.swift in Sources */,

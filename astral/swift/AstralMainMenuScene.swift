@@ -136,7 +136,7 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
         addChild(cursorNode)
         
         self.startBackgroundTransitions()
-        // self.gameState?.transitionTo(.editor)
+        self.gameState?.transitionTo(.editor)
     }
     
     
