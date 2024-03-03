@@ -178,6 +178,10 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             toolbar!.toolbarSubMenu.widthAnchor.constraint(equalToConstant: 224),
             toolbar!.toolbarSubMenu.heightAnchor.constraint(equalTo: self.toolbar!.heightAnchor)
         ])
+        
+        let stateView = AstralStageEditorStateView(icon: nil, message: "Initialized.", fontSize: 18, height: 48)
+        AstralGameStateManager.shared.editorStateView = stateView
+        stateView.showInView(self.view!)
     }
 
     // Handle the stage scroll pan gesture

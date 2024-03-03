@@ -6,6 +6,17 @@
 //
 
 import Foundation
+import CoreGraphics
+
+
+//
+// Quick CGFloat extension for readability
+//
+extension CGFloat {
+    func squared() -> CGFloat {
+        return self * self
+    }
+}
 
 
 //
@@ -40,4 +51,25 @@ extension CGPoint {
         // Return the distance from the point to the projection point
         return self.distanceTo(projection)
     }
+    
+    
+    func isOnSegment(from start: CGPoint, to end: CGPoint, tolerance: CGFloat) -> Bool {
+        let crossProduct = (self.y - start.y) * (end.x - start.x) - (self.x - start.x) * (end.y - start.y)
+        if abs(crossProduct) > tolerance {
+            return false
+        }
+        
+        let dotProduct = (self.x - start.x) * (end.x - start.x) + (self.y - start.y) * (end.y - start.y)
+        if dotProduct < 0 {
+            return false
+        }
+        
+        let squaredLength = (end.x - start.x).squared() + (end.y - start.y).squared()
+        if dotProduct > squaredLength {
+            return false
+        }
+        
+        return true
+    }
 }
+

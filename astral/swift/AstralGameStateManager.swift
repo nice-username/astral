@@ -10,6 +10,8 @@ import SpriteKit
 
 class AstralGameStateManager {
     static let shared = AstralGameStateManager()
+    var editorStateView: AstralStageEditorStateView?
+
     public init() {}
     
     var gameView: SKView?
@@ -67,6 +69,7 @@ class AstralGameStateManager {
         }
     }
     
+    
     func transitionTo(_ state: AstralGameState) {
         self.currentState = state
     }
@@ -76,6 +79,7 @@ class AstralGameStateManager {
         if state != .selectingPath {
             dismissPathManager()
         }
+        updateEditorStateView()
     }
     
     func throwEventMessage(name: NSNotification.Name, userInfo: [AnyHashable : Any]? = nil) {
@@ -145,4 +149,46 @@ class AstralGameStateManager {
             self.pathManager.removeFromParent()
         })
     }
+    
+    
+    func updateEditorStateView() {
+        guard let state = editorState else { return }
+        
+        let message: String
+        var icon: UIImage? // Determine the appropriate icon for each state
+        
+        icon = nil
+        switch state {
+        case .idle:
+            message = "Idle"
+            icon = nil
+        case .selectingPath:
+            message = "Selecting Path"
+            // icon = UIImage(named: "selectingPathIcon")
+            icon = nil
+        case .drawingNewPath:
+            message = "Drawing new path"
+        case .appendingToPath:
+            message = "Appending to path"
+        case .editingNode:
+            message = ""
+        case .editingBezier:
+            message = ""
+        case .selectingNodeType:
+            message = "Select node type"
+        case .selectingNodeActionType:
+            message = "Select action"
+        case .placingCreationNode:
+            message = "Placing creation node"
+        case .placingActionNode:
+            message = "Placing action node"
+        case .placingPathingNode:
+            message = "Placing pathing node"
+        }
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.editorStateView?.configure(with: icon, message: message)
+        }
+    }
+
 }

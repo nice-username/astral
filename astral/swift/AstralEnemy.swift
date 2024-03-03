@@ -354,28 +354,41 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         return TimeInterval(distance / speed)
     }
     
+    
     func followPath(_ path: AstralStageEditorPath) {
+        let currentPosition = self.position
         var actions: [SKAction] = []
-
+        var startSegmentFound = false
+        let segmentSearchTolerance = 1.0 / 16.0
+        
         for segment in path.segments {
             switch segment.type {
             case .line(let start, let end):
-                let duration = calculateMovementDuration(from: start, to: end, speed: movementSpeed)
-                let moveAction = SKAction.move(to: end, duration: duration)
-                actions.append(moveAction)
-            case .bezier(let start, let control1, let control2, let end):
-                let bezierPath = UIBezierPath()
-                bezierPath.move(to: start)
-                bezierPath.addCurve(to: end, controlPoint1: control1, controlPoint2: control2)
-                let duration = calculateMovementDuration(from: start, to: end, speed: movementSpeed)
-                let followCurveAction = SKAction.follow(bezierPath.cgPath, asOffset: false, orientToPath: true, duration: duration)
-                actions.append(followCurveAction)
+                if !startSegmentFound {
+                    if currentPosition.isOnSegment(from: start, to: end, tolerance: segmentSearchTolerance) {
+                        let duration = calculateMovementDuration(from: currentPosition, to: end, speed: movementSpeed)
+                        let moveAction = SKAction.move(to: end, duration: duration)
+                        actions.append(moveAction)
+                        startSegmentFound = true
+                    }
+                } else {
+                    let duration = calculateMovementDuration(from: start, to: end, speed: movementSpeed)
+                    let moveAction = SKAction.move(to: end, duration: duration)
+                    actions.append(moveAction)
+                }
+            case .bezier(_, _, _, _):
+                // For now, ignore bezier segments
+                continue
             }
         }
-
-        let sequence = SKAction.sequence(actions)
-        self.run(sequence)
+        
+        if !actions.isEmpty {
+            let sequence = SKAction.sequence(actions)
+            self.run(sequence)
+        }
     }
+
+
     
     //
     // Execute orders

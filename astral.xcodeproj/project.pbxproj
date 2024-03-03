@@ -94,6 +94,7 @@
 		7CAA6B172A029A1600EBEA1E /* AstralEnemyType00Hit.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6B162A029A1600EBEA1E /* AstralEnemyType00Hit.atlas */; };
 		7CAA6B192A035D5A00EBEA1E /* impact00.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7CAA6B182A035D5A00EBEA1E /* impact00.wav */; };
 		7CAA6B1D2A03643700EBEA1E /* AstralEnemyOrder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */; };
+		7CB255392B9480C000F03430 /* AstralStageEditorStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB255382B9480C000F03430 /* AstralStageEditorStateView.swift */; };
 		7CB67F932A4C47F600ED3333 /* AstralEffectsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB67F922A4C47F600ED3333 /* AstralEffectsManager.swift */; };
 		7CB8B9A42B0ABCAB0055ED04 /* BottomDrawerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB8B9A32B0ABCAB0055ED04 /* BottomDrawerViewController.swift */; };
 		7CB97F7E2B273EE1009B25F1 /* UIControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB97F7D2B273EE1009B25F1 /* UIControl.swift */; };
@@ -225,6 +226,7 @@
 		7CAA6B162A029A1600EBEA1E /* AstralEnemyType00Hit.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = AstralEnemyType00Hit.atlas; sourceTree = "<group>"; };
 		7CAA6B182A035D5A00EBEA1E /* impact00.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = impact00.wav; sourceTree = "<group>"; };
 		7CAA6B1C2A03643700EBEA1E /* AstralEnemyOrder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralEnemyOrder.swift; sourceTree = "<group>"; };
+		7CB255382B9480C000F03430 /* AstralStageEditorStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralStageEditorStateView.swift; sourceTree = "<group>"; };
 		7CB67F922A4C47F600ED3333 /* AstralEffectsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralEffectsManager.swift; sourceTree = "<group>"; };
 		7CB8B9A32B0ABCAB0055ED04 /* BottomDrawerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomDrawerViewController.swift; sourceTree = "<group>"; };
 		7CB97F7D2B273EE1009B25F1 /* UIControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIControl.swift; sourceTree = "<group>"; };
@@ -487,6 +489,7 @@
 				7C8690262A77635700AD307F /* AstralStageEditorToolbarButton.swift */,
 				7C8690282A77638900AD307F /* AstralStageEditorToolbarSubView.swift */,
 				7C2583FA2ABB699C0029BDDD /* AstralStageFileManager.swift */,
+				7CB255382B9480C000F03430 /* AstralStageEditorStateView.swift */,
 			);
 			path = StageEditor;
 			sourceTree = "<group>";
@@ -685,6 +688,7 @@
 				7C81E0D129FF9D92005FB6EC /* AstralParallaxBackground.swift in Sources */,
 				7C24D1CE2A582C61004D1DE7 /* AstralMainMenuBackground.swift in Sources */,
 				7C8C6BA72B6774D10049B4B1 /* AstralPathNodeData.swift in Sources */,
+				7CB255392B9480C000F03430 /* AstralStageEditorStateView.swift in Sources */,
 				7C92CBA32B1F4BFB00730C39 /* AstralStageEditorPathInputHandler.swift in Sources */,
 				7C8C6BA92B6774E80049B4B1 /* AstralPathNodeActionData.swift in Sources */,
 				7C8D136B2A0F5A6500C81D85 /* AstralDialogSpeaker.swift in Sources */,
