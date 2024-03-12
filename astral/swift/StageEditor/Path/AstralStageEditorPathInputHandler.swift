@@ -205,7 +205,6 @@ class AstralStageEditorPathInputHandler {
                 }
             }
             if gameState.editorState == .drawingNewPath {
-                print("? hm")
                 gameState.editorTransitionTo(.appendingToPath)
             }
         case .selectingPath:
@@ -342,6 +341,10 @@ class AstralStageEditorPathInputHandler {
     
     private func handleSelectingNodeType(_ touchLocation: CGPoint) {
         let touchedNodes = scene?.nodes(at: touchLocation)
+        for option in nodeTypeMenu.menuOptions {
+            let bg = option.children[0] as? SKShapeNode
+            bg?.fillColor = .white.withAlphaComponent(0)
+        }
         for node in touchedNodes! {
             if let nodeName = node.name, !nodeTypeMenu.hasActions() {
                 if nodeName == "creationButton" ||

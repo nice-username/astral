@@ -73,6 +73,7 @@ class AstralWeapon: SKNode {
                     unit.addChild(sprite!)
                     sprite?.position.y += 24
                 }
+                
                 self.lastUsedUnit = unit
                 self.isWarmingUp = true
                 self.warmUpTimeToWait = self.warmUpTime

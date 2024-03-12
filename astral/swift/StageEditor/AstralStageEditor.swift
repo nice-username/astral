@@ -467,9 +467,8 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             case .base(let baseData):
                 node = baseData.toNode()
             }
-            segment.nodes.append(node) // Add the node to the actual segment
+            segment.nodes.append(node)
             node.attachedToPath = path
-            // Render node if required. You might need a method in pathRenderer to render nodes.
             pathRenderer.renderNode(node)
         }
     }
@@ -573,6 +572,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     }
 
 
+    
     
     
     //

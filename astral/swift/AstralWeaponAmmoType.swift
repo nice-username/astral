@@ -42,8 +42,11 @@ class AstralWeaponAmmoType: SKNode {
     var firingTextures: [SKTexture] = []
     var warmUpAnim: SKAction?
     var firingAnim: SKAction?
+    var impactAtlasName: String?
+    var impactTextures: [SKTexture] = []
+    var impactAnim: SKAction?
     
-    init(name: String, spriteFilename: String? = nil, warmUpAtlasName: String? = nil, firingAtlasName: String? = nil, damage: CGFloat, moveSpeed: CGFloat, range: CGFloat, spread: CGFloat, homing: Bool, splash: Bool) {
+    init(name: String, spriteFilename: String? = nil, warmUpAtlasName: String? = nil, firingAtlasName: String? = nil, impactAtlasName: String? = nil, damage: CGFloat, moveSpeed: CGFloat, range: CGFloat, spread: CGFloat, homing: Bool, splash: Bool) {
         self.spriteFilename = spriteFilename
         self.damage = damage
         self.moveSpeed = moveSpeed
@@ -53,10 +56,12 @@ class AstralWeaponAmmoType: SKNode {
         self.splash = splash
         self.warmUpAtlasName = warmUpAtlasName
         self.firingAtlasName = firingAtlasName
+        self.impactAtlasName = impactAtlasName
         super.init()
         self.name = name
         self.initializeWarmUp()
         self.initializeFiring()
+        self.initializeImpact()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -72,7 +77,7 @@ class AstralWeaponAmmoType: SKNode {
         self.initBulletPhysics(bullet: bullet, collider: collider)
         
         // Stretch a random amount verticall
-        bullet.yScale = Double.random(in: 2.0...4.0)
+        // bullet.yScale = Double.random(in: 2.0...4.0)
 
         // Convert the angle from degrees to radians
         let angleInRadians = direction * CGFloat.pi / 180.0
@@ -86,7 +91,8 @@ class AstralWeaponAmmoType: SKNode {
 
         // Set the velocity of the bullet
         bullet.physicsBody?.velocity = CGVector(dx: directionVector.dx * speed, dy: directionVector.dy * speed)
-
+        bullet.userData = ["impactAnim": self.impactAnim!]
+        
         return bullet
     }
     
@@ -129,6 +135,7 @@ class AstralWeaponAmmoType: SKNode {
         bullet.yScale = 2.0
         bullet.texture?.filteringMode = .nearest
         bullet.position = point
+        bullet.userData = [:]
         return bullet
     }
     
@@ -151,6 +158,15 @@ class AstralWeaponAmmoType: SKNode {
         let sortedNames = atlas.textureNames.sorted()
         self.warmUpTextures = sortedNames.map { atlas.textureNamed($0) }
     }
+    
+    
+    private func initializeImpact() {
+        guard let atlasName = self.impactAtlasName else { return }
+        let atlas = SKTextureAtlas(named: atlasName)
+        self.impactTextures = atlas.textureNames.sorted().map { atlas.textureNamed($0) }
+        self.impactAnim = SKAction.animate(with: self.impactTextures, timePerFrame: 1 / 15.0, resize: false, restore: false)
+    }
+    
 
     private func initializeFiring() {
         guard let atlasName = self.firingAtlasName else { return }
@@ -163,6 +179,7 @@ class AstralWeaponAmmoType: SKNode {
     static var singleShot: AstralWeaponAmmoType {
         return AstralWeaponAmmoType(name: "Double Shot",
                         spriteFilename: "Bullet01",
+                        impactAtlasName: "Bullet01Impact",
                         damage: 4,
                         moveSpeed: 800,
                         range: 0,
@@ -188,5 +205,14 @@ class AstralWeaponAmmoType: SKNode {
         return AstralWeaponAmmoType(name: "Triple Shot", spriteFilename: "Bullet00", damage: 5, moveSpeed: 20, range: 400, spread: 30, homing: false, splash: false)
     }
     
-    // Add more ammo types as needed...
+    func handleBulletImpact(bullet: SKSpriteNode) {
+        guard let impactAnim = self.impactAnim else {
+            bullet.removeFromParent()
+            return
+        }
+        
+        let removeAction = SKAction.removeFromParent()
+        let sequence = SKAction.sequence([impactAnim, removeAction])
+        bullet.run(sequence)
+    }
 }

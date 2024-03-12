@@ -156,9 +156,8 @@ class AstralGameStateManager {
         guard let state = editorState else { return }
         
         let message: String
-        var icon: UIImage? // Determine the appropriate icon for each state
+        var icon: UIImage? = nil
         
-        icon = nil
         switch state {
         case .idle:
             message = "Idle"
@@ -180,6 +179,7 @@ class AstralGameStateManager {
             icon = UIImage(named: "add_to_path")
         case .selectingNodeActionType:
             message = "Select action"
+            icon = UIImage(named: "path_select")            
         case .placingCreationNode:
             message = "Placing creation node"
             icon = UIImage(named: "add_to_path")

@@ -185,8 +185,10 @@ class AstralStageEditorPathRenderer {
                 for node in segment.nodes {
                     node.removeFromParent()
                 }
-                segment.removeFromParent()
+                segment.shape?.removeFromParent()
+                segment.directionArrow?.removeFromParent()
             }
+            path.removeFromParent()
         }
     }
 }

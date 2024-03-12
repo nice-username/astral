@@ -12,6 +12,7 @@ class AstralCollisionHandler {
     let removeAction = SKAction.sequence([SKAction.wait(forDuration: 0.2), SKAction.removeFromParent()])
     var player : AstralPlayer? = nil
     
+    
     func handleContact(contact: SKPhysicsContact) {
         let cat1 = contact.bodyA.categoryBitMask
         let cat2 = contact.bodyB.categoryBitMask
@@ -28,20 +29,38 @@ class AstralCollisionHandler {
             contact.bodyB.node?.run(self.removeAction)
         }
         
+        
         // Bullet vs. enemy
         if cat1 == AstralPhysicsCategory.bulletPlayer && cat2 == AstralPhysicsCategory.enemy {
-            contact.bodyA.node?.removeFromParent()
+            if let bulletNode = contact.bodyA.node as? SKSpriteNode,
+               let ammoType = bulletNode.userData?["ammoType"] as? AstralWeaponAmmoType {
+                ammoType.handleBulletImpact(bullet: bulletNode)
+            }
             if let enemyNode = contact.bodyB.node as? AstralEnemy {
                 enemyNode.takeDamage()
             }
         } else if cat1 == AstralPhysicsCategory.enemy && cat2 == AstralPhysicsCategory.bulletPlayer {
             var dmg = player!.weapons[0].damage
             if let enemyNode = contact.bodyA.node as? AstralEnemy {
+                /*
                 enemyNode.takeDamage(amount: dmg)
                 let impactSound = SKAction.playSoundFileNamed("impact00", waitForCompletion: false)
                 enemyNode.run(impactSound)
+                 */
             }
-            contact.bodyB.node?.removeFromParent()
+            
+            if let bulletNode = contact.bodyB.node as? SKSpriteNode {
+                if let action = bulletNode.userData?["impactAnim"] as? SKAction {
+                    let removeAction = SKAction.removeFromParent()
+                    let sequence = SKAction.sequence([action, removeAction])
+                    bulletNode.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                    bulletNode.run(sequence)
+                    bulletNode.zPosition = 100
+                    bulletNode.xScale = 6.0
+                    bulletNode.yScale = 3.0
+                }
+            }
+            
         }
         
         
@@ -57,8 +76,12 @@ class AstralCollisionHandler {
                 let impactSound = SKAction.playSoundFileNamed("impact00", waitForCompletion: false)
                 player.run(impactSound)
             }
-            contact.bodyB.node?.removeFromParent()
+            if let bulletNode = contact.bodyB.node as? SKSpriteNode,
+               let ammoType = bulletNode.userData?["ammoType"] as? AstralWeaponAmmoType {
+                ammoType.handleBulletImpact(bullet: bulletNode)
+            }
         }
+        
     }
     
     
