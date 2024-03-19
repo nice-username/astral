@@ -92,6 +92,8 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         physicsBody?.contactTestBitMask = AstralPhysicsCategory.enemy | AstralPhysicsCategory.boundary | AstralPhysicsCategory.bulletEnemy
         physicsBody?.allowsRotation = false
         physicsBody?.affectedByGravity = false
+        
+        lightingBitMask = AstralLightingCategory.player | AstralLightingCategory.environment
     }
     
     

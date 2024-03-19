@@ -24,6 +24,8 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     var movementSpeed: CGFloat = 150.0
     var textures: [SKTexture] = []
     var texturesWhite: [SKTexture] = []
+    var deathAtlas: String = ""
+    var deathTextures: [SKTexture] = []
     var polarity: AstralPolarity = .white
     var particleSystem: AstralParticleSystem?
     var hitbox: SKShapeNode?
@@ -49,8 +51,11 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         self.maxHealth = config.maxHealth
         self.atlasName = config.atlasName
         self.textures  = config.textures
+        self.deathAtlas = config.deathAtlas
         
         let initialTexture = config.textures[0]
+        self.deathTextures = AstralEnemy.loadTextures(fromAtlasNamed: self.deathAtlas, namingStyle: .numberedSequence(frameCount: 18, prefix: "Explosion", indexLength: 4))
+
         super.init(texture: initialTexture, color: .clear, size: initialTexture.size())
         
         self.name = "enemy"
@@ -65,6 +70,9 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         physicsBody?.angularDamping = 1.0
         physicsBody?.allowsRotation = false
         physicsBody?.affectedByGravity = false
+        
+        lightingBitMask = AstralLightingCategory.enemy | AstralLightingCategory.environment | AstralLightingCategory.playerBullet
+
         
         
         self.hitbox = SKShapeNode(circleOfRadius: self.size.width / 2)
@@ -182,7 +190,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
             SKAction.fadeOut(withDuration: fadeOutTime),
             SKAction.removeFromParent()
         ])
-        self.addChild(hitSprite)
+        // self.addChild(hitSprite)
 
         hitSprite.run(action, withKey: "hit")
         
@@ -384,7 +392,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         
         if !actions.isEmpty {
             let sequence = SKAction.sequence(actions)
-            self.run(sequence)
+            self.run(sequence, withKey: "move")
         }
     }
 
@@ -440,8 +448,23 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         return self.position.distanceTo(node.position) <= triggerDistance
     }
     
+    func shotgunBlast() {
+        let shotgunDirection: CGFloat = 270
+        let shotgunSpread: CGFloat = 5
+        let shotgunBullets: Int = 5
+
+        // Assuming each enemy has a default weapon or you assign a special shotgun weapon upon their death
+        let shotgunWeapon = AstralWeapon(gameScene: self.scene!, name: "Enemy Shotgun", damage: 10, direction: shotgunDirection, cooldown: 0.5, range: 300, ammoType: .shotgunBlast, reloadTime: 1.0, clipSize: 1, isBeam: false)
+        shotgunWeapon.fireShotgunBlast(from: self, direction: shotgunDirection, spread: shotgunSpread, bulletsCount: shotgunBullets, collider: AstralPhysicsCategory.bulletEnemy)
+    }
     
     func die() {
-        (self.scene as? AstralStageEditor)?.removeEnemy(self)
+        removeAction(forKey: "move")
+        physicsBody?.categoryBitMask = AstralPhysicsCategory.none
+        shotgunBlast()
+        let deathAnimation = SKAction.animate(with: deathTextures, timePerFrame: 1 / 15.0)
+        self.run(deathAnimation) {
+            (self.scene as? AstralStageEditor)?.removeEnemy(self)
+        }
     }
 }

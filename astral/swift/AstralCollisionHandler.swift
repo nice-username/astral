@@ -32,9 +32,18 @@ class AstralCollisionHandler {
         
         // Bullet vs. enemy
         if cat1 == AstralPhysicsCategory.bulletPlayer && cat2 == AstralPhysicsCategory.enemy {
-            if let bulletNode = contact.bodyA.node as? SKSpriteNode,
-               let ammoType = bulletNode.userData?["ammoType"] as? AstralWeaponAmmoType {
-                ammoType.handleBulletImpact(bullet: bulletNode)
+            if let bulletNode = contact.bodyA.node as? SKSpriteNode {
+                if let action = bulletNode.userData?["impactAnim"] as? SKAction {
+                    let removeAction = SKAction.removeFromParent()
+                    let sequence = SKAction.sequence([action, removeAction])
+                    bulletNode.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                    bulletNode.run(sequence)
+                    bulletNode.texture = SKTexture(imageNamed: "Bullet01Impact1")
+                    bulletNode.zPosition = 10
+                    bulletNode.xScale = 10.0
+                    bulletNode.yScale = 5.0
+                    bulletNode.texture?.filteringMode = .nearest
+                }
             }
             if let enemyNode = contact.bodyB.node as? AstralEnemy {
                 enemyNode.takeDamage()
@@ -42,11 +51,9 @@ class AstralCollisionHandler {
         } else if cat1 == AstralPhysicsCategory.enemy && cat2 == AstralPhysicsCategory.bulletPlayer {
             var dmg = player!.weapons[0].damage
             if let enemyNode = contact.bodyA.node as? AstralEnemy {
-                /*
                 enemyNode.takeDamage(amount: dmg)
-                let impactSound = SKAction.playSoundFileNamed("impact00", waitForCompletion: false)
-                enemyNode.run(impactSound)
-                 */
+                // let impactSound = SKAction.playSoundFileNamed("impact00", waitForCompletion: false)
+                // enemyNode.run(impactSound)
             }
             
             if let bulletNode = contact.bodyB.node as? SKSpriteNode {
@@ -55,9 +62,11 @@ class AstralCollisionHandler {
                     let sequence = SKAction.sequence([action, removeAction])
                     bulletNode.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
                     bulletNode.run(sequence)
-                    bulletNode.zPosition = 100
-                    bulletNode.xScale = 6.0
-                    bulletNode.yScale = 3.0
+                    bulletNode.texture = SKTexture(imageNamed: "Bullet01Impact1")
+                    bulletNode.zPosition = 10
+                    bulletNode.xScale = 10.0
+                    bulletNode.yScale = 5.0
+                    bulletNode.texture?.filteringMode = .nearest
                 }
             }
             
@@ -83,7 +92,5 @@ class AstralCollisionHandler {
         }
         
     }
-    
-    
 }
 

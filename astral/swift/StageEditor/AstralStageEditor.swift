@@ -126,6 +126,8 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         
         self.pathRenderer = AstralStageEditorPathRenderer(scene: self)
         self.pathInput = AstralStageEditorPathInputHandler(scene: self, pathManager: pathManager, pathRenderer: pathRenderer)
+        
+        verifyAndLoadTexturesFromAtlas(named: "AstralEnemyType02_Death")
     }
     
     
@@ -669,4 +671,19 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             pathInput.touchesEnded(touches)
         }
     }
+    
+    func verifyAndLoadTexturesFromAtlas(named atlasName: String) {
+        let atlas = SKTextureAtlas(named: atlasName)
+        let textureNames = atlas.textureNames
+        
+        if textureNames.isEmpty {
+            print("No textures found in atlas: \(atlasName). Check the atlas name and its contents.")
+        } else {
+            print("Found \(textureNames.count) textures in atlas: \(atlasName). Loading textures...")
+            atlas.preload {
+                print("Texture atlas \(atlasName) preloaded successfully.")
+            }
+        }
+    }
+
 }

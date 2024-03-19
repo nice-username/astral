@@ -15,6 +15,7 @@ struct AstralEnemyConfiguration {
     var atlasName: String
     var textures: [SKTexture] = []
     var texturesWhite: [SKTexture] = []
+    var deathAtlas: String = ""
     var polarity: AstralPolarity?
     var particleSystem: AstralParticleSystem?
     var hitbox: SKShapeNode?

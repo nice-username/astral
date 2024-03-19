@@ -94,6 +94,16 @@ class AstralWeapon: SKNode {
         }
     }
     
+    
+    func fireShotgunBlast(from unit: SKSpriteNode, direction: CGFloat, spread: CGFloat, bulletsCount: Int, collider: UInt32) {
+        let angleIncrement = spread / CGFloat(bulletsCount - 1)
+        for i in 0..<bulletsCount {
+            let angleAdjustment = CGFloat(i) * angleIncrement - (spread / 2)
+            let bulletDirection = direction + angleAdjustment
+            let bullet = ammoType.spawnBullet(at: unit.position, direction: bulletDirection, collider: collider)
+            gameScene.addChild(bullet)
+        }
+    }
     	
     
     //

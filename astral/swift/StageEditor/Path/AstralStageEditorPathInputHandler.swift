@@ -73,7 +73,7 @@ class AstralStageEditorPathInputHandler {
             node.initialTimeOffset = 0.0
             node.isEndless = false
             node.repeatEnabled = true
-            node.repeatCount = 1
+            node.repeatCount = 6
             node.repeatInterval = 0.5
             node.initialSpeed = 200.0
         }
