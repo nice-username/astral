@@ -133,6 +133,40 @@ class AstralPathSegment : SKNode {
         t = max(0, min(1, t)) // Clamp t to the range [0, 1]
         return CGPoint(x: start.x + t * dx, y: start.y + t * dy)
     }
+    
+    func moveBy(offset: CGPoint) {
+        // Update the segment's type based on the current type
+        switch type {
+        case .line(let start, let end):
+            // Create new start and end points with the applied offset
+            let newStart = CGPoint(x: start.x + offset.x, y: start.y + offset.y)
+            let newEnd = CGPoint(x: end.x + offset.x, y: end.y + offset.y)
+            // Update the segment's type with the new points
+            self.type = .line(start: newStart, end: newEnd)
+            
+        case .bezier(let start, let control1, let control2, let end):
+            // Apply the offset to all points in the bezier segment
+            let newStart = CGPoint(x: start.x + offset.x, y: start.y + offset.y)
+            let newControl1 = CGPoint(x: control1.x + offset.x, y: control1.y + offset.y)
+            let newControl2 = CGPoint(x: control2.x + offset.x, y: control2.y + offset.y)
+            let newEnd = CGPoint(x: end.x + offset.x, y: end.y + offset.y)
+            // Update the segment's type with the new points
+            self.type = .bezier(start: newStart, control1: newControl1, control2: newControl2, end: newEnd)
+        }
+        
+        // Move all attached nodes by the offset
+        for node in nodes {
+            node.point = CGPoint(x: node.position.x + offset.x, y: node.position.y + offset.y)
+        }
+        
+        // If the segment has a visual representation (shape), move that as well
+        shape?.position = CGPoint(x: shape!.position.x + offset.x, y: shape!.position.y + offset.y)
+        
+        // Update the direction arrow, if present
+        if let directionArrow = directionArrow {
+            directionArrow.position = CGPoint(x: directionArrow.position.x + offset.x, y: directionArrow.position.y + offset.y)
+        }
+    }
 }
 
 struct AstralStageEditorPathData: Codable {
@@ -257,6 +291,12 @@ class AstralStageEditorPath: SKNode {
             } else {
                 segment.fadeOut(duration: 0.25)
             }
+        }
+    }
+    
+    func moveBy(offset: CGPoint) {
+        for segment in segments {
+            segment.moveBy(offset: offset)
         }
     }
     

@@ -189,6 +189,9 @@ class AstralGameStateManager {
         case .placingPathingNode:
             message = "Placing pathing node"
             icon = UIImage(named: "add_to_path")
+        case .movingPath:
+            message = "Moving path"
+            icon = UIImage(named: "path_tool")
         }
         
         if icon != nil {

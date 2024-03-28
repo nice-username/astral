@@ -462,9 +462,30 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         removeAction(forKey: "move")
         physicsBody?.categoryBitMask = AstralPhysicsCategory.none
         shotgunBlast()
+        particles()
         let deathAnimation = SKAction.animate(with: deathTextures, timePerFrame: 1 / 15.0)
         self.run(deathAnimation) {
             (self.scene as? AstralStageEditor)?.removeEnemy(self)
+        }
+    }
+    
+    func particles(duration: TimeInterval = 0.6, fadeOutDuration: TimeInterval = 0.4) {
+        addParticleEffect(named: "ShipExplosion02", zPosition: 6, duration: duration + Double.random(in: -0.1...0.4), fadeOutDuration: fadeOutDuration)
+        addParticleEffect(named: "ShipExplosion01", zPosition: 4, duration: duration + Double.random(in: -0.1...0.4), fadeOutDuration: fadeOutDuration)
+        addParticleEffect(named: "ShipExplosion03", zPosition: 5, duration: duration + Double.random(in: -0.1...0.4), fadeOutDuration: fadeOutDuration)
+    }
+    
+    func addParticleEffect(named fileName: String, zPosition: CGFloat, duration: TimeInterval, fadeOutDuration: TimeInterval) {
+        if let particle = SKEmitterNode(fileNamed: fileName) {
+            particle.zPosition = zPosition
+            particle.position = self.position // Emitter's start position is the enemy's current position
+            self.scene?.addChild(particle)
+
+            // Fade out the particle effect before removing it
+            let wait = SKAction.wait(forDuration: duration - fadeOutDuration)
+            let fadeOut = SKAction.fadeOut(withDuration: fadeOutDuration)
+            let remove = SKAction.removeFromParent()
+            particle.run(SKAction.sequence([wait, fadeOut, remove]))
         }
     }
 }

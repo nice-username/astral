@@ -41,6 +41,7 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         let _ = createCounterLabel("Segments", height: 34.0)
         let _ = createCounterLabel("Nodes", height: 34.0)
         let applyBtn = createFullWidthButton(labelText: "Apply", backgroundColor: .clear, borderColor: .systemGreen, textColor: .white, height: 34.0)
+        let moveBtn  = createFullWidthButton(labelText: "Move", backgroundColor: .clear, borderColor: .white, textColor: .white, height: 34.0)
         let cancelBtn = createFullWidthButton(labelText: "Cancel", backgroundColor: .clear, borderColor: .white, textColor: .white, height: 34.0)
         let deleteBtn = createFullWidthButton(labelText: "Delete", backgroundColor: .clear, borderColor: .systemRed, textColor: .white, height: 34.0)
         
@@ -51,6 +52,10 @@ class AstralStageEditorPathManagerViewController: BottomDrawerViewController {
         applyBtn.addAction {
             self.savePathData()
             self.hideMenu()
+        }
+        
+        moveBtn.addAction {
+            self.gameState.editorTransitionTo(.movingPath)
         }
         
         deleteBtn.addAction {

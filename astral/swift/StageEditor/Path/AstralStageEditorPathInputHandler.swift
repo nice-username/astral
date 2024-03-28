@@ -87,6 +87,12 @@ class AstralStageEditorPathInputHandler {
     // Double tap is used for various functionality
     //
     func handleDoubleTap() {
+        // Moving path --> idle
+        if gameState.editorState == .movingPath {
+            gameState.editorTransitionTo(.idle)
+            return
+        }
+        
         // Open menu for editing action node properties
         if (self.gameState.editorState == .idle) && getActionNodeNextTo(lastTapLocation!) != nil {
             currentNode = getActionNodeNextTo(lastTapLocation!)
@@ -152,6 +158,15 @@ class AstralStageEditorPathInputHandler {
             renderer.drawTemporaryLine(from: pathStart, to: currentPoint)
         case .placingCreationNode, .placingActionNode:
             self.attachNodeToClosestPath(to: currentPoint)
+        case .movingPath:
+            let initialTouchPoint = self.lastTapLocation
+            let path = self.path
+            
+            let currentPoint = touch.location(in: scene!)
+            let offset = CGPoint(x: currentPoint.x - initialTouchPoint!.x, y: currentPoint.y - initialTouchPoint!.y)
+            
+            path!.moveBy(offset: offset)
+            self.lastTapLocation = currentPoint
         default:
             break
         }
@@ -334,10 +349,28 @@ class AstralStageEditorPathInputHandler {
             handleSelectingNodeType(touchLocation)
         case .placingCreationNode:
             attachNodeToClosestPath(to: touchLocation)
+        case .movingPath:
+            handleMovingPath(touchLocation)
         default:
             break
         }
     }
+    
+    
+    
+    
+    private func handleMovingPath(_ touchLocation: CGPoint) {
+        if let path = self.path {
+            for segment in path.segments {
+                segment.directionArrow?.removeFromParent()
+            }
+        }
+    }
+
+    
+    
+    
+    
     
     private func handleSelectingNodeType(_ touchLocation: CGPoint) {
         let touchedNodes = scene?.nodes(at: touchLocation)

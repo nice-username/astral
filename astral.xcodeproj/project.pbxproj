@@ -375,6 +375,7 @@
 				7CE340C02A9F2E0600C16C28 /* AstralNotifications.swift */,
 				7C81E0D029FF9D92005FB6EC /* AstralParallaxBackground.swift */,
 				7C81E0D229FF9E7E005FB6EC /* AstralParallaxBackgroundLayer.swift */,
+				7C6B66C02A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift */,
 				7CAA6AF52A00E0A100EBEA1E /* AstralParticleSystem.swift */,
 				7CAA6AF32A00A7A700EBEA1E /* AstralPhysicsCategory.swift */,
 				7CA7228F2BA1302000A0FFB3 /* AstralLightingCategory.swift */,
@@ -505,7 +506,6 @@
 			isa = PBXGroup;
 			children = (
 				7CC254C62B2C8D37003381AC /* Path */,
-				7C6B66C02A97D68200BC1BD0 /* AstralParallaxBackgroundLayer2.swift */,
 				7CF8BC3D2A90CB3700E904BF /* AstralParallaxBackgroundLayerPicker.swift */,
 				7C6B66C52A9849B100BC1BD0 /* AstralParallaxBackgroundLayerPickerScene.swift */,
 				7C338B812A6D9AAB00EC4844 /* AstralStageEditor.swift */,
