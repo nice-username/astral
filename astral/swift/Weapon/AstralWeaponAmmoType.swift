@@ -242,7 +242,7 @@ class AstralWeaponAmmoType: SKNode {
                                     spriteFilename: "Bullet03",
                                     impactAtlasName: "Bullet01Impact",
                                     damage: 3,
-                                    moveSpeed: 50,
+                                    moveSpeed: 111,
                                     range: 300,
                                     spread: 5,
                                     homing: false,

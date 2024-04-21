@@ -8,7 +8,7 @@
 import Foundation
 import SpriteKit
 
-class AstralMultiShotBulletBehavior: AstralBulletBehavior {
+class AstralBulletMultiShot: AstralBulletBehavior {
     var numberOfShots: Int
     var spreadAngleDegrees: CGFloat
 

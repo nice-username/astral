@@ -22,6 +22,7 @@ class AstralStageEditorPathInputHandler {
     private weak var scene: AstralStageEditor?
     private var nodeTypeMenu = AstralStageEditorPathNodeTypeMenu(size: CGSize(width: 180.0, height: 100.0), title: "Add node")
     private var actionNodeMenu = AstralPathNodeActionMenu(size: CGSize(width: 250.0, height: 100.0), title: "Action node")
+    private let creationNodeMenu = AstralPathNodeCreationMenu(size: CGSize(width: 200.0, height: 100.0), title: "Creation node")
     private let turnRightMenu = AstralPathNodeActionTurnMenu(size: CGSize(width: 460, height: 100.0), title: "Turn right")
     private let turnLeftMenu = AstralPathNodeActionTurnMenu(size: CGSize(width: 460, height: 100.0), title: "Turn left")
     private let doubleTapThreshold = 0.3
@@ -42,6 +43,19 @@ class AstralStageEditorPathInputHandler {
         lastTapLocation = location
     }
     
+    @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        if gameState.editorState != .appendingToPath && gameState.editorState != .drawingNewPath {
+            return
+        }
+        if gesture.state == .began {
+            // Transition to idle state to end path drawing/appending
+            self.gameState.editorTransitionTo(.idle)
+            
+            // Provide haptic feedback
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+        }
+    }
     
     func isDoubleTap(_ tapTime: TimeInterval, _ tapLocation: CGPoint) -> Bool {
         if lastTapLocation == nil {
@@ -89,13 +103,26 @@ class AstralStageEditorPathInputHandler {
     func handleDoubleTap() {
         // Moving path --> idle
         if gameState.editorState == .movingPath {
+            if let path = self.path {
+                for segment in path.segments {
+                    renderer.drawDirectionIndicator(for: segment, direction: path.direction)
+                }
+            }
             gameState.editorTransitionTo(.idle)
             return
         }
         
+        // Open menu for editing creation node properties
+        if (self.gameState.editorState == .idle) && getNode(nextTo: lastTapLocation!) as AstralPathNodeCreation? != nil {
+            currentNode = getNode(nextTo: lastTapLocation!) as! AstralPathNodeCreation
+            creationNodeMenu.show(in: scene!, position: lastTapLocation!)
+            self.gameState.editorTransitionTo(.selectingNodeCreationMenu)
+            return
+        }
+        
         // Open menu for editing action node properties
-        if (self.gameState.editorState == .idle) && getActionNodeNextTo(lastTapLocation!) != nil {
-            currentNode = getActionNodeNextTo(lastTapLocation!)
+        if (self.gameState.editorState == .idle) && getNode(nextTo: lastTapLocation!) as AstralPathNodeAction? != nil {
+            currentNode = getNode(nextTo: lastTapLocation!) as! AstralPathNodeAction
             actionNodeMenu.show(in: scene!, position: lastTapLocation!)
             self.gameState.editorTransitionTo(.selectingNodeActionType)
             return
@@ -129,18 +156,19 @@ class AstralStageEditorPathInputHandler {
     }
     
     
-    func getActionNodeNextTo(_ point: CGPoint, distanceThreshold: CGFloat = 36.0) -> AstralPathNodeAction? {
+    func getNode<T: AstralPathNode>(nextTo point: CGPoint, within distanceThreshold: CGFloat = 36.0) -> T? {
         for path in manager.paths {
             for segment in path.segments {
                 for node in segment.nodes {
-                    if node.isPoint(point, withinDistance: distanceThreshold), let actionNode = node as? AstralPathNodeAction {
-                        return actionNode
+                    if node.isPoint(point, withinDistance: distanceThreshold), let specificNode = node as? T {
+                        return specificNode
                     }
                 }
             }
         }
         return nil
     }
+
     
     
     
@@ -187,42 +215,17 @@ class AstralStageEditorPathInputHandler {
         let touchPoint = touch.location(in: scene!)
         let touchedNodes = scene?.nodes(at: touchPoint)
         
-        let closePathDistanceThreshold     = 40.0
-        let createSegmentDistanceThreshold = 20.0
-        
         switch gameState.editorState {
+            
         case .drawingNewPath, .appendingToPath:
-            let endPoint = touch.location(in: scene!)
-            let pathStart = start ?? manager.lastSegmentEndPoint() ?? endPoint
-            if let path = path {
-                let distance = pathStart.distanceTo(endPoint)
-                renderer.removeTemporaryLine()
-                if distance > createSegmentDistanceThreshold {
-                    if let origin = origin, endPoint.distanceTo(origin) < closePathDistanceThreshold {
-                        // Snap to origin to close path
-                        let segmentIndex = path.addSegment(type: .line(start: pathStart, end: origin))
-                        gameState.editorTransitionTo(.idle)
-                        // Here you can handle the logic for a completed path
-                        let lastSegment = path.segments[segmentIndex]
-                        renderer.drawDirectionIndicator(for: lastSegment)
-                        renderer.drawPermanentLine(for: lastSegment)
-                    } else {
-                        // Add a new segment to the path
-                        let segmentIndex = path.addSegment(type: .line(start: pathStart, end: endPoint))
-                        start = endPoint
-                        if gameState.editorState == .drawingNewPath {
-                            gameState.editorTransitionTo(.appendingToPath)
-                        }
-                        let lastSegment = path.segments[segmentIndex]
-                        renderer.drawDirectionIndicator(for: lastSegment)
-                        renderer.drawPermanentLine(for: lastSegment)
-                    }
-                }
+            handlePathDrawingEnd(touch: touch)
+            
+        case .selectingPathToEdit:
+            if let path = self.path {
+                renderer.updatePathColor(for: path, color: .white)
             }
-            if gameState.editorState == .drawingNewPath {
-                gameState.editorTransitionTo(.appendingToPath)
-            }
-        case .selectingPath:
+        case .selectingPathToAppend:
+            handleSelectingPath(touchPoint, forAppending: true)
             if let path = self.path {
                 renderer.updatePathColor(for: path, color: .white)
             }
@@ -332,6 +335,9 @@ class AstralStageEditorPathInputHandler {
                     
                 }
             }
+            
+        case .selectingNodeCreationMenu:
+            break
         default:
             break
         }
@@ -343,7 +349,9 @@ class AstralStageEditorPathInputHandler {
         switch gameState.editorState {
         case .drawingNewPath:
             handleDrawingNewPath(touchLocation)
-        case .selectingPath:
+        case .selectingPathToEdit:
+            handleSelectingPath(touchLocation)
+        case .selectingPathToAppend:
             handleSelectingPath(touchLocation)
         case .selectingNodeType:
             handleSelectingNodeType(touchLocation)
@@ -389,7 +397,7 @@ class AstralStageEditorPathInputHandler {
         }
     }
     
-    private func handleSelectingPath(_ touchLocation: CGPoint) {
+    private func handleSelectingPath(_ touchLocation: CGPoint, forAppending: Bool = false) {
         var closestPath: AstralStageEditorPath?
         var minDistance = pathSelectTouchThreshold
         for path in manager.paths {
@@ -402,10 +410,17 @@ class AstralStageEditorPathInputHandler {
         if let closestPath = closestPath {
             self.path = closestPath
             self.manager.setActivePath(index: self.manager.getPathIndex(path: closestPath)!)
-            self.gameState.pathManager.loadPathData(path!)
+            self.gameState.pathManagerView.loadPathData(closestPath)
             renderer.updatePathColor(for: closestPath, color: .systemBlue)
+            if forAppending {
+                // Transition to appending state, which allows the user to start adding segments to the path
+                self.gameState.editorTransitionTo(.appendingToPath)
+                // Set start point for new segments as the end of the currently selected path
+                start = manager.lastSegmentEndPoint() ?? touchLocation
+            }
         }
     }
+
     
     private func handleDrawingNewPath(_ touchLocation: CGPoint) {
         let newPathIndex = manager.newPath()
@@ -414,6 +429,48 @@ class AstralStageEditorPathInputHandler {
         start = touchLocation
         origin = start
         path?.name = "Path \(newPathIndex + 1)"
-        // renderer.drawStartPoint(at: touchLocation) // Assumes a method to visually mark the start
+    }
+    
+    
+    
+    private func handlePathDrawingEnd(touch: UITouch) {
+        let closePathDistanceThreshold     = 40.0
+        let createSegmentDistanceThreshold = 20.0
+        
+        let endPoint = touch.location(in: scene!)
+        let pathStart = start ?? manager.lastSegmentEndPoint() ?? endPoint
+        
+        if let path = path {
+            let distance = pathStart.distanceTo(endPoint)
+            renderer.removeTemporaryLine()
+            if distance > createSegmentDistanceThreshold {
+                if let origin = origin, endPoint.distanceTo(origin) < closePathDistanceThreshold {
+                    // Snap to origin to close path
+                    let segmentIndex = path.addSegment(type: .line(start: pathStart, end: origin))
+                    gameState.editorTransitionTo(.idle)
+                    
+                    // Here you can handle the logic for a completed path
+                    let lastSegment = path.segments[segmentIndex]
+                    lastSegment.calcLength()
+                    renderer.drawDirectionIndicator(for: lastSegment)
+                    renderer.drawPermanentLine(for: lastSegment)
+                } else {
+                    // Add a new segment to the path
+                    let segmentIndex = path.addSegment(type: .line(start: pathStart, end: endPoint))
+                    start = endPoint
+                    if gameState.editorState == .drawingNewPath {
+                        gameState.editorTransitionTo(.appendingToPath)
+                    }
+                    let lastSegment = path.segments[segmentIndex]
+                    lastSegment.calcLength()
+                    renderer.drawDirectionIndicator(for: lastSegment)
+                    renderer.drawPermanentLine(for: lastSegment)
+                }
+            }
+        }
+        
+        if gameState.editorState == .drawingNewPath {
+            gameState.editorTransitionTo(.appendingToPath)
+        }
     }
 }

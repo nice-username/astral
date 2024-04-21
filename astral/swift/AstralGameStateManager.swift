@@ -18,7 +18,7 @@ class AstralGameStateManager {
     var gameView: SKView?
     var editorState: AstralStageEditorState?
     var viewController: UIViewController?
-    var pathManager: AstralStageEditorPathManagerViewController = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 288, titleText: "Path Manager")
+    var pathManagerView: AstralStageEditorPathManagerViewController = AstralStageEditorPathManagerViewController(minHeight: 96, maxHeight: 288, titleText: "Path Manager")
     var stageHeight: Double = 0.0
     
     private(set) var currentState: AstralGameState? {
@@ -77,7 +77,7 @@ class AstralGameStateManager {
     
     func editorTransitionTo(_ state: AstralStageEditorState) {
         self.editorState = state
-        if state != .selectingPath {
+        if state != .selectingPathToEdit {
             dismissPathManager()
         }
         updateEditorStateView()
@@ -122,32 +122,32 @@ class AstralGameStateManager {
         }
 
         // Prepare the child view controller
-        presentingViewController.addChild(pathManager)
-        pathManager.view.frame = CGRect(x: 0,
+        presentingViewController.addChild(pathManagerView)
+        pathManagerView.view.frame = CGRect(x: 0,
                                         y: presentingViewController.view.bounds.height,
                                         width: presentingViewController.view.bounds.width,
                                         height: presentingViewController.view.bounds.height)
-        presentingViewController.view.addSubview(pathManager.view)
+        presentingViewController.view.addSubview(pathManagerView.view)
 
         // Animate the presentation
         UIView.animate(withDuration: 0.35, animations: {
-            self.pathManager.view.frame = presentingViewController.view.bounds
+            self.pathManagerView.view.frame = presentingViewController.view.bounds
         }, completion: { _ in
-            self.pathManager.didMove(toParent: presentingViewController)
+            self.pathManagerView.didMove(toParent: presentingViewController)
         })
     }
 
     func dismissPathManager() {
         UIView.animate(withDuration: 0.70, animations: { [self] in
-            pathManager.hideMenu()
-            pathManager.view.frame = CGRect(x: 0,
+            pathManagerView.hideMenu()
+            pathManagerView.view.frame = CGRect(x: 0,
                                             y: self.viewController!.view.bounds.height,
-                                            width: pathManager.view.frame.width,
-                                            height: pathManager.view.frame.height)
+                                            width: pathManagerView.view.frame.width,
+                                            height: pathManagerView.view.frame.height)
         }, completion: { _ in
-            self.pathManager.willMove(toParent: nil)
-            self.pathManager.view.removeFromSuperview()
-            self.pathManager.removeFromParent()
+            self.pathManagerView.willMove(toParent: nil)
+            self.pathManagerView.view.removeFromSuperview()
+            self.pathManagerView.removeFromParent()
         })
     }
     
@@ -161,7 +161,7 @@ class AstralGameStateManager {
         switch state {
         case .idle:
             message = "Idle"
-        case .selectingPath:
+        case .selectingPathToEdit, .selectingPathToAppend:
             message = "Selecting Path"
             icon = UIImage(named: "path_tool")
         case .drawingNewPath:
@@ -179,7 +179,10 @@ class AstralGameStateManager {
             icon = UIImage(named: "add_to_path")
         case .selectingNodeActionType:
             message = "Select action"
-            icon = UIImage(named: "path_select")            
+            icon = UIImage(named: "path_select")   
+        case .selectingNodeCreationMenu:
+            message = "Editing creation node"
+            icon = UIImage(named: "path_select")
         case .placingCreationNode:
             message = "Placing creation node"
             icon = UIImage(named: "add_to_path")

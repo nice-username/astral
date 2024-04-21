@@ -32,6 +32,7 @@ class AstralPathSegment : SKNode {
     var shape: SKShapeNode?
     var nodes: [AstralPathNode] = []
     var directionArrow: SKShapeNode?
+    var length: CGFloat = 0.0
     
     init(type: AstralPathSegmentType) {
         self.type = type
@@ -40,6 +41,15 @@ class AstralPathSegment : SKNode {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func calcLength() {
+        switch type {
+        case .line(let start, let end):
+            length = start.distanceTo(end)
+        case .bezier:
+            break
+        }
     }
     
     // Adds a node and returns its index

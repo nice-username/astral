@@ -130,6 +130,11 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         verifyAndLoadTexturesFromAtlas(named: "AstralEnemyType02_Death")
     }
     
+    @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        if gesture.state == .began {
+            self.pathInput.handleLongPress(gesture)
+        }
+    }
     
     private func createBoundaries() {
         let xOffset = 80.0
@@ -183,11 +188,17 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         
         let stateView = AstralStageEditorStateView(icon: nil, message: "Initialized.", fontSize: 18, height: 48)
         AstralGameStateManager.shared.editorStateView = stateView
-        stateView.showInView(self.view!)
+        stateView.showInView(view)
+        
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        view.addGestureRecognizer(longPressRecognizer)
     }
 
     // Handle the stage scroll pan gesture
     @objc private func handleStageScroll(_ recognizer: UIPanGestureRecognizer) {
+        if isPlaying {
+           return
+        }
         switch recognizer.state {
         case .changed:
             let translation = recognizer.translation(in: recognizer.view)
@@ -592,8 +603,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             input?.update(currentTime, deltaTime: deltaTime)
             for bg in backgrounds {
                 bg.update(deltaTime: deltaTime, gestureYChange: 0)
-            }
-            
+            }            
             
             self.pathManager.updatePathActivation(progress: self.progress)
             for path in self.pathManager.paths where path.isActivated {

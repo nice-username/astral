@@ -42,6 +42,28 @@ class AstralInputHandler {
         var hitButton = false
         for t in touches {
             let point = t.location(in: scene)
+            
+            /*
+            let b = AstralBulletFactory.createBullet(from:      .shotgunBlast,
+                                                     collider:  AstralPhysicsCategory.bulletPlayer,
+                                                     position:  point,
+                                                     direction: 90,
+                                                     scale:     2)
+            scene.addChild(b)
+            */
+            
+            let behavior = AstralBulletMultiShot(numberOfShots: 7, spreadAngleDegrees: 135)
+            let angles = behavior.calculateShotAngles(baseDirection: 90)
+
+            for angle in angles {
+                let b = AstralBulletFactory.createBullet(from:      .shotgunBlast,
+                                                         collider:  AstralPhysicsCategory.bulletPlayer,
+                                                         position:  point,
+                                                         direction: angle,
+                                                         scale:     1)
+                self.scene.addChild(b)
+            }
+            
             if fireButton.contains(point) {
                 hitButton = true
                 self.fireTouch = t

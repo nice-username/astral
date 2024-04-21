@@ -8,10 +8,10 @@
 import Foundation
 import SpriteKit
 
-class BulletFactory {
-    static func createBullet(from ammoType: AstralWeaponAmmoType, position: CGPoint, direction: CGFloat) -> AstralBullet {
+class AstralBulletFactory {
+    static func createBullet(from ammoType: AstralWeaponAmmoType, collider: UInt32, position: CGPoint, direction: CGFloat, scale: Int8 = 1) -> AstralBullet {
         let behavior: AstralBulletBehavior = determineBehavior(ammoType: ammoType)
-        let bullet = AstralBullet(ammoType: ammoType, behavior: behavior, position: position, direction: direction)
+        let bullet = AstralBullet(ammoType: ammoType, behavior: behavior, collider: collider, position: position, direction: direction, scale: scale)
         return bullet
     }
 
@@ -21,6 +21,7 @@ class BulletFactory {
         } else {
             return AstralBulletSingleShot()
         }
+        return AstralBulletSingleShot()
     }
 
     private static func findTarget() -> SKNode? {
