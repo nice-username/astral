@@ -17,6 +17,7 @@ class AstralInputHandler {
     private var joystickTouch: UITouch?
     public  var fireButton : SKSpriteNode!          // TODO:  This probably doesn't belong here
     private var holdingDownFire: Bool = false
+    weak var delegate: AstralWeaponDelegate?
     
     init(scene: SKScene, player: AstralPlayer, joystick: AstralJoystick) {
         self.scene = scene
@@ -25,7 +26,6 @@ class AstralInputHandler {
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        // print("moved 2")
         if(self.touchStartPosition != nil) {
             let currentPosition = pos
             let dx = currentPosition.x - self.touchStartPosition!.x
@@ -52,7 +52,8 @@ class AstralInputHandler {
             scene.addChild(b)
             */
             
-            let behavior = AstralBulletMultiShot(numberOfShots: 7, spreadAngleDegrees: 135)
+            /*
+            let behavior = AstralBulletMultiShot(numberOfShots: 3, spreadAngleDegrees: 45)
             let angles = behavior.calculateShotAngles(baseDirection: 90)
 
             for angle in angles {
@@ -61,8 +62,19 @@ class AstralInputHandler {
                                                          position:  point,
                                                          direction: angle,
                                                          scale:     1)
-                self.scene.addChild(b)
+                b.zPosition = 3
+                scene.addChild(b)
             }
+            */
+            
+            
+            let b = AstralBulletFactory.createBullet(from:      .homingBullet,
+                                                     collider:  AstralPhysicsCategory.bulletPlayer,
+                                                     position:  point,
+                                                     direction: 90,
+                                                     scale:     2)
+            b.delegate = self.delegate
+            delegate?.addBullet(b)
             
             if fireButton.contains(point) {
                 hitButton = true

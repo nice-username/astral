@@ -8,7 +8,7 @@
 import Foundation
 import SpriteKit
 
-class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
+class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate {
     private var gameState : AstralGameStateManager!
     private var toolbar : AstralStageEditorToolbar?
     private var player : AstralPlayer?
@@ -23,6 +23,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
     private var toolbarBgColor : UIColor?
     private var backgrounds : [AstralParallaxBackgroundLayer2] = []
     public  var enemies : [AstralEnemy] = []
+    public  var bullets : [AstralBullet] = []
     
     
     // Stage playback
@@ -105,6 +106,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         self.addChild(joystick)
         
         self.input = AstralInputHandler(scene: self, player: player!, joystick: joystick)
+        input?.delegate = self
         
         fireButton = SKSpriteNode(imageNamed: "ui_fire_button_up")        
         fireButton!.xScale = 3
@@ -127,7 +129,11 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         self.pathRenderer = AstralStageEditorPathRenderer(scene: self)
         self.pathInput = AstralStageEditorPathInputHandler(scene: self, pathManager: pathManager, pathRenderer: pathRenderer)
         
-        verifyAndLoadTexturesFromAtlas(named: "AstralEnemyType02_Death")
+        // verifyAndLoadTexturesFromAtlas(named: "AstralEnemyType02_Death")
+        
+        AstralBulletFactory.getTargets = { [weak self] in
+            return self?.enemies ?? []
+        }
     }
     
     @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
@@ -599,26 +605,30 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
         lastUpdateTime = currentTime
         
         if isPlaying {
-            self.progress = min(self.progress + deltaTime * timeScale, gameState.stageHeight)
-            input?.update(currentTime, deltaTime: deltaTime)
-            for bg in backgrounds {
-                bg.update(deltaTime: deltaTime, gestureYChange: 0)
-            }            
-            
-            self.pathManager.updatePathActivation(progress: self.progress)
-            for path in self.pathManager.paths where path.isActivated {
-                for segment in path.segments {
-                    for node in segment.nodes where node.isActive {
-                        if let creationNode = node as? AstralPathNodeCreation {
-                            creationNode.repeatAction(deltaTime: deltaTime)
-                        }
-                        if let actionNode = node as? AstralPathNodeAction {
-                            for enemy in enemies {
-                                if enemy.isCloseEnough(to: actionNode) && !actionNode.isTriggered(by: enemy) {
-                                    actionNode.performAction(for: enemy)
-                                }
-                                enemy.update(currentTime: currentTime, deltaTime: deltaTime)
+            gameTick(currentTime, deltaTime: deltaTime)
+        }
+    }
+    
+    func gameTick(_ currentTime: TimeInterval, deltaTime: TimeInterval) {
+        self.progress = min(self.progress + deltaTime * timeScale, gameState.stageHeight)
+        input?.update(currentTime, deltaTime: deltaTime)
+        for bg in backgrounds {
+            bg.update(deltaTime: deltaTime, gestureYChange: 0)
+        }
+        
+        self.pathManager.updatePathActivation(progress: self.progress)
+        for path in self.pathManager.paths where path.isActivated {
+            for segment in path.segments {
+                for node in segment.nodes where node.isActive {
+                    if let creationNode = node as? AstralPathNodeCreation {
+                        creationNode.repeatAction(deltaTime: deltaTime)
+                    }
+                    if let actionNode = node as? AstralPathNodeAction {
+                        for enemy in enemies {
+                            if enemy.isCloseEnough(to: actionNode) && !actionNode.isTriggered(by: enemy) {
+                                actionNode.performAction(for: enemy)
                             }
+                            enemy.update(currentTime: currentTime, deltaTime: deltaTime)
                         }
                     }
                 }
@@ -693,6 +703,19 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate {
             atlas.preload {
                 print("Texture atlas \(atlasName) preloaded successfully.")
             }
+        }
+    }
+    
+    
+    func addBullet(_ bullet: AstralBullet) {
+        self.addChild(bullet)
+        bullets.append(bullet)
+    }
+    
+    
+    func removeBullet(_ bullet: AstralBullet) {
+        if let index = bullets.firstIndex(of: bullet) {
+            bullets.remove(at: index)
         }
     }
 

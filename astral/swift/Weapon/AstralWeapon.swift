@@ -18,7 +18,7 @@ class AstralWeapon: SKNode {
     var clipSize: Int
     var range: CGFloat
     var direction: CGFloat
-    var ammoType: AstralWeaponAmmoType
+    var ammoType: AstralWeaponBulletConfig
     // var soundEffect: SKAction
     var isReloading: Bool = false
     var isCoolingDown: Bool = false
@@ -37,7 +37,7 @@ class AstralWeapon: SKNode {
     private var lifeTime: TimeInterval = 0.0
     
 
-    init(gameScene: SKScene, name: String, damage: Int, direction: CGFloat, cooldown: TimeInterval, range: CGFloat, ammoType: AstralWeaponAmmoType, reloadTime: TimeInterval, clipSize: Int, isBeam: Bool = false, warmUpTime: TimeInterval = 2.0) {
+    init(gameScene: SKScene, name: String, damage: Int, direction: CGFloat, cooldown: TimeInterval, range: CGFloat, ammoType: AstralWeaponBulletConfig, reloadTime: TimeInterval, clipSize: Int, isBeam: Bool = false, warmUpTime: TimeInterval = 2.0) {
         self.gameScene = gameScene
         self.damage = damage
         self.direction = direction
@@ -66,7 +66,6 @@ class AstralWeapon: SKNode {
     func fire(unit: SKSpriteNode, collider: UInt32) {
         if self.canFire() {
             if self.isBeam && !self.isFiring && !self.isWarmingUp {
-                self.beam = AstralWeaponAmmoType.beamWhite.spawnBeam(collider: collider)
                 self.lastUsedCollider = collider
                 
                 for sprite in beam {
@@ -82,8 +81,8 @@ class AstralWeapon: SKNode {
                 let randomOffset = CGFloat(Int(arc4random_uniform(4)) + 0)
                 let spawnPt1     = CGPoint(x: unit.position.x - 24 - randomOffset, y: unit.position.y)
                 let spawnPt2     = CGPoint(x: unit.position.x + 24 + randomOffset, y: unit.position.y)
-                let bullet       = AstralWeaponAmmoType.singleShot.spawnBullet(at: spawnPt1, direction: self.direction + (randomOffset/2), collider: collider)
-                let bullet2      = AstralWeaponAmmoType.singleShot.spawnBullet(at: spawnPt2, direction: self.direction - (randomOffset/2), collider: collider)
+                let bullet       = AstralWeaponBulletConfig.singleShot.spawnBullet(at: spawnPt1, direction: self.direction + (randomOffset/2), collider: collider)
+                let bullet2      = AstralWeaponBulletConfig.singleShot.spawnBullet(at: spawnPt2, direction: self.direction - (randomOffset/2), collider: collider)
                 self.gameScene.addChild(bullet)
                 self.gameScene.addChild(bullet2)
                 self.cooldownTimeToWait = self.cooldownTime

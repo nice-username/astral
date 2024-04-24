@@ -79,7 +79,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         // self.addChild(self.hitbox!)
         
         // Weapon
-        let defaultAmmo   = AstralWeaponAmmoType.singleShot
+        let defaultAmmo   = AstralWeaponBulletConfig.singleShot
         let defaultWeapon = AstralWeapon(gameScene: scene,
                                          name: "Double shot",
                                          damage: 1,

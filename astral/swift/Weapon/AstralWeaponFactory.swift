@@ -8,8 +8,8 @@
 import Foundation
 
 class WeaponFactory {
-    func createWeapon(type: AstralWeaponAmmoType) -> AstralWeaponBehavior? {
-        switch type {
+    func createWeapon(bulletConfig: AstralWeaponBulletConfig) -> AstralWeaponBehavior? {
+        switch bulletConfig.type {
         // case .beam:
         //     return AstralWeaponBeam()
         case .singleShot:

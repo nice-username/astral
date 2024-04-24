@@ -19,8 +19,14 @@ class AstralCollisionHandler {
         
         // Bullet vs. screen boundaries
         if cat1 == AstralPhysicsCategory.bulletPlayer && cat2 == AstralPhysicsCategory.boundary {
+            if let bullet = contact.bodyA.node as? AstralBullet {
+                bullet.handleCollision(bullet: bullet, with: contact.bodyB.node!)
+            }
             contact.bodyA.node?.run(self.removeAction)
         } else if cat1 == AstralPhysicsCategory.boundary && cat2 == AstralPhysicsCategory.bulletPlayer {
+            if let bullet = contact.bodyB.node as? AstralBullet {
+                bullet.handleCollision(bullet: bullet, with: contact.bodyA.node!)
+            }
             contact.bodyB.node?.run(self.removeAction)
         }
         if cat1 == AstralPhysicsCategory.bulletEnemy && cat2 == AstralPhysicsCategory.boundary {
@@ -86,7 +92,7 @@ class AstralCollisionHandler {
                 player.run(impactSound)
             }
             if let bulletNode = contact.bodyB.node as? SKSpriteNode,
-               let ammoType = bulletNode.userData?["ammoType"] as? AstralWeaponAmmoType {
+               let ammoType = bulletNode.userData?["ammoType"] as? AstralWeaponBulletConfig {
                 ammoType.handleBulletImpact(bullet: bulletNode)
             }
         }

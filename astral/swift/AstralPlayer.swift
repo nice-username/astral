@@ -106,14 +106,14 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     private func initWeapon() {
         // Default weapon
         // Laser beam weapon
-        let laserAmmo = AstralWeaponAmmoType.beamWhite
+        // let laserAmmo = AstralWeaponBulletConfig.beamWhite
         let defaultWeapon = AstralWeapon(gameScene: self.initialScene,
                                          name: "",
                                          damage: 1,
                                          direction: 90.0,
                                          cooldown: 0.125,
                                          range: 0,
-                                         ammoType: laserAmmo,
+                                         ammoType: AstralWeaponBulletConfig.singleShot,
                                          reloadTime: 6.0,
                                          clipSize: 0,
                                          isBeam: false)

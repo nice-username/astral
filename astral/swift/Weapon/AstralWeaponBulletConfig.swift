@@ -1,5 +1,5 @@
 //
-//  AmmoType.swift
+//  AstralWeaponBulletConfig.swift
 //  astral
 //
 //  Created by Joseph Haygood on 4/30/23.
@@ -28,7 +28,8 @@ enum AmmoType: Int {
 }
 */
 
-class AstralWeaponAmmoType: SKNode {
+class AstralWeaponBulletConfig {
+    let type: AstralBulletType
     let spriteFilename: String?
     let damage: CGFloat
     let moveSpeed: CGFloat
@@ -47,7 +48,8 @@ class AstralWeaponAmmoType: SKNode {
     var impactAnim: SKAction?
     let isAnimated: Bool
     
-    init(name: String, spriteFilename: String? = nil, warmUpAtlasName: String? = nil, firingAtlasName: String? = nil, impactAtlasName: String? = nil, damage: CGFloat, moveSpeed: CGFloat, range: CGFloat, spread: CGFloat, homing: Bool, splash: Bool, isAnimated: Bool = false) {
+    init(type: AstralBulletType, spriteFilename: String? = nil, warmUpAtlasName: String? = nil, firingAtlasName: String? = nil, impactAtlasName: String? = nil, damage: CGFloat, moveSpeed: CGFloat, range: CGFloat, spread: CGFloat, homing: Bool, splash: Bool, isAnimated: Bool = false) {
+        self.type = type
         self.spriteFilename = spriteFilename
         self.damage = damage
         self.moveSpeed = moveSpeed
@@ -60,8 +62,6 @@ class AstralWeaponAmmoType: SKNode {
         self.impactAtlasName = impactAtlasName
         self.isAnimated = isAnimated
         
-        super.init()
-        self.name = name
         self.initializeWarmUp()
         self.initializeFiring()
         self.initializeImpact()
@@ -208,8 +208,9 @@ class AstralWeaponAmmoType: SKNode {
     }
     
     
-    static var singleShot: AstralWeaponAmmoType {
-        return AstralWeaponAmmoType(name: "Double Shot",
+    static var singleShot: AstralWeaponBulletConfig {
+        return AstralWeaponBulletConfig(
+                        type: .singleShot,
                         spriteFilename: "Bullet01",
                         impactAtlasName: "Bullet01Impact",
                         damage: 4,
@@ -220,32 +221,32 @@ class AstralWeaponAmmoType: SKNode {
                         splash: false)
     }
     
-    
-    static var beamWhite: AstralWeaponAmmoType {
-        return AstralWeaponAmmoType(name: "Beam",
-                        warmUpAtlasName: "BeamWhite02WarmUp",
-                        firingAtlasName: "BeamWhite00",
-                        damage: 1,
-                        moveSpeed: 0,
-                        range: 0,
-                        spread: 0,
-                        homing: false,
-                        splash: false)
-    }
-    
-    static var tripleShot: AstralWeaponAmmoType {
-        return AstralWeaponAmmoType(name: "Triple Shot", spriteFilename: "Bullet00", damage: 5, moveSpeed: 20, range: 400, spread: 30, homing: false, splash: false)
-    }
-    
-    static var shotgunBlast: AstralWeaponAmmoType {
-        return AstralWeaponAmmoType(name: "Shotgun Blast",
+    static var shotgunBlast: AstralWeaponBulletConfig {
+        return AstralWeaponBulletConfig(
+                                    type: .shotgun,
                                     spriteFilename: "Bullet03",
                                     impactAtlasName: "Bullet01Impact",
                                     damage: 3,
                                     moveSpeed: 111,
+                                    range: 45,
+                                    spread: 3,
+                                    homing: false,
+                                    splash: false,
+                                    isAnimated: true)
+    }
+    
+    
+    
+    static var homingBullet: AstralWeaponBulletConfig {
+        return AstralWeaponBulletConfig(
+                                    type: .homing,
+                                    spriteFilename: "Bullet08",
+                                    impactAtlasName: "Bullet01Impact",
+                                    damage: 3,
+                                    moveSpeed: 100,
                                     range: 300,
                                     spread: 5,
-                                    homing: false,
+                                    homing: true,
                                     splash: false,
                                     isAnimated: true)
     }

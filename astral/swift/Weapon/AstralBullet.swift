@@ -12,11 +12,12 @@ class AstralBullet: SKNode {
     var damage: CGFloat
     var moveSpeed: CGFloat
     var behavior: AstralBulletBehavior
-    var ammoType: AstralWeaponAmmoType
+    var ammoType: AstralWeaponBulletConfig
     var sprite: AstralSprite
     var impact: AstralSprite
+    weak var delegate: AstralWeaponDelegate?
 
-    init(ammoType: AstralWeaponAmmoType, behavior: AstralBulletBehavior, collider: UInt32, position: CGPoint, direction: CGFloat, scale: Int8 = 1) {
+    init(ammoType: AstralWeaponBulletConfig, behavior: AstralBulletBehavior, collider: UInt32, position: CGPoint, direction: CGFloat, scale: Int8 = 1) {
         self.damage     = ammoType.damage
         self.moveSpeed  = ammoType.moveSpeed
         self.ammoType   = ammoType
@@ -48,6 +49,7 @@ class AstralBullet: SKNode {
         self.position = position
         self.addChild(sprite)
         setupPhysics(direction: direction, collider: collider)
+        (behavior as? AstralBulletHomingShot)?.startSpinning(bullet: self)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -73,6 +75,11 @@ class AstralBullet: SKNode {
     
     func update(deltaTime: TimeInterval) {
         behavior.apply(to: self, deltaTime: deltaTime)
+    }    
+    
+    func handleCollision(bullet: AstralBullet, with target: SKNode) {
+        bullet.behavior.handleCollision(bullet: bullet, with: target)
+        delegate?.removeBullet(bullet)
     }
 }
 
