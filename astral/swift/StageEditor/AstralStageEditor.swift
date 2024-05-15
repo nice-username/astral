@@ -129,7 +129,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate
         self.pathRenderer = AstralStageEditorPathRenderer(scene: self)
         self.pathInput = AstralStageEditorPathInputHandler(scene: self, pathManager: pathManager, pathRenderer: pathRenderer)
         
-        // verifyAndLoadTexturesFromAtlas(named: "AstralEnemyType02_Death")
+        verifyAndLoadTexturesFromAtlas(named: "Bullet09")
         
         AstralBulletFactory.getTargets = { [weak self] in
             return self?.enemies ?? []
@@ -615,6 +615,7 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate
         for bg in backgrounds {
             bg.update(deltaTime: deltaTime, gestureYChange: 0)
         }
+        updateBullets(deltaTime: deltaTime)
         
         self.pathManager.updatePathActivation(progress: self.progress)
         for path in self.pathManager.paths where path.isActivated {
@@ -716,6 +717,12 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate
     func removeBullet(_ bullet: AstralBullet) {
         if let index = bullets.firstIndex(of: bullet) {
             bullets.remove(at: index)
+        }
+    }
+    
+    func updateBullets(deltaTime: TimeInterval) {
+        for bullet in bullets {
+            bullet.update(deltaTime: deltaTime)
         }
     }
 

@@ -23,6 +23,8 @@ class AstralStageEditorPathInputHandler {
     private var nodeTypeMenu = AstralStageEditorPathNodeTypeMenu(size: CGSize(width: 180.0, height: 100.0), title: "Add node")
     private var actionNodeMenu = AstralPathNodeActionMenu(size: CGSize(width: 250.0, height: 100.0), title: "Action node")
     private let creationNodeMenu = AstralPathNodeCreationMenu(size: CGSize(width: 200.0, height: 100.0), title: "Creation node")
+    private let creationCountMenu = AstralPathNodeCreationCountMenu(size: CGSize(width: 340, height: 100.0), title: "Entity count")
+    private let movementSpeedMenu = AstralPathNodeCreationSpeedMenu(size: CGSize(width: 460, height: 100.0), title: "Movement speed")
     private let turnRightMenu = AstralPathNodeActionTurnMenu(size: CGSize(width: 460, height: 100.0), title: "Turn right")
     private let turnLeftMenu = AstralPathNodeActionTurnMenu(size: CGSize(width: 460, height: 100.0), title: "Turn left")
     private let doubleTapThreshold = 0.3
@@ -336,8 +338,55 @@ class AstralStageEditorPathInputHandler {
                 }
             }
             
+        
         case .selectingNodeCreationMenu:
-            break
+            for node in touchedNodes! {
+                if let nodeName = node.name, !creationNodeMenu.hasActions() {
+                    switch nodeName {
+                    case "moveButton":
+                        if let _ = currentNode as? AstralPathNodeCreation {
+                            self.gameState.editorTransitionTo(.placingCreationNode)
+                            creationNodeMenu.hide()
+                        }
+                        
+                    case "set countButton":
+                        creationNodeMenu.openSubMenu(creationCountMenu)
+                        if let node = currentNode as? AstralPathNodeCreation {
+                            creationCountMenu.setCount(node.repeatCount)
+                        }
+                        
+                    case "set speedButton":
+                        creationNodeMenu.openSubMenu(movementSpeedMenu)
+                        if let node = currentNode as? AstralPathNodeCreation {
+                            movementSpeedMenu.setCount(Int(node.initialSpeed))
+                        }
+                    default:
+                        break
+                    }
+                }
+                
+                if !touchedNodes!.contains(where: { $0.name == "nodeCreationMenuBackground" }) {
+                    creationNodeMenu.hide()
+                    gameState.editorTransitionTo(.idle)
+                    
+                    if let menu = creationNodeMenu.subMenu {
+                        menu.hide()
+                        if menu.name == "Entity countMenu" {
+                            if let node = currentNode as? AstralPathNodeCreation {
+                                let count = creationCountMenu.getCount()
+                                node.repeatCount = count
+                            }
+                        }
+                        if menu.name == "Movement speedMenu" {
+                            if let node = currentNode as? AstralPathNodeCreation {
+                                let speed = movementSpeedMenu.getCount()
+                                node.initialSpeed = CGFloat(speed)
+                            }
+                        }
+                    }
+                }
+            }
+            
         default:
             break
         }

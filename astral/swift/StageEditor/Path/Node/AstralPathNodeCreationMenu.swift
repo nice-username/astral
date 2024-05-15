@@ -7,7 +7,7 @@
 
 import Foundation
 
-class AstralPathNodeCreationMenu: AstralStageEditorPopupMenu {
+class AstralPathNodeCreationMenu: AstralStageEditorPopupMenu {    
     override init(size: CGSize, title: String = "") {
         super.init(size: size, title: title)
         background.name = "nodeCreationMenuBackground"

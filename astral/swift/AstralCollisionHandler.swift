@@ -46,8 +46,8 @@ class AstralCollisionHandler {
                     bulletNode.run(sequence)
                     bulletNode.texture = SKTexture(imageNamed: "Bullet01Impact1")
                     bulletNode.zPosition = 10
-                    bulletNode.xScale = 10.0
-                    bulletNode.yScale = 5.0
+                    bulletNode.xScale = 4.0
+                    bulletNode.yScale = 2.0
                     bulletNode.texture?.filteringMode = .nearest
                 }
             }
@@ -70,8 +70,8 @@ class AstralCollisionHandler {
                     bulletNode.run(sequence)
                     bulletNode.texture = SKTexture(imageNamed: "Bullet01Impact1")
                     bulletNode.zPosition = 10
-                    bulletNode.xScale = 10.0
-                    bulletNode.yScale = 5.0
+                    bulletNode.xScale = 4.0
+                    bulletNode.yScale = 2.0
                     bulletNode.texture?.filteringMode = .nearest
                 }
             }

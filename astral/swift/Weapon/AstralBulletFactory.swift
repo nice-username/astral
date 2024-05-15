@@ -20,7 +20,7 @@ class AstralBulletFactory {
     private static func determineBehavior(ammoType: AstralWeaponBulletConfig) -> AstralBulletBehavior {
         if ammoType.type == .homing {
             let target = findTarget()  // Ensure this actually retrieves a valid target
-            return AstralBulletHomingShot(target: target, nudgeStrength: 0.1)  // Customize the nudge strength as needed
+            return AstralBulletHomingShot(target: target, nudgeStrength: 4.0)  // Customize the nudge strength as needed
         }
         if ammoType.type == .shotgun {
             return AstralBulletMultiShot(numberOfShots: Int(ammoType.range), spreadAngleDegrees: ammoType.spread)
@@ -30,8 +30,9 @@ class AstralBulletFactory {
 
 
     private static func findTarget() -> SKNode? {
-        guard let enemies = getTargets?() else { return nil }
-        print(enemies.count)
-        return nil
+        guard let enemies = getTargets?(), !enemies.isEmpty else { return nil }
+        // Example: Selecting the first enemy as the target
+        // We want to implement more sophisticated target selection logic here
+        return enemies.first
     }
 }

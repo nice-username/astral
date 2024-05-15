@@ -80,7 +80,9 @@ class AstralWeaponBulletConfig {
         self.initBulletPhysics(bullet: bullet, collider: collider)
         
         // Stretch a random amount verticall
-        // bullet.yScale = Double.random(in: 2.0...4.0)
+        // bullet.xScale = 2.0
+        // bullet.yScale = 2.0
+        // bullet.texture?.filteringMode = .nearest
 
         // Convert the angle from degrees to radians
         let angleInRadians = direction * CGFloat.pi / 180.0
@@ -211,14 +213,15 @@ class AstralWeaponBulletConfig {
     static var singleShot: AstralWeaponBulletConfig {
         return AstralWeaponBulletConfig(
                         type: .singleShot,
-                        spriteFilename: "Bullet01",
+                        spriteFilename: "Bullet09",
                         impactAtlasName: "Bullet01Impact",
                         damage: 4,
                         moveSpeed: 800,
                         range: 0,
                         spread: 0,
                         homing: false,
-                        splash: false)
+                        splash: false,
+                        isAnimated: true)
     }
     
     static var shotgunBlast: AstralWeaponBulletConfig {
