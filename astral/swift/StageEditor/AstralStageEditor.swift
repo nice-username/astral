@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SceneKit
 import SpriteKit
 
 class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate {
@@ -37,6 +38,10 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate
     private var pathInput : AstralStageEditorPathInputHandler!
     private var pathManager = AstralStageEditorPathManager()
     private var pathRenderer: AstralStageEditorPathRenderer!
+    
+    // test SceneKit 3D
+    // var sceneKitManager: AstralSceneKitManager!
+    
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -198,7 +203,13 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate
         
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         view.addGestureRecognizer(longPressRecognizer)
+
+        // new camera controls
+        // sceneKitManager = AstralSceneKitManager(view: view, sceneName: "IkarugaSplit1")
+        
     }
+    
+    
 
     // Handle the stage scroll pan gesture
     @objc private func handleStageScroll(_ recognizer: UIPanGestureRecognizer) {
