@@ -53,6 +53,10 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
     var currentBackground : SKSpriteNode!
     var nextBackground : SKSpriteNode!
     var isTransitioning = false
+    private var cameraShaker: SKNodeShaker!
+    private var newGameMenuItemCopy: SKLabelNode!
+    private var itemShaker: SKNodeShaker!
+    var lastUpdateTime : TimeInterval = 0
 
     
     override func didMove(to view: SKView) {
@@ -97,6 +101,20 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
                                                  isLocked: false,
                                                  lockedText: nil,
                                                  index: 0)
+        newGameMenuItemCopy = newGameMenuItem.labelNode.copy() as? SKLabelNode
+        newGameMenuItemCopy.alpha = 0.667
+        newGameMenuItemCopy.fontColor = .white
+        newGameMenuItemCopy.zPosition = newGameMenuItem.labelNode.zPosition - 1
+        addChild(newGameMenuItemCopy)
+        
+        itemShaker = SKNodeShaker(
+            node:              newGameMenuItemCopy,
+            intensity:         25.00,
+            rotationIntensity: 0.12,
+            duration:          1.15,
+            decay:             0.9
+        )
+
                                                  
         let continueMenuItem = AstralMainMenuItem(withText: "Continue",
                                                   position: CGPoint(x: size.width / 2, y: size.height * 0.45),
@@ -135,8 +153,23 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
         animateCursor()
         addChild(cursorNode)
         
-        self.startBackgroundTransitions()
-        self.gameState?.transitionTo(.editor)
+        let newCamera = SKCameraNode()
+        self.camera = newCamera
+        addChild(newCamera)
+        camera?.position.x += self.frame.width / 2
+        camera?.position.y += self.frame.height / 2
+        
+        if let camera = self.camera {
+            cameraShaker = SKNodeShaker(
+                node:              camera,
+                intensity:         25.00,
+                rotationIntensity: 0.12,
+                duration:          1.15,
+                decay:             0.9
+            )
+        }
+        // self.startBackgroundTransitions()
+        // self.gameState?.transitionTo(.editor)
     }
     
     
@@ -419,6 +452,7 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         
+        
         if let menuItem = menuItem(atPoint: location) {
             self.vibrate(style: .medium)
             if let action = menuItem.action {
@@ -430,6 +464,9 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
                 self.selectedItem = menuItem.index
             }
         }
+        
+        itemShaker?.startShake()
+        cameraShaker?.startShake()
     }
     
     
@@ -453,6 +490,12 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
     
     // Called before each frame is rendered
     override func update(_ currentTime: TimeInterval) {
+        
+        let deltaTime = currentTime - (lastUpdateTime)
+        lastUpdateTime = currentTime
+        cameraShaker?.update(deltaTime: deltaTime)
+        // itemShaker.update(deltaTime: deltaTime)
+        
         for background in self.backgrounds {
             if background.isInTransition || background === self.backgrounds[self.currentBackgroundIndex] {
                 background.scroll()

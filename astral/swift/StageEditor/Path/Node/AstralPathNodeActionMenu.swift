@@ -18,6 +18,7 @@ class AstralPathNodeActionMenu: AstralStageEditorPopupMenu {
         addMenuOption(text: "Turn right", fontSize: 32)
         addMenuOption(text: "Use weapon", fontSize: 32)
         addMenuOption(text: "Stop attacking", fontSize: 32)
+        addMenuOption(text: "Delete", fontSize: 32)
         layoutMenuOptions()
     }
     

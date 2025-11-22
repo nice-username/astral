@@ -11,6 +11,7 @@ import UIKit
 
 class AstralSceneKeyframeViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var keyframeManager: AstralSceneKeyframeManager!
+    var sceneKitManager: AstralSceneKitManager!
     var selectedFrameIndex: Int?
     var keyframePropertiesVC: AstralSceneKeyframePropertiesViewController!
     
@@ -22,8 +23,19 @@ class AstralSceneKeyframeViewController: UICollectionViewController, UICollectio
     
     private func setupNavigationBar() {
         navigationItem.title = "Keyframes"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addKeyframe))
+        let btns = [
+            UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(playbackKeyframes)),
+            UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addKeyframe))
+        ]
+        navigationItem.setRightBarButtonItems(btns, animated: true)
     }
+    
+    @objc private func playbackKeyframes() {
+        print("playback keyframes")
+        let keyframes = keyframeManager.getAllKeyframes()
+        sceneKitManager.playbackKeyframes(keyframes)
+    }
+    
     
     @objc private func addKeyframe() {
         print("add new keyframe")
@@ -64,7 +76,7 @@ class AstralSceneKeyframeViewController: UICollectionViewController, UICollectio
         ]
         
         keyframePropertiesVC = AstralSceneKeyframePropertiesViewController()
-        keyframePropertiesVC.sceneKitManager = (parent?.parent as? GameViewController)?.sceneKitManager
+        keyframePropertiesVC.sceneKitManager = sceneKitManager
         keyframePropertiesVC.keyframeManager = keyframeManager
         keyframePropertiesVC.selectedFrameIndex = selectedFrameIndex!
         keyframePropertiesVC.sliderValues = values

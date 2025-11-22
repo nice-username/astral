@@ -98,6 +98,8 @@ class AstralWeaponBulletConfig {
         bullet.physicsBody?.velocity = CGVector(dx: directionVector.dx * speed, dy: directionVector.dy * speed)
         bullet.userData = ["impactAnim": self.impactAnim!]
         
+        bullet.zPosition = 10
+        
         return bullet
     }
     

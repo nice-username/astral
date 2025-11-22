@@ -20,5 +20,18 @@ let AstralGlobalEnemyConfiguration : [String: AstralEnemyConfiguration] = [
                                        weapons: [],
                                        speedUpChangeTimeLeft: 0.0,
                                        speedDownChangeTimeLeft: 0.0,
+                                       currentPath: nil),
+    
+    "enemy2": AstralEnemyConfiguration(health: 4,
+                                       maxHealth: 4,
+                                       movementSpeed: 12,
+                                       atlasName: "AstralEnemyType01",
+                                       textures: AstralEnemy.loadTextures(fromAtlasNamed: "AstralEnemyType01", namingStyle: .angleSequence),
+                                       deathAtlas: "AstralEnemyType02_Death",
+                                       polarity: .white,
+                                       targetRestingFrame: 0,
+                                       weapons: [],
+                                       speedUpChangeTimeLeft: 0.0,
+                                       speedDownChangeTimeLeft: 0.0,
                                        currentPath: nil)
 ]

@@ -61,7 +61,16 @@ class AstralPathSegment : SKNode {
     
     // Removes a node by index
     func removeNode(at index: Int) {
+        nodes[index].removeFromParent()
         nodes.remove(at: index)
+    }
+    
+    // Removes a node by reference
+    func removeNode(_ node: AstralPathNode) {
+        if let index = nodes.firstIndex(where: { $0 === node }) {
+            nodes[index].removeFromParent()
+            nodes.remove(at: index)
+        }
     }
     
     // get the center and facing angle of the segment for drawing arrows

@@ -20,6 +20,7 @@ class GameViewController: UIViewController {
         gameStateManager.viewController = self
         
         
+        // let scene = AstralMainMenuScene(size: view.bounds.size)
         let scene = AstralMainMenuScene(size: view.bounds.size)
         if let view = self.view as! SKView? {
             scene.scaleMode = .aspectFill
@@ -28,12 +29,13 @@ class GameViewController: UIViewController {
             view.showsFPS            = true
             view.showsNodeCount      = true
             
+            /*
             let lowerThird = CGRect(x: 0, y: view.frame.height * 2/3, width: view.frame.width, height: view.frame.height / 3)
-            
             sceneKitManager = AstralSceneKitManager(view: view, sceneName: "IkarugaSplit1")
             keyframeViewController = AstralSceneKeyframeViewController(collectionViewLayout: UICollectionViewFlowLayout())
 
             keyframeViewController.keyframeManager = AstralSceneKeyframeManager()
+            keyframeViewController.sceneKitManager = sceneKitManager
             
             
             // Embed KeyframeViewController in UINavigationController
@@ -44,6 +46,7 @@ class GameViewController: UIViewController {
             keyframeNavController.didMove(toParent: self)
             
             keyframeViewController.keyframeManager.addTestData()
+             */
         }
         
         

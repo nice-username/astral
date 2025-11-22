@@ -315,6 +315,15 @@ class AstralStageEditorPathInputHandler {
                             actionNodeMenu.hide()
                         }
                         
+                    case "deleteButton":
+                        if let node = currentNode as? AstralPathNodeAction, let path = path {
+                            for segment in path.segments {
+                                segment.removeNode(node)
+                            }
+                            self.gameState.editorTransitionTo(.idle)
+                            actionNodeMenu.hide()
+                        }
+                        
                     default:
                         break
                     }
@@ -348,17 +357,23 @@ class AstralStageEditorPathInputHandler {
                             self.gameState.editorTransitionTo(.placingCreationNode)
                             creationNodeMenu.hide()
                         }
-                        
                     case "set countButton":
                         creationNodeMenu.openSubMenu(creationCountMenu)
                         if let node = currentNode as? AstralPathNodeCreation {
                             creationCountMenu.setCount(node.repeatCount)
                         }
-                        
                     case "set speedButton":
                         creationNodeMenu.openSubMenu(movementSpeedMenu)
                         if let node = currentNode as? AstralPathNodeCreation {
                             movementSpeedMenu.setCount(Int(node.initialSpeed))
+                        }
+                    case "deleteButton":
+                        if let node = currentNode as? AstralPathNodeCreation, let path = path {
+                            for segment in path.segments {
+                                segment.removeNode(node)
+                            }
+                            self.gameState.editorTransitionTo(.idle)
+                            creationNodeMenu.hide()
                         }
                     default:
                         break

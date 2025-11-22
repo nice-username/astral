@@ -17,6 +17,7 @@ class AstralPathNodeCreationMenu: AstralStageEditorPopupMenu {
         addMenuOption(text: "Set count", fontSize: 32)
         addMenuOption(text: "Set type", fontSize: 32)
         addMenuOption(text: "Set speed", fontSize: 32)
+        addMenuOption(text: "Delete", fontSize: 32)
         layoutMenuOptions()
     }
     

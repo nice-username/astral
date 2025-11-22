@@ -20,7 +20,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     private var targetRestingFrame: Int = 6
     private var initialScene: SKScene
     public var weapons: [AstralWeapon] = []
-
+    
     // Thruster particles
     var particleSystem: AstralParticleSystem?
     var hitbox : SKShapeNode?
@@ -52,25 +52,25 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         
         
         /*
-            Example Gaussian blur
+         Example Gaussian blur
          */
         /*
-            let glowEffectNode = SKEffectNode()
-            let glowShapeNode = SKShapeNode(circleOfRadius: self.size.width / 4)
-            glowShapeNode.fillColor = .white
-            glowShapeNode.strokeColor = .white
-            glowEffectNode.addChild(glowShapeNode)
-            self.addChild(glowEffectNode)
-            
-            let blurFilter = CIFilter(name: "CIGaussianBlur")
-            blurFilter?.setValue(20, forKey: kCIInputRadiusKey)
-            glowEffectNode.filter = blurFilter
-            glowEffectNode.shouldRasterize = true
-            glowEffectNode.shouldEnableEffects = true
-            
-            // For the white polarity:
-            glowShapeNode.fillColor = .white
-            glowShapeNode.strokeColor = .white
+         let glowEffectNode = SKEffectNode()
+         let glowShapeNode = SKShapeNode(circleOfRadius: self.size.width / 4)
+         glowShapeNode.fillColor = .white
+         glowShapeNode.strokeColor = .white
+         glowEffectNode.addChild(glowShapeNode)
+         self.addChild(glowEffectNode)
+         
+         let blurFilter = CIFilter(name: "CIGaussianBlur")
+         blurFilter?.setValue(20, forKey: kCIInputRadiusKey)
+         glowEffectNode.filter = blurFilter
+         glowEffectNode.shouldRasterize = true
+         glowEffectNode.shouldEnableEffects = true
+         
+         // For the white polarity:
+         glowShapeNode.fillColor = .white
+         glowShapeNode.strokeColor = .white
          */
     }
     
@@ -186,12 +186,6 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         } else {
         }
     }
-
-    
-    
-    
-    
-    
     
     
     
@@ -203,9 +197,9 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
         let currentFrame = textures.firstIndex(of: currentTexture) ?? targetRestingFrame
         let frameDifference = abs(targetRestingFrame - currentFrame)
         let frameDuration = duration / Double(frameDifference)
-
+        
         let toFrame = currentFrame < targetRestingFrame ? targetRestingFrame + 1 : targetRestingFrame - 1
-
+        
         var actions: [SKAction] = []
         for i in stride(from: currentFrame, to: toFrame, by: currentFrame < targetRestingFrame ? 1 : -1) {
             let texture = self.textures[i]
@@ -216,11 +210,11 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
             actions.append(waitAction)
             actions.append(textureAction)
         }
-
+        
         let sequence = SKAction.sequence(actions)
         self.run(sequence,withKey: "returnToRest")
     }
-
+    
     
     // Called every frame to update the player's position, weapons and thruster jet animation
     func update(currentTime: TimeInterval, deltaTime: TimeInterval) {
@@ -240,30 +234,13 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
             }
         }
     }
-    
-    // Called when the player touches the screen, moves the player sprite
-    func move(to touch: UITouch) {
-        // Move the player sprite based on the touch position
-    }
-    
-    // Switches the player's polarity, allowing them to absorb or dodge bullets depending on the current polarity
-    func switchPolarity() {
-        // Switch the player's polarity and update any relevant properties
-    }
-    
     // Handles the player picking up power-ups, and updates the player's weapons or other properties as appropriate
     // func collectPowerUp(_ powerUp: PowerUpType) {
-        // Handle the power-up and apply any relevant effects to the player's properties
+    // Handle the power-up and apply any relevant effects to the player's properties
     // }
     
     // Ouch!
     func damage(amount: Int = 1) {
         // print("You're fucking dead.")
-    }
-    
-    
-    // Upgrades the player's current weapon, increasing its power or adding new capabilities
-    func upgradeWeapon() {
-        // Upgrade the player's weapon and update any relevant properties
     }
 }

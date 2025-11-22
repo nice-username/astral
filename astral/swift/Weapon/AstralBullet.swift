@@ -48,6 +48,7 @@ class AstralBullet: SKNode {
         super.init()
         self.position = position
         self.addChild(sprite)
+        self.zPosition = 10
         setupPhysics(direction: direction, collider: collider)
         (behavior as? AstralBulletHomingShot)?.startSpinning(bullet: self)
     }

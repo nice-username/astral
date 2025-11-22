@@ -81,13 +81,9 @@ class AstralSceneKitManager {
         cameraNode.position = SCNVector3(x: 0, y: 0, z: 25)
         scnView.scene?.rootNode.addChildNode(cameraNode)
         scnView.pointOfView = cameraNode
-        scnView.rendersContinuously = true  // May increase power consumption
+        // scnView.rendersContinuously = true  // May increase power consumption
         scnView.isJitteringEnabled = true   // Helps reduce aliasing
         scnView.antialiasingMode = .multisampling4X
-        
-        // Set the camera to look at the model
-        // let constraint = SCNLookAtConstraint(target: ship)
-        // cameraNode.constraints = [constraint]
         
         // Idle camera animation
         let rotation = SCNAction.rotateBy(x: 0, y: 0, z: CGFloat.pi * 1, duration: 6)
@@ -155,44 +151,30 @@ class AstralSceneKitManager {
         node.geometry?.materials = [material]
     }
     
-
+    
     
     func updateCameraPosition(x: Float, y: Float, z: Float) {
         cameraNode.position = SCNVector3(x: x, y: y, z: z)
     }
     
     
-    func setupPlaybackControls(view: UIView) {
-        playbackControlsView = UIView(frame: CGRect(x: 0, y: view.bounds.height - 230, width: view.bounds.width, height: 35))
-        playbackControlsView.backgroundColor = .black
-        view.addSubview(playbackControlsView)
-        
-        let playButton = UIButton(frame: CGRect(x: 20, y: 10, width: 30, height: 30))
-        playButton.setTitle("▶️", for: .normal)
-        playButton.addTarget(self, action: #selector(playback), for: .touchUpInside)
-        playbackControlsView.addSubview(playButton)
-        
-        let pauseButton = UIButton(frame: CGRect(x: 80, y: 10, width: 30, height: 30))
-        pauseButton.setTitle("⏸", for: .normal)
-        pauseButton.addTarget(self, action: #selector(pausePlayback), for: .touchUpInside)
-        playbackControlsView.addSubview(pauseButton)
-        
-        let stopButton = UIButton(frame: CGRect(x: 140, y: 10, width: 30, height: 30))
-        stopButton.setTitle("⏹", for: .normal)
-        stopButton.addTarget(self, action: #selector(stopPlayback), for: .touchUpInside)
-        playbackControlsView.addSubview(stopButton)
-    }
-    
-    @objc func playback() {
-        // Implement playback logic
-    }
-    
-    @objc func pausePlayback() {
-        // Implement pause logic
-    }
-    
-    @objc func stopPlayback() {
-        // Implement stop logic
+    func playbackKeyframes(_ keyframes: [AstralSceneKeyframe]) {
+        for (index, keyframe) in keyframes.enumerated() {
+            let delay = keyframes.prefix(index).reduce(0) { $0 + $1.timeWait }
+            let action = SCNAction.group([
+                SCNAction.move(to: keyframe.position, duration: keyframe.timeApply),
+                SCNAction.rotateTo(x: CGFloat(keyframe.eulerAngles.x), y: CGFloat(keyframe.eulerAngles.y), z: CGFloat(keyframe.eulerAngles.z), duration: keyframe.timeApply, usesShortestUnitArc: true)
+            ])
+
+            // Sequence actions with wait
+            let sequenceAction = SCNAction.sequence([
+                SCNAction.wait(duration: delay),
+                action,
+            ])
+
+            // Run the sequence action on the ship
+            ship?.runAction(sequenceAction, forKey: "keyframe\(index)")
+        }
     }
 }
 

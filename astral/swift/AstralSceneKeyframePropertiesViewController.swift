@@ -70,13 +70,18 @@ class AstralSceneKeyframePropertiesViewController: UIViewController {
     func setSliderValue(index: Int, value: Float) {
         if index >= 0 && index < self.sliders.count {
             sliders[index].value = value
+            rotationSliderChanged(sliders[index])
         }
+    }
+    
+    func updateLabel(attatched to: UISlider) {
+        let label = controlScrollView.viewWithTag(to.tag + 10) as? UILabel
+        label?.text = String(format: "%.2f", to.value)
     }
     
     @objc func rotationSliderChanged(_ sender: UISlider) {
         let radians = CGFloat(sender.value)
-        let label = controlScrollView.viewWithTag(sender.tag + 10) as? UILabel  // Retrieve the corresponding label
-        label?.text = String(format: "%.2f", sender.value)  // Update the label text
+        updateLabel(attatched: sender)
         
         switch sender.tag {
         case 0: // X-axis
@@ -100,7 +105,7 @@ class AstralSceneKeyframePropertiesViewController: UIViewController {
         super.viewWillDisappear(animated)
         let pos   = SCNVector3(x: sliders[3].value, y: sliders[4].value, z: sliders[5].value)
         let angle = SCNVector3(x: sliders[0].value, y: sliders[1].value, z: sliders[2].value)
-        let keyframe = AstralSceneKeyframe(timeWait: 10, timeApply: 10, position: pos, eulerAngles: angle)
+        let keyframe = AstralSceneKeyframe(timeWait: 0.5, timeApply: 2, position: pos, eulerAngles: angle)
         keyframeManager.setKeyframe(at: selectedFrameIndex, from: keyframe)
     }
 }
