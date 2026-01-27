@@ -77,7 +77,6 @@ class AstralWeapon: SKNode {
                 self.isWarmingUp = true
                 self.warmUpTimeToWait = self.warmUpTime
             } else {
-                // print("lol, firin: \(self.isFiring), warmin: \(self.isWarmingUp)")
                 let randomOffset = CGFloat(Int(arc4random_uniform(4)) + 0)
                 let spawnPt1     = CGPoint(x: unit.position.x - 24 - randomOffset, y: unit.position.y)
                 let spawnPt2     = CGPoint(x: unit.position.x + 24 + randomOffset, y: unit.position.y)
@@ -89,7 +88,6 @@ class AstralWeapon: SKNode {
                 self.isCoolingDown = true
             }
         } else {
-            // print("fucken, cd: \(self.isCoolingDown), reload: \(self.isReloading)")
         }
     }
     

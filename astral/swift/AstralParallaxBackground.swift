@@ -53,7 +53,6 @@ class AstralParallaxBackground: SKNode {
                 background.position.y += speed * CGFloat(delta)
                 if background.position.y > size.height / 2 {
                     background.position.y -= size.height
-                    // print("Layer \(index) looped, position reset to \(background.position.y)")
                 }
             }
         }

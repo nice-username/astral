@@ -164,11 +164,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
     
     
     
-    //
-    //
-    //
     func moveBy(_ vector: CGVector) {
-        // print("dx: \(vector.dx), dy: \(vector.dy)")
         let newPosition = CGPoint(x: self.position.x + vector.dx * movementSpeed, y: self.position.y + vector.dy * movementSpeed)
         self.position = newPosition
     }
@@ -234,13 +230,7 @@ class AstralPlayer: SKSpriteNode, AstralUnit {
             }
         }
     }
-    // Handles the player picking up power-ups, and updates the player's weapons or other properties as appropriate
-    // func collectPowerUp(_ powerUp: PowerUpType) {
-    // Handle the power-up and apply any relevant effects to the player's properties
-    // }
-    
-    // Ouch!
+
     func damage(amount: Int = 1) {
-        // print("You're fucking dead.")
     }
 }

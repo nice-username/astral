@@ -146,7 +146,6 @@ class AstralJoystick: SKNode {
         
         // Determine the direction based on the touch location and the joystick's position
         self.direction = self.calculateDirection(from: location, relativeTo: self.touchDownPoint!)
-        // print("\(direction)")
         
         // Update the joystick texture based on the direction
         if self.direction != .none {

@@ -64,29 +64,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.gravity = .zero
         self.physicsWorld.contactDelegate = self
         self.createBoundaries()
-        
-        // test dialog
-        /*
-            let speaker = AstralDialogSpeaker(at: CGPoint(x: -150.0, y: -472.0))
-            let test1   = AstralDialogSmall(dialogText: "host", dialogWidth: 7.0)
-            let test2   = AstralDialogSmall(dialogText: "status", dialogWidth: 46.0)
-            let test3   = AstralDialogSmall(dialogText: "connection", dialogWidth: 65.0)
-            let test4   = AstralDialogSmall(dialogText: "frequency", dialogWidth: 62.0)
-            self.addChild(test1)
-            self.addChild(test2)
-            self.addChild(test3)
-            self.addChild(test4)
-            self.addChild(speaker)
-                    
-            test2.position.y -= 48.0
-            test3.position.y -= 96.0
-            test4.position.y -= 144.0
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                test1.extendWidthTo(targetWidth: 34.0, overTime: 0.250)
-            }
-        */
-        
+
         let textIntro = ["", "Wow that's so long lmfaooo"]
         let textBox = AstralDialogTextBox(scale: 4.0,
                                           backgroundSpriteName: "DialogTextBox00",
@@ -116,11 +94,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         body.categoryBitMask = AstralPhysicsCategory.boundary
         body.collisionBitMask = AstralPhysicsCategory.boundary
         body.contactTestBitMask = AstralPhysicsCategory.bulletPlayer | AstralPhysicsCategory.bulletEnemy | AstralPhysicsCategory.enemy | AstralPhysicsCategory.player
-        
-        // let hitbox = SKShapeNode(rect: bounds)
-        // hitbox.lineWidth = 5.0
-        // self.addChild(hitbox)
-        
         self.physicsBody = body
     }
     

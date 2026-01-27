@@ -20,8 +20,6 @@ class AstralParallaxBackgroundLayerPickerScene: SKScene {
         let deltaTime = currentTime - lastUpdateTime
         
         if parallaxBackgrounds.indices.contains(1) {
-            // parallaxBackgrounds[1].update(deltaTime: deltaTime)
-            // print("hello?")
         }
         
         if deltaTime < 1.0 {
