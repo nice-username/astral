@@ -455,7 +455,11 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         particles()
         let deathAnimation = SKAction.animate(with: deathTextures, timePerFrame: 1 / 15.0)
         self.run(deathAnimation) {
-            (self.scene as? AstralStageEditor)?.removeEnemy(self)
+            if let editor = self.scene as? AstralStageEditor {
+                editor.removeEnemy(self)
+            } else if let gameScene = self.scene as? GameScene {
+                gameScene.removeEnemy(self)
+            }
         }
     }
     

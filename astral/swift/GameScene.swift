@@ -137,7 +137,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for e in enemies {
             e.update(currentTime: currentTime, deltaTime: dt)
         }
-        
+
         self.lastUpdateTime = currentTime
+    }
+
+    func removeEnemy(_ enemy: AstralEnemy) {
+        enemies.removeAll { $0 == enemy }
+        enemy.removeFromParent()
     }
 }
