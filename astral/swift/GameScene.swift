@@ -106,7 +106,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         input?.fireButton = self.fireButton
         
         self.size = CGSize(width: 750.0, height: 1334.0)
-        print("w: \(self.frame.width), h:\(self.frame.height)")
     }
 
     

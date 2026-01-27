@@ -42,16 +42,14 @@ class AstralParallaxBackgroundLayer2: SKNode {
         if !self.layers.isEmpty {
             return self.layers[0].frame.width
         } else {
-            print("Can't get the width of the background layer because you haven't loaded it yet.")
             return 0
         }
     }
-    
+
     public func getHeight() -> CGFloat {
         if !self.layers.isEmpty {
             return self.layers[0].frame.height
         } else {
-            print("Can't get the height of the background layer because you haven't loaded it yet.")
             return 0
         }
     }

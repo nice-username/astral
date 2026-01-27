@@ -241,7 +241,6 @@ class AstralParallaxBackgroundLayerPicker: UIViewController {
         case .began, .changed:
             updateBottomView(translation: translation, controlsRevealed: controlsRevealed)
         case .ended, .cancelled:
-            print("Was \(controlsRevealed), \(velocity.y)")
             if controlsRevealed && (velocity.y > 500 || translation.y > 64) {
                 resetControls()
             } else if !controlsRevealed && (velocity.y > 500 || translation.y <= -64) {

@@ -96,7 +96,6 @@ class AstralStageEditorMenuStepper: SKNode {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("began")
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         if upArrowButton.contains(location) {

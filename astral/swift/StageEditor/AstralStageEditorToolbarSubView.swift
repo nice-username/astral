@@ -259,15 +259,15 @@ class AstralStageEditorToolbarSubView: UIView {
         
         switch index {
         case 0:
-            print("New")
+            break
         case 1:
             NotificationCenter.default.post(name: .loadFile, object: nil)
         case 2:
             NotificationCenter.default.post(name: .saveFile, object: nil)
         case 3:
-            print("rename")
+            break
         case 4:
-            print("set length")
+            break
         case 5:
             if self.gameState?.currentState == .editorPlay {
                 self.buttons[5].setImage(UIImage(named: "play"), for: .normal)
@@ -289,9 +289,9 @@ class AstralStageEditorToolbarSubView: UIView {
         case 0:
             self.gameState?.transitionTo(.editorParallaxBackgroundPicker)
         case 1:
-            print("Location")
+            break
         case 2:
-            print("Animation")
+            break
         default:
             break
         }

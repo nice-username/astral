@@ -98,9 +98,7 @@ class AstralGameStateManager {
             viewControllerToPresent.modalPresentationStyle = .fullScreen
             viewControllerToPresent.isModalInPresentation = true
             presentingViewController.present(viewControllerToPresent, animated: false, completion: nil)
-            // presentingViewController.present(viewControllerToPresent, animated: animated, completion: completion)
         } else {
-            print("Never set the view controller before calling transition!")
         }
     }
     
@@ -110,14 +108,12 @@ class AstralGameStateManager {
             sceneToPresent.scaleMode = .aspectFill
             gameView!.presentScene(sceneToPresent, transition: transition)
         } else {
-            print("Never set the view before calling transition!")
         }
     }
     
     
     func presentPathManager() {
         guard let presentingViewController = viewController else {
-            print("No presenting view controller set")
             return
         }
 

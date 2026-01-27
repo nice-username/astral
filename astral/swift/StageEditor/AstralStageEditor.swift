@@ -53,22 +53,22 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate
     
     func setupToolbar() {
         let stageButton = AstralStageEditorToolbarButton(icon: UIImage(named: "file_tool")!,
-                                                         action: { print("stage button tapped") },
+                                                         action: { },
                                                          type: .topLevel,
                                                          submenuType: .file)
-        
+
         let transitionButton = AstralStageEditorToolbarButton(icon: UIImage(named: "transition")!,
-                                                              action: { print("transition button tapped") },
+                                                              action: { },
                                                               type: .topLevel,
                                                               submenuType: .transition)
-        
+
         let pathButton = AstralStageEditorToolbarButton(icon: UIImage(named: "path_tool")!,
-                                                        action: { print("path button tapped") },
+                                                        action: { },
                                                         type: .topLevel,
                                                         submenuType: .path)
-        
+
         let enemyButton = AstralStageEditorToolbarButton(icon: UIImage(named: "enemy")!,
-                                                         action: { print("enemy button tapped") },
+                                                         action: { },
                                                          type: .topLevel,
                                                          submenuType: .enemy)
         
@@ -557,7 +557,6 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate
             clearPaths()
             loadPaths(from: loadedStage.paths)
         } else {
-            print("Failed to load stage.")
         }
     }
 
@@ -707,14 +706,9 @@ class AstralStageEditor: SKScene, SKPhysicsContactDelegate, AstralWeaponDelegate
     func verifyAndLoadTexturesFromAtlas(named atlasName: String) {
         let atlas = SKTextureAtlas(named: atlasName)
         let textureNames = atlas.textureNames
-        
-        if textureNames.isEmpty {
-            print("No textures found in atlas: \(atlasName). Check the atlas name and its contents.")
-        } else {
-            print("Found \(textureNames.count) textures in atlas: \(atlasName). Loading textures...")
-            atlas.preload {
-                print("Texture atlas \(atlasName) preloaded successfully.")
-            }
+
+        if !textureNames.isEmpty {
+            atlas.preload { }
         }
     }
     

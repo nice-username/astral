@@ -108,15 +108,13 @@ class AstralWeaponBulletConfig {
         bullet.position = point
         
         guard let atlasName = self.spriteFilename else {
-            print("Sprite filename is nil")
             return bullet
         }
-        
+
         let atlas = SKTextureAtlas(named: atlasName)
         let textureNames = atlas.textureNames.sorted()
-        
+
         if textureNames.isEmpty {
-            print("No textures found in atlas: \(atlasName)")
             return bullet
         }
         

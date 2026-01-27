@@ -27,7 +27,6 @@ class AstralPathNodeAction: AstralPathNode {
     
     func performAction(for enemy: AstralEnemy) {
         guard let action = action else {
-            print("No action defined for this node.")
             return
         }
 

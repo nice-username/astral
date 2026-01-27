@@ -31,14 +31,11 @@ class AstralSceneKeyframeViewController: UICollectionViewController, UICollectio
     }
     
     @objc private func playbackKeyframes() {
-        print("playback keyframes")
         let keyframes = keyframeManager.getAllKeyframes()
         sceneKitManager.playbackKeyframes(keyframes)
     }
-    
-    
+
     @objc private func addKeyframe() {
-        print("add new keyframe")
         // Navigate to the keyframe editing view
         // Example:
         // let editVC = KeyframeEditViewController()

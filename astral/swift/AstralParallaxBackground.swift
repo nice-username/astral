@@ -25,7 +25,6 @@ class AstralParallaxBackground: SKNode {
                 addChild(layer)
                 layers.append(layer)
             } else {
-                print("Failed to load texture: \(layerName)")
             }
         }
     }

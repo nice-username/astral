@@ -43,7 +43,6 @@ class AstralBitmapFont {
     //
     func loadFont(fromFile fileName: String, withExtension fileExtension: String = "fnt") {
         guard let fontURL = Bundle.main.url(forResource: fileName, withExtension: fileExtension) else {
-            print("Could not find font file")
             return
         }
 
@@ -77,7 +76,6 @@ class AstralBitmapFont {
                 }
             }
         } catch {
-            print("Error reading font file: \(error)")
         }
     }
     

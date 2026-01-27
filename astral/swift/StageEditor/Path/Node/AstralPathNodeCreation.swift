@@ -95,7 +95,6 @@ class AstralPathNodeCreation: AstralPathNode {
         switch objectType {
         case .enemy:
             if let config = AstralGlobalEnemyConfiguration["enemy\(objectIndex)"] {
-                print(config)
                 let enemy = AstralEnemy(scene: self.scene!, config: config)
                 enemy.zPosition = 4
                 return enemy

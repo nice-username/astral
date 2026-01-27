@@ -97,7 +97,7 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
         // Add menu buttons
         let newGameMenuItem = AstralMainMenuItem(withText: "New Game",
                                                  position: CGPoint(x: size.width / 2, y: size.height * 0.5),
-                                                 action: { print("New Game Selected") },
+                                                 action: { },
                                                  isLocked: false,
                                                  lockedText: nil,
                                                  index: 0)
@@ -118,14 +118,14 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
                                                  
         let continueMenuItem = AstralMainMenuItem(withText: "Continue",
                                                   position: CGPoint(x: size.width / 2, y: size.height * 0.45),
-                                                  action: { print("Continue Selected") },
+                                                  action: { },
                                                   isLocked: false,
                                                   lockedText: nil,
                                                   index: 1)
 
         let optionsMenuItem = AstralMainMenuItem(withText: "Options",
                                                  position: CGPoint(x: size.width / 2, y: size.height * 0.35),
-                                                 action: { print("Options Selected") },
+                                                 action: { },
                                                  isLocked: false,
                                                  lockedText: nil,
                                                  index: 3)
@@ -402,7 +402,6 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
     
     
     func resetBackgrounds(except currentIndex: Int) {
-        print("Reset")
         for (index, background) in backgrounds.enumerated() {
             if index != currentIndex {
                 background.resetBackground()
@@ -482,7 +481,6 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
                 player.delegate = self
                 self.audioPlayers.append(player)
             } catch {
-                print("Could not load sound file.")
             }
         }
     }

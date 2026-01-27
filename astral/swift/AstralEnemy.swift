@@ -224,11 +224,6 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
             ids.append(newSpriteID)
         }
         
-        print("Sprite IDs for turnRight: \(ids)")
-        for id in ids {
-            print("Texture name for ID \(id): \(self.textures[id].description)")
-        }
-        
         // Retrieve corresponding textures for the turn
         let turnTextures = ids.map { self.textures[$0] }
         
@@ -292,17 +287,12 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
             ids.append(newSpriteID)
         }
         
-        print("Sprite IDs for turnLeft: \(ids)")
-        for id in ids {
-            print("Texture name for ID \(id): \(self.textures[id].description)")
-        }
-        
         // Retrieve corresponding textures for the turn
         let turnTextures = ids.map { self.textures[$0] }
-        
+
         // Calculate the duration for each frame of the animation
         let frameDuration = time / Double(turnTextures.count)
-        
+
         // Create an array of actions to set each texture in turn
         var actions: [SKAction] = []
         for (index, texture) in turnTextures.enumerated() {
@@ -314,7 +304,7 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
             let frameAction = SKAction.sequence([textureAction, setSpriteAction, waitAction])
             actions.append(frameAction)
         }
-        
+
         // Run the action sequence on the enemy node
         let sequence = SKAction.sequence(actions)
         self.run(sequence, withKey: "turn")

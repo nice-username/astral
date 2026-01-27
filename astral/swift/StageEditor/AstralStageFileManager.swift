@@ -17,9 +17,7 @@ class AstralStageFileManager {
             let jsonData = try JSONEncoder().encode(stageData)
             let filePath = getDocumentsDirectory().appendingPathComponent(filename)
             try jsonData.write(to: filePath)
-            print("Saved stage data to \(filePath)")
         } catch {
-            print("Couldn't save file: \(error)")
         }
     }
     
@@ -34,7 +32,6 @@ class AstralStageFileManager {
             let loadedStageData = try JSONDecoder().decode(AstralStageData.self, from: jsonData)
             return loadedStageData
         } catch {
-            print("Couldn't load file: \(error)")
             return nil
         }
     }
