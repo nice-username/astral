@@ -205,32 +205,36 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
     
     
     
-    //
-    // Tell the sprite to play its "turn right" animation over time
-    //
     func turnRight(over time: TimeInterval, turnAngle: Int) {
-        // Stop any existing turn animation
+        performTurn(over: time, turnAngle: turnAngle, direction: 1)
+    }
+
+    func turnLeft(over time: TimeInterval, turnAngle: Int) {
+        performTurn(over: time, turnAngle: turnAngle, direction: -1)
+    }
+
+    /// Performs a turn animation over time
+    /// - Parameters:
+    ///   - time: Duration of the turn animation
+    ///   - turnAngle: Angle to turn in degrees
+    ///   - direction: 1 for right, -1 for left
+    private func performTurn(over time: TimeInterval, turnAngle: Int, direction: Int) {
         self.removeAction(forKey: "turn")
-        
+
         let startSpriteID = self.currentSpriteID
         let spriteCount = self.textures.count
-        // Calculate turnSteps as before
         let turnSteps = (turnAngle + 14) / 15
-        
-        // Generate the sequence of sprite IDs for the turn
+
         var ids: [Int] = []
         for i in 0..<turnSteps {
-            let newSpriteID = (startSpriteID + i + 1) % spriteCount // Adjusted to include the final sprite
+            let offset = direction * (i + 1)
+            let newSpriteID = (startSpriteID + offset + spriteCount) % spriteCount
             ids.append(newSpriteID)
         }
-        
-        // Retrieve corresponding textures for the turn
+
         let turnTextures = ids.map { self.textures[$0] }
-        
-        // Calculate the duration for each frame of the animation
         let frameDuration = time / Double(turnTextures.count)
-        
-        // Create an array of actions to set each texture in turn
+
         var actions: [SKAction] = []
         for (index, texture) in turnTextures.enumerated() {
             let textureAction = SKAction.setTexture(texture)
@@ -241,19 +245,15 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
             let frameAction = SKAction.sequence([textureAction, setSpriteAction, waitAction])
             actions.append(frameAction)
         }
-        
-        // Run the action sequence on the enemy node
+
         let sequence = SKAction.sequence(actions)
         self.run(sequence, withKey: "turn")
     }
 
-    
-    
     // Needed to comply to protocol
     func moveBy(_ vector: CGVector) {
     }
-    
-    
+
     func turn(direction: AstralEnemyOrder.AstralEnemyActionType, duration: TimeInterval, angle: CGFloat) {
         switch direction {
         case .turnLeft:
@@ -265,49 +265,6 @@ class AstralEnemy: SKSpriteNode, AstralUnit {
         default:
             break
         }
-    }
-    
-        
-    //
-    // Tell the sprite to play its "turn right" animation over time
-    //
-    func turnLeft(over time: TimeInterval, turnAngle: Int) {
-        // Stop any existing turn animation
-        self.removeAction(forKey: "turn")
-        
-        let startSpriteID = self.currentSpriteID
-        let spriteCount = self.textures.count
-        // Calculate turnSteps as before
-        let turnSteps = (turnAngle + 14) / 15
-        
-        // Generate the sequence of sprite IDs for the turn
-        var ids: [Int] = []
-        for i in 0..<turnSteps {
-            let newSpriteID = (startSpriteID - (i + 1) + spriteCount) % spriteCount
-            ids.append(newSpriteID)
-        }
-        
-        // Retrieve corresponding textures for the turn
-        let turnTextures = ids.map { self.textures[$0] }
-
-        // Calculate the duration for each frame of the animation
-        let frameDuration = time / Double(turnTextures.count)
-
-        // Create an array of actions to set each texture in turn
-        var actions: [SKAction] = []
-        for (index, texture) in turnTextures.enumerated() {
-            let textureAction = SKAction.setTexture(texture)
-            let waitAction = SKAction.wait(forDuration: frameDuration)
-            let setSpriteAction = SKAction.run { [weak self] in
-                self?.currentSpriteID = ids[index]
-            }
-            let frameAction = SKAction.sequence([textureAction, setSpriteAction, waitAction])
-            actions.append(frameAction)
-        }
-
-        // Run the action sequence on the enemy node
-        let sequence = SKAction.sequence(actions)
-        self.run(sequence, withKey: "turn")
     }
 
 
