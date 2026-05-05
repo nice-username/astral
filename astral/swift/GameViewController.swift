@@ -20,8 +20,9 @@ class GameViewController: UIViewController {
         gameStateManager.viewController = self
         
         
-        // let scene = AstralMainMenuScene(size: view.bounds.size)
         let scene = AstralMainMenuScene(size: view.bounds.size)
+        //let scene = PlayerEntityTestScene.createScene()
+
         if let view = self.view as! SKView? {
             scene.scaleMode = .aspectFill
             view.presentScene(scene)

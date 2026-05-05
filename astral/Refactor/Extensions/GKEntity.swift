@@ -7,6 +7,7 @@
 
 import Foundation
 import GameplayKit
+import SpriteKit
 
 extension GKEntity {
     var node: SKNode? {
@@ -14,13 +15,13 @@ extension GKEntity {
     }
     
     func switchPolarity() {
-        guard let polarityComponent = component(ofType: AstralPolarityComponent.self),
+        guard let polarityComponent = component(ofType: AstralPlayerPolarityComponent.self),
               polarityComponent.canSwitch() else { return }
         
         polarityComponent.switchPolarity()
     }
     
     func getCurrentPolarity() -> AstralPolarityState? {
-        return component(ofType: AstralPolarityComponent.self)?.polarity
+        return component(ofType: AstralPlayerPolarityComponent.self)?.polarity
     }
 }

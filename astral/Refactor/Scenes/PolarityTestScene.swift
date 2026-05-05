@@ -21,7 +21,7 @@ class PolarityTestScene: SKScene {
         audioManager = AstralAudioManager.shared
         
         // Preload assets
-        AstralPolarityComponent.preloadAssets {
+        AstralPlayerPolarityComponent.preloadAssets {
             print("Polarity assets preloaded")
             self.setupTestEntity()
         }
@@ -41,7 +41,7 @@ class PolarityTestScene: SKScene {
         
         // Add components
         let spriteComponent = GKSKNodeComponent(node: spriteNode)
-        let polarityComponent = AstralPolarityComponent()
+        let polarityComponent = AstralPlayerPolarityComponent()
         if let audioManager = audioManager {
             let sfxComponent = AstralSoundEffectComponent(audioManager: audioManager)
             sfxComponent.registerSound("switch", filename: "def_win_31.wav")
@@ -77,7 +77,7 @@ class PolarityTestScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let entity = testEntity,
-              let polarityComponent = entity.component(ofType: AstralPolarityComponent.self) else { return }
+              let polarityComponent = entity.component(ofType: AstralPlayerPolarityComponent.self) else { return }
         
         if polarityComponent.canSwitch() {
             entity.node?.position = touches.first!.location(in: self)

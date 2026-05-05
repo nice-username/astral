@@ -8,7 +8,7 @@
 import Foundation
 import GameplayKit
 
-class StateComponent: GKComponent, Resettable {
+class AstralStateComponent: GKComponent, Resettable {
     var isActive: Bool = false
     var isInvincible: Bool = false
     

@@ -1,0 +1,86 @@
+{
+  "/Users/joseph/Developer/astral/astral/astral/Refactor/Classes/AstralAudioManager.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralAudioManager.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralAudioManager.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralAudioManager.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralAudioManager.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralAudioManager.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/AstralLightingCategory.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralLightingCategory.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralLightingCategory.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralLightingCategory.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralLightingCategory.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralLightingCategory.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/AstralPhysicsCategory.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPhysicsCategory.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPhysicsCategory.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPhysicsCategory.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPhysicsCategory.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPhysicsCategory.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/AstralPlayer.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPlayer.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPlayer.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPlayer.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPlayer.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPlayer.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/BottomDrawerViewController.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/BottomDrawerViewController.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/BottomDrawerViewController.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/BottomDrawerViewController.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/BottomDrawerViewController.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/BottomDrawerViewController.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/GameScene.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/GameScene.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/GameScene.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/GameScene.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/GameScene.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/GameScene.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/StageEditor/AstralStageEditorToolbar.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorToolbar.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorToolbar.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorToolbar.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorToolbar.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorToolbar.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/StageEditor/Path/AstralStageEditorPathData.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorPathData.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorPathData.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorPathData.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorPathData.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralStageEditorPathData.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/StageEditor/Path/Node/AstralPathNodeActionMenu.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPathNodeActionMenu.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPathNodeActionMenu.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPathNodeActionMenu.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPathNodeActionMenu.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralPathNodeActionMenu.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/Weapon/AstralBulletHomingShot.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletHomingShot.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletHomingShot.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletHomingShot.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletHomingShot.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletHomingShot.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/Weapon/AstralBulletSingleShot.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletSingleShot.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletSingleShot.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletSingleShot.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletSingleShot.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralBulletSingleShot.swiftdeps"
+  },
+  "/Users/joseph/Developer/astral/astral/astral/swift/Weapon/AstralWeaponDelegate.swift" : {
+    "const-values" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralWeaponDelegate.swiftconstvalues",
+    "dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralWeaponDelegate.d",
+    "diagnostics" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralWeaponDelegate.dia",
+    "object" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralWeaponDelegate.o",
+    "swift-dependencies" : "/Users/joseph/Developer/astral/astral/.derivedData/Build/Intermediates.noindex/astral.build/Debug-iphonesimulator/astral.build/Objects-normal/x86_64/AstralWeaponDelegate.swiftdeps"
+  }
+}

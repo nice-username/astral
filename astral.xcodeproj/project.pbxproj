@@ -61,6 +61,7 @@
 		7C4795C02BA6CB820048CEA2 /* Bullet03.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C4795BF2BA6CB820048CEA2 /* Bullet03.atlas */; };
 		7C4795C52BA992820048CEA2 /* AstralEnemyType02_Death.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 7C4795C42BA992820048CEA2 /* AstralEnemyType02_Death.atlas */; };
 		7C47DE5B2A245F0000113BF2 /* blip.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7C47DE5A2A245F0000113BF2 /* blip.wav */; };
+		7C57A3382F2C96C300E1E0F0 /* PlayerEntityTestScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C57A3372F2C96C300E1E0F0 /* PlayerEntityTestScene.swift */; };
 		7C59CD172B44EE94007FF1C2 /* AstralStageEditorPathNodeTypeMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C59CD162B44EE94007FF1C2 /* AstralStageEditorPathNodeTypeMenu.swift */; };
 		7C5F04DC2BF87361004D0A75 /* IkarugaSplit1.dae in Resources */ = {isa = PBXBuildFile; fileRef = 7C5F04DB2BF87361004D0A75 /* IkarugaSplit1.dae */; };
 		7C611FB12AA81F1800FC04D8 /* AstralInputHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C611FB02AA81F1800FC04D8 /* AstralInputHandler.swift */; };
@@ -242,6 +243,7 @@
 		7C4795BF2BA6CB820048CEA2 /* Bullet03.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = Bullet03.atlas; sourceTree = "<group>"; };
 		7C4795C42BA992820048CEA2 /* AstralEnemyType02_Death.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = AstralEnemyType02_Death.atlas; sourceTree = "<group>"; };
 		7C47DE5A2A245F0000113BF2 /* blip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = blip.wav; sourceTree = "<group>"; };
+		7C57A3372F2C96C300E1E0F0 /* PlayerEntityTestScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerEntityTestScene.swift; sourceTree = "<group>"; };
 		7C59CD162B44EE94007FF1C2 /* AstralStageEditorPathNodeTypeMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralStageEditorPathNodeTypeMenu.swift; sourceTree = "<group>"; };
 		7C5F04DB2BF87361004D0A75 /* IkarugaSplit1.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = IkarugaSplit1.dae; sourceTree = "<group>"; };
 		7C611FB02AA81F1800FC04D8 /* AstralInputHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AstralInputHandler.swift; sourceTree = "<group>"; };
@@ -505,6 +507,7 @@
 			isa = PBXGroup;
 			children = (
 				7C23D9A92D64338A00D5AA5D /* PolarityTestScene.swift */,
+				7C57A3372F2C96C300E1E0F0 /* PlayerEntityTestScene.swift */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -1016,6 +1019,7 @@
 				7CC57AE62BD4CD9C006ADD3B /* AstralBulletFactory.swift in Sources */,
 				7CC57AEB2BD546AF006ADD3B /* AstralBulletMultiShot.swift in Sources */,
 				7C0711F32B3B78B8009B6F48 /* AstralEnemyConfiguration.swift in Sources */,
+				7C57A3382F2C96C300E1E0F0 /* PlayerEntityTestScene.swift in Sources */,
 				7C04C9FB2B2CBF0D00E91357 /* AstralPathNodeProtocol.swift in Sources */,
 				7C280F582A1ABA4E002385D7 /* AstralBitmapFont.swift in Sources */,
 				7C2D38D72B4FC3BC00366D0D /* AstralPathNodeActionTurnMenu.swift in Sources */,
@@ -1220,7 +1224,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = personal.astral;
+				PRODUCT_BUNDLE_IDENTIFIER = personal.astralgame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1250,7 +1254,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = personal.astral;
+				PRODUCT_BUNDLE_IDENTIFIER = personal.astralgame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

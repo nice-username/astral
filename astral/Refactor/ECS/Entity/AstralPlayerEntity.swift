@@ -10,35 +10,42 @@ import SpriteKit
 import GameplayKit
 
 class AstralPlayerEntity: AstralEntity {
-    // Movement
-    var movementSpeed: CGFloat = 8.0
-
-    // Health
     var health: Int = 1
     var maxHealth: Int = 1
 
-    // Reference to joystick for input
-    private weak var joystick: AstralJoystick?
+    var movementSpeed: CGFloat {
+        get {
+            component(ofType: AstralPlayerMovementComponent.self)?.movementSpeed ?? 0
+        }
+        set {
+            component(ofType: AstralPlayerMovementComponent.self)?.movementSpeed = newValue
+        }
+    }
+
+    private static let defaultMovementSpeed: CGFloat = 8.0
 
     init(scene: SKScene, position: CGPoint, joystick: AstralJoystick) {
-        self.joystick = joystick
+        let textureComponent = AstralTextureComponent(atlasNamed: AstralPlayerTurnAnimationComponent.atlasName)
+        let initialTexture = textureComponent.textures.indices.contains(AstralPlayerTurnAnimationComponent.restingFrameIndex)
+            ? textureComponent.textures[AstralPlayerTurnAnimationComponent.restingFrameIndex]
+            : SKTexture(imageNamed: "frame06.png")
 
-        // Create the sprite node
-        let sprite = SKSpriteNode(imageNamed: "frame06.png")
+        let sprite = SKSpriteNode(texture: initialTexture)
         sprite.position = position
         sprite.zPosition = 2
-        sprite.texture?.filteringMode = .nearest
+        sprite.name = "player"
 
         super.init(type: .player, node: sprite)
 
-        // Add polarity component
-        addComponent(AstralPolarityComponent())
+        addComponent(textureComponent)
+        addComponent(AstralPlayerPolarityComponent())
+        addComponent(AstralPlayerMovementComponent(joystick: joystick, movementSpeed: Self.defaultMovementSpeed))
+        addComponent(AstralPlayerTurnAnimationComponent(joystick: joystick))
+        addComponent(AstralPlayerThrusterEffectComponent(joystick: joystick))
 
-        // Setup physics
         setupPhysics(sprite: sprite)
-
-        // Add to scene
         scene.addChild(sprite)
+        component(ofType: AstralStateComponent.self)?.isActive = true
     }
 
     required init?(coder: NSCoder) {
@@ -54,13 +61,16 @@ class AstralPlayerEntity: AstralEntity {
         sprite.physicsBody?.affectedByGravity = false
     }
 
-    func update(deltaTime: TimeInterval) {
-        guard let joystick = joystick,
-              let velocity = joystick.velocity else { return }
+    override func update(deltaTime: TimeInterval) {
+        super.update(deltaTime: deltaTime)
+    }
 
-        let newX = position.x + velocity.dx * movementSpeed
-        let newY = position.y + velocity.dy * movementSpeed
-        position = CGPoint(x: newX, y: newY)
+    func setSprite(inputValue: CGFloat) {
+        component(ofType: AstralPlayerTurnAnimationComponent.self)?.setSprite(inputValue: inputValue)
+    }
+
+    func animateToRestingPosition(duration: TimeInterval) {
+        component(ofType: AstralPlayerTurnAnimationComponent.self)?.animateToRestingPosition(duration: duration)
     }
 
     func damage(amount: Int = 1) {
@@ -71,13 +81,12 @@ class AstralPlayerEntity: AstralEntity {
     }
 
     func die() {
-        component(ofType: StateComponent.self)?.isActive = false
+        component(ofType: AstralStateComponent.self)?.isActive = false
         node?.removeFromParent()
     }
 
     override func reset() {
         super.reset()
         health = maxHealth
-        movementSpeed = 8.0
     }
 }

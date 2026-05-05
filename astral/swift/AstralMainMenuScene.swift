@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import AVFoundation
 import UIKit
 import SpriteKit
 
@@ -40,9 +39,8 @@ struct AstralMainMenuItem {
 
 
 
-class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
+class AstralMainMenuScene: SKScene {
     var gameState: AstralGameStateManager?
-    private var audioPlayers: [AVAudioPlayer] = []
     var logo: SKSpriteNode!
     var menuItems: [AstralMainMenuItem] = []
     var selectedItem: Int?
@@ -471,18 +469,7 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
     
     
     private func playSound() {
-        if let url = Bundle.main.url(forResource: "menu_select", withExtension: "wav") {
-            do {
-                let player = try AVAudioPlayer(contentsOf: url)
-                player.prepareToPlay()
-                player.play()
-
-                // Clean up the player once it has finished playing
-                player.delegate = self
-                self.audioPlayers.append(player)
-            } catch {
-            }
-        }
+        AstralAudioManager.shared.playSFX(filename: "menu_select.wav")
     }
 
     
@@ -507,18 +494,4 @@ class AstralMainMenuScene: SKScene, AVAudioPlayerDelegate {
             }
         }
     }
-    
-    
-    
-    // Part of AVAudioPlayerDelegate
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        // Once a sound finishes playing, remove it from the array to free up resources
-        if let index = self.audioPlayers.firstIndex(of: player) {
-            self.audioPlayers.remove(at: index)
-        }
-    }
-
-
-    
 }
-

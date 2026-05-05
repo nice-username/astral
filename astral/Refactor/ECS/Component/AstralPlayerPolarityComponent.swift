@@ -7,8 +7,9 @@
 
 import Foundation
 import GameplayKit
+import SpriteKit
 
-class AstralPolarityComponent: GKComponent {
+class AstralPlayerPolarityComponent: GKComponent, Resettable {
     // Reference to the sprite node component
     private var spriteComponent: GKSKNodeComponent? {
         return entity?.component(ofType: GKSKNodeComponent.self)
@@ -107,19 +108,13 @@ class AstralPolarityComponent: GKComponent {
         
         let sequence = SKAction.sequence([
             animation,
-            SKAction.run { [weak self] in
+            SKAction.run {
                 overlaySprite.alpha = 0.0
                 completion?()
-                self?.onSwitchComplete()
             }
         ])
         
         overlaySprite.run(sequence, withKey: "polaritySwitch")
-    }
-    
-    private func onSwitchComplete() {
-        // Notify other components or update game state if needed
-        print("Polarity switch completed to: \(currentPolarity)")
     }
     
     func canSwitch() -> Bool {
@@ -147,5 +142,12 @@ class AstralPolarityComponent: GKComponent {
         group.notify(queue: .main) {
             completion()
         }
+    }
+
+    func reset() {
+        currentPolarity = .white
+        lastSwitchTime = 0
+        overlaySprite?.removeAction(forKey: "polaritySwitch")
+        overlaySprite?.alpha = 0.0
     }
 }

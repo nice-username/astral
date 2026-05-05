@@ -23,7 +23,7 @@ class AstralEntity: GKEntity {
         super.init()
         
         addComponent(GKSKNodeComponent(node: node))
-        addComponent(StateComponent())  // Track entity state
+        addComponent(AstralStateComponent())  // Track entity state
     }
     
     required init?(coder: NSCoder) {
@@ -31,7 +31,7 @@ class AstralEntity: GKEntity {
     }
 
     func reset() {
-        component(ofType: StateComponent.self)?.isActive = false
+        component(ofType: AstralStateComponent.self)?.isActive = false
         node?.removeAllActions()
         node?.removeFromParent()
         node?.position = .zero
